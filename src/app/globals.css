@@ -17,6 +17,9 @@
 
     --color-verdeNeon: #39FF14;
     --color-azulEscuro: #0A0E1A;
+    --color-azulCinzado: #151C2C;
+    --color-azulMedio: #111827;
+    --color-cinzaSuave: #8895AA;
 }
 
 @theme inline {
