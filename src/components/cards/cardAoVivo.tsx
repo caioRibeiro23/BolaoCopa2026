@@ -1,6 +1,6 @@
 import Flag from "./iconePais/flag";
-import CaixaPlacar from "./caixaPlacar/caixaPlacar";
 import CaixaPlacarFechado from "./caixaPlacar/caixaPlacarFechado";
+import { getCountryAbbr } from "./iconePais/countryAbbr";
 
 interface CardAoVivoProps {
     paisCasa: string;
@@ -18,21 +18,22 @@ export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, plac
         <div className="w-full flex flex-col bg-azulMedio rounded-2xl">
 
             {/* Cabeçalho do Card */}
-            <div className="w-full flex justify-between px-5 py-3 bg-azulCinzado shadow-inner rounded-t-2xl text-xs font-inter">
+            <div className="w-full flex justify-between px-5 py-3 bg-verdeNeon/5 shadow-inner rounded-t-2xl text-xs font-inter">
                 <div className="text-white w-full flex justify-start items-center gap-2">
                     <div className="w-2 h-2 aspect-square rounded-4xl bg-vermelhoVibrante shadow-[0_0_8px_#FF4C4C]"></div>
                     <span className="text-vermelhoVibrante tracking-[1px]">Live</span> 
                     <span className="text-cinzaSuave">{tempo}&apos;</span>
                 </div>
-                <div className="text-cinzaSuave w-full text-center">Grupo {grupo}</div>
-                <div className="text-verdeNeon w-full text-end font-roboto"> +3 pts placar exato / +1 pt resultado</div>
+                <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +3 pts placar exato / +1 pt resultado</div>
             </div>
 
             {/* Corpo do Card */}
             <div className="w-full px-6 py-5 flex flex-row items-center">
-                <div className="w-full py-2 text-start text-white font-bold font-inter text-base flex flex-row items-center gap-3">
+                <div className="w-full py-2 text-start text-white font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3">
                     <Flag country={paisCasa} />
-                    <span>{paisCasa}</span>
+                    <span className="bp-540:hidden text-base tracking-[1px] text-cinzaSuave">{getCountryAbbr(paisCasa)}</span>
+                    <span className="hidden bp-540:block">{paisCasa}</span>
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex gap-2 justify-center items-center">
@@ -50,9 +51,10 @@ export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, plac
                         <p className="font-bebas-neue text-3xl tracking-[3px] text-verdeNeon drop-shadow-[0_0_8px_#39FF14]"> {placarCasa} : {placarVisitante}</p>
                     </div>
                 </div>
-                <div className="w-full py-2 text-end text-white font-bold font-inter text-base flex flex-row items-center gap-3 justify-end">
-                    <span>{paisVisitante}</span>
+                <div className="w-full py-2 text-end text-white font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3 justify-end">
+                    <span className="hidden bp-540:block">{paisVisitante}</span>
                     <Flag country={paisVisitante} />
+                    <span className="bp-540:hidden text-base tracking-[1px] text-cinzaSuave">{getCountryAbbr(paisVisitante)}</span>
                 </div>
 
             </div>
