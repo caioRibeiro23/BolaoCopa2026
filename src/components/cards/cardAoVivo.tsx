@@ -30,10 +30,10 @@ export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, plac
 
             {/* Corpo do Card */}
             <div className="w-full px-6 py-5 flex flex-row items-center">
-                <div className="w-full py-2 text-start text-white font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3">
+                <div className="w-full py-2 text-start text-cinzaSuave font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3">
                     <Flag country={paisCasa} />
-                    <span className="bp-540:hidden text-base tracking-[1px] text-cinzaSuave">{getCountryAbbr(paisCasa)}</span>
-                    <span className="hidden bp-540:block">{paisCasa}</span>
+                    <span className="md:hidden text-base tracking-[1px] text-cinzaSuave">{getCountryAbbr(paisCasa)}</span>
+                    <span className="hidden md:block">{paisCasa}</span>
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex gap-2 justify-center items-center">
@@ -51,8 +51,9 @@ export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, plac
                         <p className="font-bebas-neue text-3xl tracking-[3px] text-verdeNeon drop-shadow-[0_0_8px_#39FF14]"> {placarCasa} : {placarVisitante}</p>
                     </div>
                 </div>
-                <div className="w-full py-2 text-end text-white font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3 justify-end">
-                    <span className="hidden bp-540:block">{paisVisitante}</span>
+                <div className="w-full py-2 text-end text-cinzaSuave font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3 justify-end">
+                    <span className="hidden md:block">{paisVisitante}</span>
+                    <span className="hidden bp-540:block md:hidden text-base tracking-[1px] text-cinzaSuave">{getCountryAbbr(paisVisitante)}</span>
                     <Flag country={paisVisitante} />
                     <span className="bp-540:hidden text-base tracking-[1px] text-cinzaSuave">{getCountryAbbr(paisVisitante)}</span>
                 </div>
