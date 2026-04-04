@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Geist, Geist_Mono, Inter, Roboto } from "next/font/google";
 import "./globals.css";
+import NavBar from "../components/NavBar/navbar";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -34,6 +35,7 @@ export default function RootLayout({
       lang="en"
       className={`${roboto.variable} ${inter.variable} ${bebasNeue.variable} h-full antialiased`}
     >
+      <NavBar/>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
