@@ -10,7 +10,7 @@ interface ChampionshipRowProps {
 
 export default function championshipRow({ position, name, shortName, exactScores, points }: ChampionshipRowProps) {
     return(
-        <div className="w-full flex px-5 py-2.5 gap-3 items-center">
+        <div className="w-full flex px-5 py-2.5 gap-3 items-center border-b border-cinzaSuave/10">
             {/* No futuro fazer lógica para colocar as posições certinhas */}
             <span className="text-lg">🥇</span>
             <UserBox name={shortName}/>

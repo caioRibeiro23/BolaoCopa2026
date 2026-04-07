@@ -6,7 +6,7 @@ interface HistoryRowProps {
 
 export default function historyRow({ status }: HistoryRowProps) {
     return(
-        <div className="w-full grid grid-cols-[minmax(0,1fr)_6rem_7rem] px-5 py-2.5 gap-4 items-center">
+        <div className="w-full grid grid-cols-[minmax(0,1fr)_6rem_7rem] px-5 py-2.5 gap-4 items-center border-b border-cinzaSuave/10">
             <div className="min-w-0 flex flex-col py-0.5 font-inter">
                 <p className="font-bold text-sm text-[#E8EDF5]">Brasil vs Argentina</p>
                 <span className="text-xs text-cinzaSuave">Grupo D - 13 jul</span>
