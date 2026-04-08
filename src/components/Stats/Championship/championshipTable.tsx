@@ -9,10 +9,17 @@ export default function championshipTable() {
                     <span>🏆</span>
                     <h2 className="drop-shadow-[0_0_8px_#FFD700]"> A Tabela</h2>
                 </div>
-                <span className="font-inter text-xs text-cinzaSuave">18 partidas - Fase de Grupos</span>
+                <span className="font-inter text-xs text-cinzaSuave">18 partidas</span>
             </div>
             <ChampionshipRow 
                 position={1} 
+                name="Marco K." 
+                shortName="MK" 
+                exactScores={9} 
+                points={218} 
+            />
+            <ChampionshipRow 
+                position={5} 
                 name="Marco K." 
                 shortName="MK" 
                 exactScores={9} 

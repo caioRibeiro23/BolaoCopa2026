@@ -50,15 +50,15 @@ export default function ProgressTable() {
             <div className="grid w-full grid-cols-3 gap-3 px-5 py-1 bg-[#FFFFFF]/2">
                 <div className="flex flex-col justify-center items-center p-4 gap-2 border-r border-cinzaSuave/10">
                     <span className="font-bebas-neue text-2xl text-verdeNeon">150</span>
-                    <p className="font-inter text-xs text-cinzaSuave">Pontos Totais</p>
+                    <p className="font-inter text-xs text-cinzaSuave text-center">Pontos Totais</p>
                 </div>
                 <div className="flex flex-col justify-center items-center p-4 gap-2 border-r border-cinzaSuave/10">
                     <span className="font-bebas-neue text-2xl text-[#FFD700]">7</span>
-                    <p className="font-inter text-xs text-cinzaSuave">Placares Exatos</p>
+                    <p className="font-inter text-xs text-cinzaSuave text-center">Placares Exatos</p>
                 </div>
                 <div className="flex flex-col justify-center items-center p-4 gap-2">
                     <span className="font-bebas-neue text-2xl text-[#E8EDF5]">#3</span>
-                    <p className="font-inter text-xs text-cinzaSuave">Posição</p>
+                    <p className="font-inter text-xs text-cinzaSuave text-center">Posição</p>
                 </div>
             </div>
         </div> 

@@ -37,11 +37,11 @@ export default function HistoryResultCard({ status }: HistoryResultCardProps) {
     const style = statusStyles[status];
 
     return (
-        <div className="flex flex-col items-end justify-center gap-2">
-            <div className={`w-full text-center px-3 py-1.5 rounded-lg border shadow-md font-inter text-xs tracking-[1px] ${style.colorClass} ${style.bgClass} ${style.borderClass}`}>
+        <div className="flex flex-col items-center md:items-end justify-center gap-0.5 md:gap-2 w-full">
+            <div className={`w-fit min-w-18 md:w-full text-center px-2 md:px-3 py-1 rounded-lg border shadow-md font-inter text-[10px] md:text-xs tracking-[0.5px] md:tracking-[1px] ${style.colorClass} ${style.bgClass} ${style.borderClass}`}>
                 {style.label}
             </div>
-            <span className={`w-full text-center font-inter text-xs font-bold ${style.colorClass}`}>{style.points}</span>
+            <span className={`hidden md:block w-full text-center font-inter text-xs font-bold ${style.colorClass}`}>{style.points}</span>
         </div>
     );
 }
