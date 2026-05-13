@@ -4,8 +4,8 @@ import { LockKeyhole, MailIcon, Eye, EyeOff, Loader2, User } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { createClient as createBrowserClient } from '../../../lib/supabase/client'
 import { translateSupabaseError } from "../../utils/supabase-errors"
+import { createClient } from "@/src/lib/supabase/client"
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/
 
@@ -54,7 +54,7 @@ export default function RegisterForm() {
     }
 
     try {
-      const supabase = createBrowserClient()
+      const supabase = createClient()
       const { error: supaError } = await supabase.auth.signUp({
         email,
         password,
@@ -72,6 +72,7 @@ export default function RegisterForm() {
       router.push('/login?registered=true')
     } catch (err) {
       setError('Ocorreu um erro inesperado.')
+      console.error(err)
       setPending(false)
     }
   }
