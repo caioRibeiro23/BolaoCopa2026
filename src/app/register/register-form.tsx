@@ -2,22 +2,79 @@
 
 import { LockKeyhole, MailIcon, Eye, EyeOff, Loader2, User } from "lucide-react"
 import Link from "next/link"
-import { useActionState, useState } from "react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { createClient as createBrowserClient } from '../../../lib/supabase/client'
+import { translateSupabaseError } from "../../utils/supabase-errors"
 
-type AuthActionState = {
-  error: string
-}
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/
 
-type RegisterFormProps = {
-  action: (previousState: AuthActionState, formData: FormData) => Promise<AuthActionState>
-}
-
-const initialState: AuthActionState = { error: "" }
-
-export default function RegisterForm({ action }: RegisterFormProps) {
+export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [state, formAction, pending] = useActionState(action, initialState)
+  const [error, setError] = useState("")
+  const [pending, setPending] = useState(false)
+  const router = useRouter()
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError("")
+    setPending(true)
+
+    const form = new FormData(e.currentTarget)
+    const fullName = (form.get("fullName") as string) || ""
+    const email = (form.get("email") as string) || ""
+    const password = (form.get("password") as string) || ""
+    const confirmPassword = (form.get("confirmPassword") as string) || ""
+
+    if (!fullName) {
+      setError("Nome completo é obrigatório.")
+      setPending(false)
+      return
+    }
+
+    if (!email || !password || !confirmPassword) {
+      setError("Preencha todos os campos para criar a conta.")
+      setPending(false)
+      return
+    }
+
+    if (password.length < 8 || !passwordRegex.test(password)) {
+      setError(
+        "A senha deve ter no mínimo 8 caracteres, incluindo letras maiúsculas, minúsculas, números e caracteres especiais."
+      )
+      setPending(false)
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem.")
+      setPending(false)
+      return
+    }
+
+    try {
+      const supabase = createBrowserClient()
+      const { error: supaError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName },
+        },
+      })
+
+      if (supaError) {
+        setError(translateSupabaseError(supaError))
+        setPending(false)
+        return
+      }
+
+      router.push('/login?registered=true')
+    } catch (err) {
+      setError('Ocorreu um erro inesperado.')
+      setPending(false)
+    }
+  }
 
   return (
     <div className="flex items-center justify-center bg-[url('/background/fundoLogin.png')] bg-cover bg-center min-h-screen font-inter gap-5 py-10">
@@ -27,10 +84,10 @@ export default function RegisterForm({ action }: RegisterFormProps) {
           <p className="text-white/45 text-xs bp-1024:text-sm">Junte-se ao bolão da Copa 2026!</p>
         </div>
 
-        <form action={formAction} className="w-full flex flex-col items-start gap-4">
-          {state.error && (
+        <form onSubmit={handleSubmit} className="w-full flex flex-col items-start gap-4">
+          {error && (
             <div className="w-full flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 animate-in fade-in duration-200">
-              <p className="text-sm text-red-200 leading-relaxed">{state.error}</p>
+              <p className="text-sm text-red-200 leading-relaxed">{error}</p>
             </div>
           )}
 
