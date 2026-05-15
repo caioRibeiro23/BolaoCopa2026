@@ -1,10 +1,123 @@
+"use client";
+
+import {useEffect, useState} from "react";
+import { createClient } from "@supabase/supabase-js";
 import HeroSection from "../components/HeroSection/herosection";
 import CardAbertas from "../components/cards/cardAbertas";
 import CardAoVivo from "../components/cards/cardAoVivo";
 import CardEncerradas from "../components/cards/cardEncerradas";
 import TitlePage from "../components/ui/titlepage";
 
+interface Match {
+  id: string;
+  team_home: string;
+  team_away: string;
+  date_time: string;
+  group_letter: string;
+  status: 'scheduled' | 'live' | 'finished';
+  goals_home?: number;
+  goals_away?: number;
+}
+
+const traduçãoPaises: { [key: string]: string } = {
+    // Anfitriões
+    "Canada": "Canadá",
+    "USA": "Estados Unidos",
+    "United States": "Estados Unidos",
+    "United States of America": "Estados Unidos",
+    "Mexico": "México",
+
+    // América do Sul (CONMEBOL)
+    "Argentina": "Argentina",
+    "Brazil": "Brasil",
+    "Colombia": "Colômbia",
+    "Ecuador": "Equador",
+    "Paraguay": "Paraguai",
+    "Uruguay": "Uruguai",
+
+    // Europa (UEFA)
+    "Germany": "Alemanha",
+    "Austria": "Áustria",
+    "Belgium": "Bélgica",
+    "Bosnia-Herzegovina": "Bósnia-Herzegovina",
+    "Croatia": "Croácia",
+    "Scotland": "Escócia",
+    "Spain": "Espanha",
+    "France": "França",
+    "Netherlands": "Holanda",
+    "England": "Inglaterra",
+    "Norway": "Noruega",
+    "Portugal": "Portugal",
+    "Czech Republic": "República Tcheca",
+    "Czechia": "República Tcheca",
+    "Sweden": "Suécia",
+    "Switzerland": "Suíça",
+    "Turkey": "Turquia",
+
+    // África (CAF)
+    "South Africa": "África do Sul",
+    "Algeria": "Argélia",
+    "Cape Verde Islands": "Cabo Verde",
+    "Ivory Coast": "Costa do Marfim",
+    "Egypt": "Egito",
+    "Ghana": "Gana",
+    "Morocco": "Marrocos",
+    "DR Congo": "RD Congo",
+    "Congo DR": "RD Congo",
+    "Senegal": "Senegal",
+    "Tunisia": "Tunísia",
+
+    // Ásia (AFC)
+    "Saudi Arabia": "Arábia Saudita",
+    "Australia": "Austrália",
+    "Qatar": "Qatar",
+    "South Korea": "Coreia do Sul",
+    "Korea Republic": "Coreia do Sul",
+    "Iran": "Irã",
+    "Iraq": "Iraque",
+    "Japan": "Japão",
+    "Jordan": "Jordânia",
+    "Uzbekistan": "Uzbequistão",
+
+    // América do Norte/Caribe (CONCACAF)
+    "Curaçao": "Curaçao",
+    "Haiti": "Haiti",
+    "Panama": "Panamá",
+
+    // Oceania (OFC)
+    "New Zealand": "Nova Zelândia"
+};
+
+const t = (nome: string | undefined | null) => {
+  if (!nome) return "TBD"; // "To Be Defined" para jogos sem time
+  return traduçãoPaises[nome] || nome;
+};
+
+
 export default function Home() {
+  
+  const [matches, setMatches] = useState<Match[]>([]);
+
+  useEffect(() => {
+    async function getMatches() {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+      );
+      const { data, error } = await supabase
+        .from('matches')
+        .select('*')
+        .gte('date_time', '2025-01-01T00:00:00+00:00') // Pega tudo desde o ano passado
+        .order('date_time', { ascending: true });
+      if (!error && data) {
+      setMatches(data);
+    }
+  }
+
+  getMatches();
+}, []);
+
+
   return (
     <div>
       <HeroSection />
@@ -25,10 +138,15 @@ export default function Home() {
           </div>
 
           {/*Lista de partidas abertas*/}
-
-          <CardAbertas paisCasa = "Brasil" paisVisitante = "Argentina" hora = "20:00" grupo = "A" />
-          <CardAbertas paisCasa = "França" paisVisitante = "Alemanha" hora = "16:00" grupo = "B" />
-
+        {matches.filter(m => m.status === 'scheduled').map(jogo => (
+            <CardAbertas 
+              key={jogo.id}
+              paisCasa={t(jogo.team_home)} 
+              paisVisitante={t(jogo.team_away)} 
+              hora={new Date(jogo.date_time).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})} 
+              grupo={jogo.group_letter} 
+            />
+          ))}
         </div>
 
         {/* Partidas Ao Vivo */}

@@ -8,11 +8,16 @@ export default function Flag({ country }: { country: string }) {
         "Holanda": "Países Baixos",
         "Estados Unidos": "Estados Unidos da América",
         "Irã": "Irão",
+        "RD Congo": "República Democrática do Congo",
+        "República Tcheca": "Chéquia",
     };
     const nomeBuscado = nomesPadronizados[country] || country;
     let cod = countries.getAlpha2Code(nomeBuscado, "pt");
     if (country.toLowerCase() === "inglaterra") {
         cod = "gb-eng"; 
+    }
+    if (country.toLowerCase() === "escócia") {
+        cod = "gb-sct"; 
     }
     return (
         <div className="w-12 h-12 px-3 bg-azulCinzado rounded-2xl shadow-xl flex items-center justify-center">
