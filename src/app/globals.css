@@ -10,6 +10,7 @@
     --breakpoint-bp-540: 540px;
     --breakpoint-md: 768px;
     --breakpoint-bp-840: 840px;
+    --breakpoint-bp-1024: 1024px;
     --breakpoint-lg: 1280px;
     --breakpoint-xl: 1920px;
     --breakpoint-2xl: 2560px;
@@ -17,6 +18,10 @@
 
     --color-verdeNeon: #39FF14;
     --color-azulEscuro: #0A0E1A;
+    --color-azulCinzado: #151C2C;
+    --color-azulMedio: #111827;
+    --color-cinzaSuave: #8895AA;
+    --color-vermelhoVibrante: #FF4C4C;
 }
 
 @theme inline {
