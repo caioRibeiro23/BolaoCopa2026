@@ -1,5 +1,6 @@
 import Image from "next/image";
 import HeroSection from "../components/HeroSection/herosection";
+import GameRules from "../components/GameRules/gameRules";
 
 export default function Home() {
   const dataHoje = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -13,6 +14,7 @@ export default function Home() {
           <div className="px-3 py-2 bg-[#151C2C] rounded-md text-[#8895AA] text-xs">{dataHoje}</div>
         </div>
       </div>
+      <GameRules/>
     </div>
   );
 }
