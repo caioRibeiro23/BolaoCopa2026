@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Bebas_Neue,Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import NavBar from "../components/NavBar/navbar";
+import NavBar from "../components/navbar/navbar";
 
 const roboto = Roboto({
   variable: "--font-roboto",
