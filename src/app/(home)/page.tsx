@@ -1,9 +1,9 @@
-import HeroSection from "../components/HeroSection/herosection";
-import GameRules from "../components/GameRules/gameRules";
-import CardAbertas from "../components/cards/cardAbertas";
-import CardAoVivo from "../components/cards/cardAoVivo";
-import CardEncerradas from "../components/cards/cardEncerradas";
-import TitlePage from "../components/ui/titlepage";
+import HeroSection from "../../components/HeroSection/herosection";
+import GameRules from "../../components/GameRules/gameRules";
+import CardAbertas from "../../components/cards/cardAbertas";
+import CardAoVivo from "../../components/cards/cardAoVivo";
+import CardEncerradas from "../../components/cards/cardEncerradas";
+import TitlePage from "../../components/ui/titlepage";
 
 export default function Home() {
   return (

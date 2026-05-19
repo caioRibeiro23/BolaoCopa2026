@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Bebas_Neue,Inter, Roboto } from "next/font/google";
+import { Bebas_Neue, Inter, Roboto } from "next/font/google";
 import "./globals.css";
-import NavBar from "../components/navbar/navbar";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -19,10 +18,10 @@ const bebasNeue = Bebas_Neue({
   weight: "400",
 });
 
-
 export const metadata: Metadata = {
   title: "Bolaço - Bolão da Copa 2026",
-  description: "Participe do Bolão da Copa 2026 e teste seus palpites para os jogos! Acesse agora e faça parte da diversão!",
+  description:
+    "Participe do Bolão da Copa 2026 e teste seus palpites para os jogos!",
 };
 
 export default function RootLayout({
@@ -34,13 +33,10 @@ export default function RootLayout({
     <html
       lang="pt-br"
       className={`${roboto.variable} ${inter.variable} ${bebasNeue.variable} h-full antialiased`}
-    >      
+    >
       <body className="min-h-full flex flex-col">
-        <NavBar/>
-        <main>
-          {children}
-        </main>
-        </body>
+        {children}
+      </body>
     </html>
   );
 }
