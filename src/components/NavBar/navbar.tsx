@@ -1,5 +1,7 @@
 'use client'
 
+import { logoutAction } from "@/src/lib/supabase/auth-actions";
+import { User } from "@supabase/supabase-js";
 import { ChevronDown, Menu, Star, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,21 +10,28 @@ import { useState } from "react";
 const links = [
   { href: "/", label: "Home" },
   { href: "/", label: "Classificação" },
-  { href: "/", label: "Histórico" }
+  { href: "/stats", label: "Histórico" }
 ];
 
-export default function NavBar() {
+type NavBarProps = {
+  user?:User;
+}
+
+export default function NavBar({ user }: NavBarProps) {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleNav = () => setIsNavOpen(!isNavOpen);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [user, setUser] = useState({ name: "Bernardo", pts: 150 });
-
+  const currentUser = {
+    name: user?.user_metadata.full_name,
+    pts: user?.user_metadata.pts,
+  };
+  
   return (
-    <header className="sticky top-0 left-0 right-0 z-20 bg-[#111827] border-b">
+    <header className="sticky top-0 left-0 right-0 z-20 bg-azulMedio border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between py-3">
           
-          <div className="flex-shrink-0 flex items-center bg-white p-2 rounded-full">
+          <div className="shrink-0 flex items-center bg-white p-2 rounded-full">
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/copa.png"
@@ -38,7 +47,7 @@ export default function NavBar() {
           <div className="hidden md:flex gap-8 items-center">
             {links.map((link, index) => (
               <Link href={link.href} key={index}>
-                <span className="text-base border border-transparent font-semibold hover:bg-[#39FF141A] hover:opacity-25% hover:border hover:border-[#39FF1440] text-[#8895AA] hover:text-[#39FF14] px-4 py-3 transition-all duration-300 rounded-lg">
+                <span className="text-base border border-transparent font-semibold hover:bg-[#39FF141A] hover:opacity-25% hover:border hover:border-[#39FF1440] text-cinzaSuave hover:text-verdeNeon px-4 py-3 transition-all duration-300 rounded-lg">
                   {link.label}
                 </span>
               </Link>
@@ -59,9 +68,9 @@ export default function NavBar() {
           </div>
 
           <div className="hidden md:flex gap-8 items-center">
-            <div className="flex bg-[#FFD7001F] p-3 gap-2 rounded-full border border-[#FFD70066] outline outline-[#39FF14]">
-                <Star color="#FFD700" fill="#FFD700"/>
-                <span className="text-[#FFD700] font-bold drop-shadow-sm drop-shadow-[#FFD700]">150 pts</span>
+            <div className="flex bg-[#FFD7001F] p-3 gap-2 rounded-full border border-[#FFD70066] outline outline-verdeNeon">
+              <Star color="#FFD700" fill="#FFD700"/>
+              <span className="text-[#FFD700] font-bold drop-shadow-[0_2px_4px_rgba(255,215,0,0.25)]">150 pts</span>
             </div>
             <div className="relative">
               <button 
@@ -77,21 +86,23 @@ export default function NavBar() {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <span className="font-medium text-sm">{user.name}</span>
+                <span className="font-medium text-sm">{currentUser?.name}</span>
                 <ChevronDown size={16} className={`transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {isSelectOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-[#1F2937] border border-gray-700 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
-                  <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-[#39FF14] transition-colors">
+                  <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors">
                     Meu Perfil
                   </button>
-                  <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-[#39FF14] transition-colors border-t border-gray-700">
+                  <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors border-t border-gray-700">
                     Configurações
                   </button>
-                  <button className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors border-t border-gray-700">
-                    Sair
-                  </button>
+                  <form action={logoutAction}>
+                    <button type="submit" className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors border-t border-gray-700">
+                      Sair
+                    </button>
+                  </form>
                 </div>
               )}
             </div>
