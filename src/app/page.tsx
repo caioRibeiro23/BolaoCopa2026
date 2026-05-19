@@ -1,98 +1,28 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "@/src/lib/supabase/client";
 import HeroSection from "../components/HeroSection/herosection";
 import CardAbertas from "../components/cards/cardAbertas";
 import CardAoVivo from "../components/cards/cardAoVivo";
 import CardEncerradas from "../components/cards/cardEncerradas";
 import TitlePage from "../components/ui/titlepage";
+import { formatarHoraBR } from "../utils/formatar-hora";
+import { t } from "../utils/traducaoPaises";
+import { formatarDataBR } from "../utils/formatar-data";
 
 interface Match {
   id: string;
   team_home: string;
   team_away: string;
   date_time: string;
+  
   group_letter: string;
   status: 'scheduled' | 'live' | 'finished';
   goals_home?: number;
   goals_away?: number;
+  minute_play?: number;
 }
-
-const traduçãoPaises: { [key: string]: string } = {
-    // Anfitriões
-    "Canada": "Canadá",
-    "USA": "Estados Unidos",
-    "United States": "Estados Unidos",
-    "United States of America": "Estados Unidos",
-    "Mexico": "México",
-
-    // América do Sul (CONMEBOL)
-    "Argentina": "Argentina",
-    "Brazil": "Brasil",
-    "Colombia": "Colômbia",
-    "Ecuador": "Equador",
-    "Paraguay": "Paraguai",
-    "Uruguay": "Uruguai",
-
-    // Europa (UEFA)
-    "Germany": "Alemanha",
-    "Austria": "Áustria",
-    "Belgium": "Bélgica",
-    "Bosnia-Herzegovina": "Bósnia-Herzegovina",
-    "Croatia": "Croácia",
-    "Scotland": "Escócia",
-    "Spain": "Espanha",
-    "France": "França",
-    "Netherlands": "Holanda",
-    "England": "Inglaterra",
-    "Norway": "Noruega",
-    "Portugal": "Portugal",
-    "Czech Republic": "República Tcheca",
-    "Czechia": "República Tcheca",
-    "Sweden": "Suécia",
-    "Switzerland": "Suíça",
-    "Turkey": "Turquia",
-
-    // África (CAF)
-    "South Africa": "África do Sul",
-    "Algeria": "Argélia",
-    "Cape Verde Islands": "Cabo Verde",
-    "Ivory Coast": "Costa do Marfim",
-    "Egypt": "Egito",
-    "Ghana": "Gana",
-    "Morocco": "Marrocos",
-    "DR Congo": "RD Congo",
-    "Congo DR": "RD Congo",
-    "Senegal": "Senegal",
-    "Tunisia": "Tunísia",
-
-    // Ásia (AFC)
-    "Saudi Arabia": "Arábia Saudita",
-    "Australia": "Austrália",
-    "Qatar": "Qatar",
-    "South Korea": "Coreia do Sul",
-    "Korea Republic": "Coreia do Sul",
-    "Iran": "Irã",
-    "Iraq": "Iraque",
-    "Japan": "Japão",
-    "Jordan": "Jordânia",
-    "Uzbekistan": "Uzbequistão",
-
-    // América do Norte/Caribe (CONCACAF)
-    "Curaçao": "Curaçao",
-    "Haiti": "Haiti",
-    "Panama": "Panamá",
-
-    // Oceania (OFC)
-    "New Zealand": "Nova Zelândia"
-};
-
-const t = (nome: string | undefined | null) => {
-  if (!nome) return "TBD"; // "To Be Defined" para jogos sem time
-  return traduçãoPaises[nome] || nome;
-};
-
 
 export default function Home() {
   
@@ -100,23 +30,42 @@ export default function Home() {
 
   useEffect(() => {
     async function getMatches() {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-      );
+      const supabase = createClient();
+
+      // 1. Pega a data e hora EXATA de agora (seja dia 11, 12, 13...)
+      const agora = new Date();
+
+      //APENAS PARA TESTES: FORÇA A DATA PARA 11 DE JUNHO DE 2026, PARA VER AS PARTIDAS DE HOJE FUNCIONANDO
+      agora.setDate(11);
+      agora.setMonth(5); // Junho no JavaScript é mês 5 (0 = Janeiro, 1 = Fevereiro...)
+      agora.setFullYear(2026);
+
+      // 2. Cria o "Início de Hoje" (00:00:00) baseado no dia atual
+      const hojeInicio = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 0, 0, 0, 0);
+      
+      // 3. Cria o "Fim de Amanhã" (23:59:59) somando 1 dia ao hoje
+      const amanhaFim = new Date(hojeInicio);
+      amanhaFim.setDate(hojeInicio.getDate() + 1);
+      amanhaFim.setHours(23, 59, 59, 999);
+
+      // 4. Converte para ISO para o Supabase entender
+      const dataInicioISO = hojeInicio.toISOString();
+      const dataFimISO = amanhaFim.toISOString();
+
       const { data, error } = await supabase
         .from('matches')
         .select('*')
-        .gte('date_time', '2025-01-01T00:00:00+00:00') // Pega tudo desde o ano passado
+        .gte('date_time', dataInicioISO)
+        .lte('date_time', dataFimISO)
         .order('date_time', { ascending: true });
+
       if (!error && data) {
-      setMatches(data);
+        setMatches(data);
+      }
     }
-  }
 
-  getMatches();
-}, []);
-
+    getMatches();
+  }, []);
 
   return (
     <div>
@@ -125,8 +74,8 @@ export default function Home() {
       {/* div de palpites da página inicial */}
       <div className="w-full px-8 py-14 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro">
 
-        {/* Partidas de Hoje */}
-        <TitlePage title="Partidas de Hoje"/>
+        {/* Partidas de Hoje e Amanhã */}
+        <TitlePage title="Partidas de Hoje e Amanhã"/>
 
         {/*Partidas Abertas */}
         <div className="w-full flex flex-col gap-3 ">
@@ -143,8 +92,9 @@ export default function Home() {
               key={jogo.id}
               paisCasa={t(jogo.team_home)} 
               paisVisitante={t(jogo.team_away)} 
-              hora={new Date(jogo.date_time).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})} 
+              hora={`${formatarDataBR(jogo.date_time)} - ${formatarHoraBR(jogo.date_time)}`} 
               grupo={jogo.group_letter} 
+              matchId={jogo.id}
             />
           ))}
         </div>
@@ -158,8 +108,20 @@ export default function Home() {
             <div className="h-[1px] flex-1 bg-gradient-to-r from-[#FF4455]/40 to-[#FF4455]/0"></div>
           </div>
 
-          <CardAoVivo paisCasa = "Inglaterra" paisVisitante = "Espanha" grupo = "C" tempo = "45" placarCasa = {1} placarVisitante = {0} palpiteCasa={2} palpiteVisitante={1}/>
-          <CardAoVivo paisCasa = "Itália" paisVisitante = "Holanda" grupo = "D" tempo = "30" placarCasa = {0} placarVisitante = {0} />
+          {matches.filter(m => m.status === 'live').map(jogo => (
+            <CardAoVivo 
+              key={jogo.id}
+              paisCasa={t(jogo.team_home)} 
+              paisVisitante={t(jogo.team_away)} 
+              grupo={jogo.group_letter}
+              placarCasa={jogo.goals_home ?? 0}
+              placarVisitante={jogo.goals_away ?? 0}
+              tempo={String(jogo.minute_play || 0)} 
+            />
+          ))}
+          {matches.filter(m => m.status === 'live').length === 0 && (
+            <p className="text-cinzaSuave text-base px-[2px]">Nenhum jogo acontecendo agora.</p>
+          )}
         </div>
 
         <div className="w-full flex flex-col gap-3 ">

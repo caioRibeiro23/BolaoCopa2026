@@ -24,7 +24,7 @@ export default function Flag({ country }: { country: string }) {
             <img 
                 src={`https://flagcdn.com/w40/${cod?.toLowerCase()}.png`} 
                 alt={country}
-                className="w-6 h-auto rounded-sm hover:scale-110 transition-transform duration-200"
+                className="w-7 h-4 rounded-sm hover:scale-110 transition-transform duration-200 shadow-md"
             />
         </div>
     );

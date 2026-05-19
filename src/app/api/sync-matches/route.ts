@@ -28,7 +28,28 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+
+
 export async function GET() {
+
+  //bloco de verificação para poupar a API de chamadas desnecessárias
+  const agora = new Date();
+  const duasHorasDepois = new Date(agora.getTime() + 2 * 60 * 60 * 1000);
+
+  // 2. Busca no banco se há jogos AO VIVO ou que começam nas próximas 2 horas
+  const { data: jogosProximos, error } = await supabase
+    .from('matches')
+    .select('id, status, date_time')
+    .or(`status.eq.live,and(status.eq.scheduled,date_time.lte.${duasHorasDepois.toISOString()})`);
+
+  // 3. Se o banco estiver baleado ou se realmente não tiver jogo perto, poupa a API
+  if (error || !jogosProximos || jogosProximos.length === 0) {
+    return NextResponse.json({ 
+      message: "Nenhum jogo ao vivo ou próximo de começar. Requisição externa poupada." 
+    });
+  }
+
+  // Se chegou aqui, é porque tem jogo AO VIVO ou que começa nas próximas 2 horas, então vamos buscar os dados atualizados na API de Futebol
   const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
   // Usando 'WC' para Copa do Mundo ou 'PL' para testes
   const API_URL = 'https://api.football-data.org/v4/competitions/WC/matches';
@@ -50,19 +71,28 @@ export async function GET() {
     }
 
     // Mapeamento tipado para o seu banco de dados
-    const matchesToUpsert = data.matches.map((match: FootballMatch) => ({
-      team_home: match.homeTeam.name,
-      team_away: match.awayTeam.name,
-      date_time: match.utcDate,
-      status: match.status === 'TIMED' ? 'scheduled' : 
-              match.status === 'IN_PLAY' ? 'live' : 'finished',
-      goals_home: match.score.fullTime.home ?? null,
-      goals_away: match.score.fullTime.away ?? null,
-      phase: match.stage ? match.stage.toLowerCase() : 'groups',
-      group_letter: match.group ? match.group.replace('GROUP_', '') : null
-    }))
-    .filter((match: TransformedMatch) => match.team_home !== null && match.team_away !== null);
+    const matchesToUpsert = data.matches.map((match: FootballMatch) => {
+      // Define o status dinamicamente baseado na API de Futebol
+      let status: 'scheduled' | 'live' | 'finished' = 'scheduled';
+      
+      if (match.status === 'IN_PLAY' || match.status === 'PAUSED') {
+        status = 'live';
+      } else if (match.status === 'FINISHED') {
+        status = 'finished';
+      }
 
+      return {
+          team_home: match.homeTeam.name,
+          team_away: match.awayTeam.name,
+          date_time: match.utcDate,
+          status: status,
+          // Garante que o placar seja atualizado em tempo real no banco
+          goals_home: match.score.fullTime.home,
+          goals_away: match.score.fullTime.away,
+          phase: match.stage ? match.stage.toLowerCase() : 'groups',
+          group_letter: match.group ? match.group.replace('GROUP_', '') : null
+        };
+    }).filter((match: TransformedMatch) => match.team_home !== null && match.team_away !== null);
     // Upsert para salvar/atualizar
     const { error } = await supabase
       .from('matches')
