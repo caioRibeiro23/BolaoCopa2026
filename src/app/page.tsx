@@ -41,8 +41,8 @@ export default function Home() {
 
       // Configuração da data fictícia de testes (11 de Junho de 2026)
       const agora = new Date();
-      agora.setDate(11);
-      agora.setMonth(5); 
+      agora.setDate(23); //era 11
+      agora.setMonth(4);  //era 5
       agora.setFullYear(2026);
 
       const hojeInicio = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 0, 0, 0, 0);
@@ -98,7 +98,7 @@ export default function Home() {
       <HeroSection />
 
       {/* div de palpites da página inicial */}
-      <div className="w-full px-8 py-14 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro">
+      <div className="w-full px-8 py-14 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro min-h-screen">
 
         {/* Partidas de Hoje e Amanhã */}
         <TitlePage title="Partidas de Hoje e Amanhã"/>
