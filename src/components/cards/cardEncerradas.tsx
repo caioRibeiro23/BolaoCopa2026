@@ -8,7 +8,6 @@ interface CardAoVivoProps {
     paisCasa: string;
     paisVisitante: string;
     grupo: string;
-    tempo: string;
     placarCasa: number;
     placarVisitante: number;
     palpiteCasa?: number;
