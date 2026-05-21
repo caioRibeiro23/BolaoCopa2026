@@ -14,17 +14,17 @@ const links = [
 ];
 
 type NavBarProps = {
-  user?:User;
+  userData?: {
+    name?: string
+    pts?: number
+  }
 }
 
-export default function NavBar({ user }: NavBarProps) {
+export default function NavBar({ userData }: NavBarProps) {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleNav = () => setIsNavOpen(!isNavOpen);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const currentUser = {
-    name: user?.user_metadata.full_name,
-    pts: user?.user_metadata.pts,
-  };
+  const currentUser = userData;
   
   return (
     <header className="sticky top-0 left-0 right-0 z-20 bg-azulMedio border-b border-gray-700">
@@ -70,7 +70,7 @@ export default function NavBar({ user }: NavBarProps) {
           <div className="hidden md:flex gap-8 items-center">
             <div className="flex bg-[#FFD7001F] p-3 gap-2 rounded-full border border-[#FFD70066] outline outline-verdeNeon">
               <Star color="#FFD700" fill="#FFD700"/>
-              <span className="text-[#FFD700] font-bold drop-shadow-[0_2px_4px_rgba(255,215,0,0.25)]">150 pts</span>
+              <span className="text-[#FFD700] font-bold drop-shadow-[0_2px_4px_rgba(255,215,0,0.25)]">{userData?.pts ?? 0} pts</span>
             </div>
             <div className="relative">
               <button 

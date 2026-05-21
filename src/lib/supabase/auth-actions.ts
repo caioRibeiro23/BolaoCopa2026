@@ -3,7 +3,8 @@
 import { createClient } from "@/src/lib/supabase/server"
 import { translateSupabaseError } from "@/src/utils/supabase-errors"
 import { redirect } from "next/navigation"
-import { getCurrentUser } from "./user-actions"
+import { getUserData } from "./user-actions"
+
 
 export type AuthActionState = {
   error: string
@@ -95,7 +96,7 @@ export async function logoutAction() {
 
 
 export async function requireUser() {
-  const user = await getCurrentUser();
+  const user = await getUserData();
 
   if (!user) {
     redirect("/login");
