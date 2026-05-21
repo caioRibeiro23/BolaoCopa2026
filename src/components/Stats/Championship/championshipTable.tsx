@@ -3,7 +3,7 @@ import ChampionshipRow from "./championshipRow";
 import { getLeaderboard } from "@/src/lib/supabase/leaderboard";
 
 export default async function championshipTable() {
-    const players = await getLeaderboard()
+    const players = await getLeaderboard();
 
     return (
         <div className="flex flex-col bg-azulMedio rounded-2xl border border-azulCinzado w-full shadow-sm">
@@ -12,15 +12,15 @@ export default async function championshipTable() {
                     <span>🏆</span>
                     <h2 className="drop-shadow-[0_0_8px_#FFD700]"> A Tabela</h2>
                 </div>
-                <span className="font-inter text-xs text-cinzaSuave">18 partidas</span>
+                <span className="font-inter text-xs text-cinzaSuave">{players.length} jogadores</span>
             </div>
             {players.map((player) => (
                 <ChampionshipRow
-                    key={player.id}
+                    key={player.user_id}
                     position={player.position}
                     name={player.full_name}
                     shortName={player.username.slice(0, 2).toUpperCase()}
-                    exactScores={player.correct_predictions}
+                    exactScores={player.exact_scores}
                     points={player.total_points}
                 />
             ))}
