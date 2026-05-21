@@ -35,8 +35,10 @@ export default function RootLayout({
       lang="pt-br"
       className={`${roboto.variable} ${inter.variable} ${bebasNeue.variable} h-full antialiased`}
     >
-      <NavBar/>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <NavBar/>
+        <main>{children}</main>
+        </body>
     </html>
   );
 }
