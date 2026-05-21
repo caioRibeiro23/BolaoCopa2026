@@ -3,6 +3,7 @@
 import { createClient } from "@/src/lib/supabase/server"
 import { translateSupabaseError } from "@/src/utils/supabase-errors"
 import { redirect } from "next/navigation"
+import { getCurrentUser } from "./user-actions"
 
 export type AuthActionState = {
   error: string
@@ -83,4 +84,22 @@ export async function registerAction(
   }
 
   redirect("/login?registered=true")
+}
+
+
+export async function logoutAction() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect("/login")
+}
+
+
+export async function requireUser() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  return user;
 }
