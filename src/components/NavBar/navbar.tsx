@@ -31,18 +31,16 @@ export default function NavBar({ userData }: NavBarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="flex items-center justify-between py-3">
           
-          <div className="shrink-0 flex items-center bg-white p-2 rounded-full">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                src="/copa.png"
+                src="/navbar2.png"
                 alt="Logo do site"
-                width={56}
-                height={56}
-                className="h-14 w-14 object-contain"
+                width={200}
+                height={100}
+                className=" object-contain"
                 priority
               />
             </Link>
-          </div>
 
           <div className="hidden md:flex gap-8 items-center">
             {links.map((link, index) => (
