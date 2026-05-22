@@ -1,7 +1,4 @@
-import { createClient } from "./client";
-
-// Inicializa o client do Supabase a partir das variáveis de ambiente
-const supabase = createClient();
+import { createClient } from "./server";
 
 export interface LeaderboardUser {
   user_id: string;        // ID mapeado na View nova
@@ -15,7 +12,22 @@ export interface LeaderboardUser {
   position: number;       // Campo controlado que injetamos logo abaixo
 }
 
+interface ChampionshipLeaderboardUser {
+  championship_id: string;
+  user_id: string;
+  username: string;
+  full_name: string;
+  avatar_url: string | null;
+  total_points: number;
+  exact_scores: number;
+  correct_results: number;
+  total_bets: number;
+}
+
 export async function getLeaderboard(): Promise<LeaderboardUser[]> {
+
+  const supabase = await createClient();
+
   // A requisição precisa selecionar as colunas que realmente existem na View nova
   const { data, error } = await supabase
     .from('leaderboard')
@@ -34,4 +46,26 @@ export async function getLeaderboard(): Promise<LeaderboardUser[]> {
   }));
 
   return playersWithPosition as LeaderboardUser[];
+}
+
+
+export async function getChampionshipLeaderboard(championshipId: string) {
+
+  const supabase = await createClient();
+  
+  const { data, error } = await supabase
+    .from('championship_leaderboard')
+    .select('*')
+    .eq('championship_id', championshipId);
+
+  if (error) {
+    console.error(error);
+    return [];
+  }
+
+  return ((data || []) as ChampionshipLeaderboardUser[])
+  .map((player, index) => ({
+    ...player,
+    position: index + 1,
+  }));
 }
