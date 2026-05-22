@@ -104,3 +104,20 @@ export async function requireUser() {
 
   return user;
 }
+
+export async function loginWithGoogle() {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: "http://localhost:3000/auth/callback",
+    },
+  })
+
+  if (error) {
+    redirect("/login?error=social_auth")
+  }
+
+  redirect(data.url)
+}

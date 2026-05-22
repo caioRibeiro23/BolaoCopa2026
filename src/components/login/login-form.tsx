@@ -1,6 +1,8 @@
 'use client'
 
+import { loginWithGoogle } from "@/src/lib/supabase/auth-actions"
 import { LockKeyhole, MailIcon, Eye, EyeOff, Loader2 } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { useActionState, useState } from "react"
 
@@ -87,6 +89,27 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
           >
             {pending && <Loader2 size={20} className="animate-spin" />}
             {pending ? "Entrando..." : "Entrar no bolão"}
+          </button>
+        </form>
+
+        <div className="w-full flex items-center gap-3">
+          <div className="flex-1 h-px bg-white/10" />
+          <span className="text-xs text-white/40">ou</span>
+          <div className="flex-1 h-px bg-white/10" />
+        </div>
+
+        <form action={loginWithGoogle} className="w-full">
+          <button type="submit" className="w-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-[10px] py-2 bp-1024:py-4 px-6 flex items-center justify-center gap-3 cursor-pointer">
+            <Image
+              src="google-logo.svg"
+              alt="Google"
+              className="w-5 h-5"
+              width={20}
+              height={20}
+            />
+            <span className="font-medium">
+              Entrar com Google
+            </span>
           </button>
         </form>
 
