@@ -1,7 +1,6 @@
 'use client'
 
 import { logoutAction } from "@/src/lib/supabase/auth-actions";
-import { User } from "@supabase/supabase-js";
 import { ChevronDown, Menu, Star, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
