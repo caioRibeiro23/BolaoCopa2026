@@ -1,7 +1,25 @@
 import Link from "next/link";
 import HistoryRow from "./historyRow";
 
-export default function historyTable() {
+interface HistoryTableProps {
+    userId: string;
+}
+
+interface MatchWithBet {
+    id: string;
+    team_home: string;
+    team_away: string;
+    goals_home: number;
+    goals_away: number;
+    utc_date: string;
+    bets: {
+        prediction_home: number;
+        prediction_away: number;
+        points_earned: number;
+    }[];
+}
+
+export default function historyTable({ userId }: HistoryTableProps) {
     return(
         <div className="flex flex-col bg-azulMedio rounded-2xl border border-azulCinzado w-full shadow-sm">
             <div className="w-full flex items-center justify-between px-6 py-4 bg-[#FFFFFF]/2 ">

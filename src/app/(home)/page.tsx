@@ -23,6 +23,7 @@ interface Match {
   
   group_letter: string;
   status: 'scheduled' | 'live' | 'finished';
+  status_exibicao?: string;
   goals_home?: number;
   goals_away?: number;
   minute_play?: number;
@@ -97,6 +98,15 @@ export default function Home() {
     getHomeData();
   }, []);
 
+  const partidasAbertas = matches.filter(m => m.status === 'scheduled' && new Date().getTime() < new Date(m.date_time).getTime());
+  
+  const partidasAoVivo = matches.filter(m => 
+    m.status === 'live' || 
+    (m.status === 'scheduled' && new Date().getTime() >= new Date(m.date_time).getTime())
+  );
+  
+  const partidasEncerradas = matches.filter(m => m.status === 'finished');
+
   return (
     <div>
       <HeroSection />
@@ -117,7 +127,7 @@ export default function Home() {
           </div>
 
           {/*Lista de partidas abertas*/}
-        {matches.filter(m => m.status === 'scheduled').map(jogo => (
+        {partidasAbertas.map(jogo => (
             <CardAbertas 
               key={jogo.id}
               paisCasa={t(jogo.team_home)} 
@@ -125,8 +135,12 @@ export default function Home() {
               hora={`${formatarDataBR(jogo.date_time)} - ${formatarHoraBR(jogo.date_time)}`} 
               grupo={jogo.group_letter} 
               matchId={jogo.id}
+              date_time={jogo.date_time}
             />
           ))}
+          {partidasAbertas.length === 0 && (
+            <p className="text-cinzaSuave text-base px-0.5">Nenhuma partida disponível para palpites.</p>
+          )}
         </div>
 
         {/* Partidas Ao Vivo */}
@@ -138,8 +152,10 @@ export default function Home() {
             <div className="h-px flex-1 bg-linear-to-r from-[#FF4455]/40 to-[#FF4455]/0"></div>
           </div>
 
-          {matches.filter(m => m.status === 'live').map(jogo => {
+          {partidasAoVivo.map(jogo => {
             const palpite = userBets[jogo.id];
+            const apiAtrasada = jogo.status === 'scheduled' && new Date().getTime() >= new Date(jogo.date_time).getTime();
+            const statusTempo = apiAtrasada ? "Aguardando início..." : jogo.status_exibicao || "Ao Vivo";  
 
             return (
               <CardAoVivo 
@@ -149,13 +165,13 @@ export default function Home() {
                 grupo={jogo.group_letter}
                 placarCasa={jogo.goals_home ?? 0}
                 placarVisitante={jogo.goals_away ?? 0}
-                tempo={String(jogo.minute_play || 0)} 
+                tempo={statusTempo}
                 palpiteCasa={palpite?.prediction_home}
                 palpiteVisitante={palpite?.prediction_away}
               />
             );
           })}
-          {matches.filter(m => m.status === 'live').length === 0 && (
+          {partidasAoVivo.length === 0 && (
             <p className="text-cinzaSuave text-base px-0.5">Nenhum jogo acontecendo agora.</p>
           )}
         </div>
@@ -167,7 +183,7 @@ export default function Home() {
             <span className="text-cinzaSuave text-xs font-inter tracking-[1.5px] font-bold">ENCERRADAS</span>
             <div className="h-px flex-1 bg-linear-to-r from-cinzaSuave/40 to-cinzaSuave/0"></div>
           </div>
-          {matches.filter(m => m.status === 'finished').map(jogo => {
+          {partidasEncerradas.map(jogo => {
             // Recupera o palpite feito para este jogo específico dentro do mapa de palpites
             const palpite = userBets[jogo.id];
 
@@ -185,7 +201,7 @@ export default function Home() {
             );
           })}
 
-          {matches.filter(m => m.status === 'finished').length === 0 && (
+          {partidasEncerradas.length === 0 && (
             <p className="text-cinzaSuave text-base px-[2px]">Nenhum jogo encerrado recentemente.</p>
           )}     
         </div>

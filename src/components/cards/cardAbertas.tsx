@@ -10,10 +10,10 @@ interface CardAbertasProps {
     paisVisitante: string;
     hora: string;
     grupo: string;
-
+    date_time?: string;
 }
 
-export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, grupo }: CardAbertasProps) {
+export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, grupo, date_time }: CardAbertasProps) {
     const [predictionHome, setPredictionHome] = useState<number | null>(null);
     const [predictionAway, setPredictionAway] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -35,6 +35,15 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
 
     function handleEditPrediction() {
         if (isSubmitting) return;
+        if (date_time) {
+            const agora = new Date();
+            const horarioJogo = new Date(date_time);
+
+            if (agora.getTime() >= horarioJogo.getTime()) {
+                alert("As apostas para esta partida já foram encerradas! Não é possível editar.");
+                return;
+            }
+        }
         setIsSaved(false);
     }
 
@@ -66,6 +75,17 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
     async function handleSendPrediction(e: FormEvent) {
         e.preventDefault();
         setIsSubmitting(true);
+
+        if (date_time) {
+            const agora = new Date();
+            const horarioJogo = new Date(date_time);
+
+            if (agora.getTime() >= horarioJogo.getTime()) {
+                alert("As apostas para esta partida já foram encerradas! Seu palpite não foi enviado.");
+                setIsSubmitting(false);
+                return;
+            }
+        }
 
         try {
         //Pega a sessão do usuário logado diretamente pelo Supabase Auth

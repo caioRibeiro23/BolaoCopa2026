@@ -6,7 +6,12 @@ interface FootballMatch {
   awayTeam: { name: string };
   utcDate: string;
   status: string;
-  score: { fullTime: { home: number | null; away: number | null } };
+  minute?: number | string;
+  time?: string;
+  score: { 
+    fullTime: { home: number | null; away: number | null };
+    halfTime?: { home: number | null; away: number | null } | null;
+  };
   stage?: string;
   group?: string;
 }
@@ -16,6 +21,7 @@ interface TransformedMatch {
   team_away: string;
   date_time: string;
   status: string;
+  status_exibicao: string;
   goals_home: number | null;
   goals_away: number | null;
   phase: string;
@@ -65,6 +71,23 @@ export async function GET() {
     });
 
     const data = await response.json();
+    if (data.matches) {
+  const jogosAoVivo = data.matches.filter((m: FootballMatch) => m.status === 'IN_PLAY');
+  
+  console.log("=== PROPRIEDADES DE TEMPO DOS JOGOS AO VIVO ===");
+  jogosAoVivo.forEach((match: FootballMatch) => {
+    console.log(`\n⚽ ${match.homeTeam.name} x ${match.awayTeam.name}:`);
+    console.log(`- Status na API: ${match.status}`);
+    
+    // Inspeciona chaves comuns onde a API injeta o minuto do jogo
+    console.log(`- Propriedade 'minute' direta:`, match.minute);
+    console.log(`- Propriedade 'time' direta:`, match.time);
+    
+    // Alimenta uma visualização completa do objeto 'score' para ver se está lá dentro
+    console.log(`- Objeto 'score' completo:`, JSON.stringify(match.score, null, 2));
+  });
+  console.log("\n===============================================");
+}
 
     if (!data.matches) {
       return NextResponse.json({ error: "Dados não encontrados na API" }, { status: 404 });
@@ -81,12 +104,27 @@ export async function GET() {
         status = 'finished';
       }
 
+      let statusExibicao = 'Ainda não começou';
+  
+      if (match.status === 'SCHEDULED') {
+        statusExibicao = 'Ainda não começou';
+      } else if (match.status === 'PAUSED') {
+        statusExibicao = 'Intervalo';
+      } else if (match.status === 'FINISHED') {
+        statusExibicao = 'Encerrado';
+      } else if (match.status === 'IN_PLAY') {
+        // Checa se o primeiro tempo já terminou olhando os dados do halfTime
+        const jaTeveIntervalo = match.score?.halfTime?.home !== null && match.score?.halfTime?.away !== null;
+        statusExibicao = jaTeveIntervalo ? '2º Tempo' : '1º Tempo';
+      }
+
       return {
           team_home: match.homeTeam.name,
           team_away: match.awayTeam.name,
           date_time: match.utcDate,
           status: status,
           // Garante que o placar seja atualizado em tempo real no banco
+          status_exibicao: statusExibicao,
           goals_home: match.score.fullTime.home,
           goals_away: match.score.fullTime.away,
           phase: match.stage ? match.stage.toLowerCase() : 'groups',
