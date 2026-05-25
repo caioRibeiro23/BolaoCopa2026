@@ -16,7 +16,7 @@ export default function championshipRow({ position, name, shortName, exactScores
     return (
         <div
             className={`w-full flex px-5 py-2.5 gap-3 items-center border-b border-cinzaSuave/10 transition-all ${isCurrentUser
-                    ? "bg-[#1E3A8A]/20 border border-[#3B82F6]/30 rounded-lg"
+                    ? "bg-azulClaro/20 border border-azulClaroSuave/30 rounded-lg"
                     : ""
                 }`}
         >
@@ -26,10 +26,10 @@ export default function championshipRow({ position, name, shortName, exactScores
             </span>
             <UserBox shortName={shortName} />
             <div className="w-full flex flex-col py-0.5">
-                <p className="text-sm text-[#E8EDF5] flex items-center gap-2">
+                <p className="font-roboto text-sm text-[#E8EDF5] flex items-center gap-2">
                     {name}
                     {isCurrentUser && (
-                        <span className="text-blue-400 text-[10px]">(Você)</span>
+                        <span className="text-verdeNeon text-[10px] font-semibold">(Você)</span>
                     )}
                 </p>
                 <p className="font-inter text-[11px] text-cinzaSuave">{exactScores} exacts scores</p>
