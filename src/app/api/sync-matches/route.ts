@@ -11,9 +11,15 @@ interface FootballMatch {
   score: { 
     fullTime: { home: number | null; away: number | null };
     halfTime?: { home: number | null; away: number | null } | null;
+    regularTime?: { home: number | null; away: number | null } | null;
   };
   stage?: string;
   group?: string;
+}
+
+interface FootballMatchApiResponse {
+  homeTeam?: { name?: string };
+  awayTeam?: { name?: string };
 }
 
 interface TransformedMatch {
@@ -71,24 +77,32 @@ export async function GET() {
     });
 
     const data = await response.json();
-    if (data.matches) {
-  const jogosAoVivo = data.matches.filter((m: FootballMatch) => m.status === 'IN_PLAY');
-  
-  console.log("=== PROPRIEDADES DE TEMPO DOS JOGOS AO VIVO ===");
-  jogosAoVivo.forEach((match: FootballMatch) => {
-    console.log(`\n⚽ ${match.homeTeam.name} x ${match.awayTeam.name}:`);
-    console.log(`- Status na API: ${match.status}`);
-    
-    // Inspeciona chaves comuns onde a API injeta o minuto do jogo
-    console.log(`- Propriedade 'minute' direta:`, match.minute);
-    console.log(`- Propriedade 'time' direta:`, match.time);
-    
-    // Alimenta uma visualização completa do objeto 'score' para ver se está lá dentro
-    console.log(`- Objeto 'score' completo:`, JSON.stringify(match.score, null, 2));
-  });
-  console.log("\n===============================================");
-}
+    if (data.matches && Array.isArray(data.matches)) {
+      const jogoEspecifico = data.matches.find((m: FootballMatchApiResponse) => {
+        const eVascoNaCasa = m.homeTeam?.name?.includes("Vasco");
+        const eBragantinoNoVisitante = m.awayTeam?.name?.includes("Bragantino");
+        
+        return eVascoNaCasa && eBragantinoNoVisitante;
+      });
 
+      console.log("============== ALVO: VASCO x BRAGANTINO ==============");
+      if (jogoEspecifico) {
+        console.log(`Confronto Real: ${jogoEspecifico.homeTeam?.name} x ${jogoEspecifico.awayTeam?.name}`);
+        console.log(`Data (UTC): ${jogoEspecifico.utcDate}`);
+        console.log(`Status na API: ${jogoEspecifico.status}`);
+        console.log(`Placar fullTime retornado:`, jogoEspecifico.score?.fullTime);
+        console.log(`Objeto score completo:`, JSON.stringify(jogoEspecifico.score, null, 2));
+      } else {
+        console.log("❌ O confronto específico 'Vasco x Bragantino' NÃO foi encontrado com esses nomes no JSON da API!");
+        
+        // Mostra os 3 primeiros jogos só para sabermos o formato dos nomes dos times vindo na API
+        console.log("\nExemplo de como os times estão escritos no payload:");
+        data.matches.slice(0, 3).forEach((m: FootballMatchApiResponse) => {
+          console.log(`- ${m.homeTeam?.name} x ${m.awayTeam?.name}`);
+        });
+      }
+      console.log("======================================================");
+    }
     if (!data.matches) {
       return NextResponse.json({ error: "Dados não encontrados na API" }, { status: 404 });
     }
@@ -118,6 +132,18 @@ export async function GET() {
         statusExibicao = jaTeveIntervalo ? '2º Tempo' : '1º Tempo';
       }
 
+      const golsCasaAPI = match.score.fullTime.home;
+      const golsCasaRegular = match.score.regularTime?.home;
+      const goals_home_final = golsCasaRegular !== undefined && golsCasaRegular !== null && golsCasaRegular > (golsCasaAPI ?? 0)
+        ? golsCasaRegular
+        : golsCasaAPI;
+
+      const golsFormatadoAway = match.score.fullTime.away;
+      const golsAwayRegular = match.score.regularTime?.away;
+      const goals_away_final = golsAwayRegular !== undefined && golsAwayRegular !== null && golsAwayRegular > (golsFormatadoAway ?? 0)
+        ? golsAwayRegular
+        : golsFormatadoAway;
+
       return {
           team_home: match.homeTeam.name,
           team_away: match.awayTeam.name,
@@ -125,8 +151,8 @@ export async function GET() {
           status: status,
           // Garante que o placar seja atualizado em tempo real no banco
           status_exibicao: statusExibicao,
-          goals_home: match.score.fullTime.home,
-          goals_away: match.score.fullTime.away,
+          goals_home: goals_home_final,
+          goals_away: goals_away_final,
           phase: match.stage ? match.stage.toLowerCase() : 'groups',
           group_letter: match.group ? match.group.replace('GROUP_', '') : null
         };
