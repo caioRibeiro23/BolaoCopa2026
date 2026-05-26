@@ -43,7 +43,8 @@ export default async function ProgressTable({ userId }: ProgressTableProps) {
         supabase
             .from("matches")
             .select("id", { count: "exact", head: true })
-            .eq("status", "finished"),
+            .eq("status", "finished")
+            .gt("date_time", new Date(2026, 4, 22).toISOString()), // Considera apenas partidas após o dia 22 de maio
         
 
         // Busca o ranking ordenado para descobrir a posição real dele
