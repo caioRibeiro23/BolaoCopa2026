@@ -3,7 +3,11 @@ import GeneralRow from "./generalRow";
 import { getLeaderboard } from "@/src/lib/supabase/leaderboard";
 import { createClient } from "@/src/lib/supabase/server";
 
-export default async function generalTable() {
+export default async function generalTable({
+  userId,
+}: {
+  userId: string;
+}) {
     const players = await getLeaderboard();
     const supabase = await createClient();
     const {
@@ -34,6 +38,7 @@ export default async function generalTable() {
                     shortName={player.username.slice(0, 2).toUpperCase()}
                     exactScores={player.exact_scores}
                     points={player.total_points}
+                    isCurrentUser={player.user_id === userId}
                 />
             ))}
             <div className="flex justify-center items-center px-5 py-4 bg-[#FFFFFF]/2">

@@ -32,6 +32,8 @@
   --color-azulMedio: #111827;
   --color-cinzaSuave: #8895AA;
   --color-vermelhoVibrante: #FF4C4C;
+  --color-azulClaro: #1E3A8A;
+  --color-azulClaroSuave: #3B82F6;
 
   /* Fontes atreladas às variáveis do Next.js */
   --font-sans: var(--font-geist-sans);

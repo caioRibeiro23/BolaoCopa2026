@@ -16,7 +16,7 @@ export default function generalRow({ position, name, shortName, exactScores, poi
     return (
         <div
             className={`w-full flex px-5 py-2.5 gap-3 items-center border-b border-cinzaSuave/10 transition-all ${isCurrentUser
-                    ? "bg-[#1E3A8A]/20 border border-[#3B82F6]/30 rounded-lg"
+                    ? "bg-azulClaro/20 border border-azulClaroSuave/30 rounded-lg"
                     : ""
                 }`}
         >

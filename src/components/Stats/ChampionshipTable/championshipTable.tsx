@@ -2,7 +2,11 @@ import Link from "next/link";
 import { getChampionshipLeaderboard } from "@/src/lib/supabase/leaderboard";
 import ChampionshipRow from "./championshipRow";
 
-export default async function ChampionshipTable() {
+export default async function ChampionshipTable({
+  userId,
+}: {
+  userId: string;
+}) {
     const players = await getChampionshipLeaderboard(
         "9f949a87-0b94-48ee-ae3d-aa65bd3478da"
     );
@@ -33,6 +37,7 @@ export default async function ChampionshipTable() {
                         .toUpperCase()}
                     exactScores={player.exact_scores}
                     points={player.total_points}
+                    isCurrentUser={player.user_id === userId}
                 />
             ))}
 
