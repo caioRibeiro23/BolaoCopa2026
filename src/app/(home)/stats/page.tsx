@@ -20,7 +20,7 @@ export default async function StatsPage() {
             <GeneralTable/>
             <ChampionshipTable/>
             <ProgressTable userId={user.id}/>
-            <HistoryTable/>
+            <HistoryTable userId={user.id}/>
         </div>
     )
 }
