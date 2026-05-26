@@ -43,7 +43,7 @@ export default async function ChampionshipTable({
 
             <div className="flex justify-center items-center px-5 py-4 bg-[#FFFFFF]/2">
                 <Link
-                    href="/stats/classification"
+                    href="/tournament"
                     className="text-cinzaSuave hover:underline text-sm font-inter"
                 >
                     Mostrar tabela completa
