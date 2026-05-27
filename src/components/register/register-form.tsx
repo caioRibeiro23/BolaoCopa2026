@@ -81,7 +81,7 @@ export default function RegisterForm() {
     <div className="flex items-center justify-center bg-[url('/background/fundoLogin.png')] bg-cover bg-center min-h-screen font-inter gap-5 py-10">
       <div className="w-11/12 md:w-7/12 bp-1024:w-6/12 lg:w-4/12 bg-azulEscuro/82 border border-[#FFFFFF]/10 rounded-2xl flex flex-col items-start px-9 py-10 gap-6 backdrop-blur-md">
         <div className="flex flex-col items-start gap-1 w-full">
-          <h1 className="font-bebas-neue text-lg bp-1024:text-2xl">Criar sua conta</h1>
+          <h1 className="font-bebas-neue text-lg bp-1024:text-2xl text-white">Criar sua conta</h1>
           <p className="text-white/45 text-xs bp-1024:text-sm">Junte-se ao bolão da Copa 2026!</p>
         </div>
 
@@ -93,7 +93,7 @@ export default function RegisterForm() {
           )}
 
           <div className="w-full flex flex-col gap-1 items-start">
-            <h3 className="text-sm bp-1024:text-base">Nome Completo</h3>
+            <h3 className="text-sm bp-1024:text-base text-white">Nome Completo</h3>
             <div className="relative w-full">
               <User className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#757575]" />
               <input
@@ -107,7 +107,7 @@ export default function RegisterForm() {
           </div>
 
           <div className="w-full flex flex-col gap-1 items-start">
-            <h3 className="text-sm bp-1024:text-base">E-mail</h3>
+            <h3 className="text-sm bp-1024:text-base text-white">E-mail</h3>
             <div className="relative w-full">
               <MailIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#757575]" />
               <input
@@ -121,7 +121,7 @@ export default function RegisterForm() {
           </div>
 
           <div className="w-full flex flex-col gap-2 items-start">
-            <h3 className="text-sm bp-1024:text-base">Senha</h3>
+            <h3 className="text-sm bp-1024:text-base text-white">Senha</h3>
             <div className="relative w-full">
               <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#757575]" />
               <input
@@ -142,7 +142,7 @@ export default function RegisterForm() {
           </div>
 
           <div className="w-full flex flex-col gap-1 items-start">
-            <h3 className="text-sm bp-1024:text-base">Confirmar Senha</h3>
+            <h3 className="text-sm bp-1024:text-base text-white">Confirmar Senha</h3>
             <div className="relative w-full">
               <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#757575]" />
               <input

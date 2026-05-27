@@ -24,8 +24,19 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
   return (
     <div className="flex items-center justify-center bg-[url('/background/fundoLogin.png')] bg-cover bg-center h-screen font-inter gap-5 ">
       <div className="w-11/12 md:w-7/12 bp-1024:w-6/12 lg:w-4/12 bg-azulEscuro/82 border border-[#FFFFFF]/10 rounded-2xl flex flex-col items-start px-9 py-10 gap-6">
+        <div className="flex w-full justify-center items-center gap-2">
+              <Image
+                src="/navbar2.png"
+                alt="Logo do site"
+                width={200}
+                height={100}
+                className=" object-contain"
+                priority
+              />
+          </div>
+
         <div className="flex flex-col items-start gap-1 w-full">
-          <h1 className="font-bebas-neue text-lg bp-1024:text-2xl">Entrar na sua conta</h1>
+          <h1 className="font-bebas-neue text-lg bp-1024:text-2xl text-white">Entrar na sua conta</h1>
           <p className="text-white/45 text-xs bp-1024:text-sm">Bem vindo! Faça login para continuar</p>
         </div>
 
@@ -43,7 +54,7 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
 
         <form action={formAction} className="w-full flex flex-col items-start gap-3.5">
           <div className="w-full flex flex-col gap-1 items-start">
-            <h3 className="text-sm bp-1024:text-base">E-mail</h3>
+            <h3 className="text-sm bp-1024:text-base text-white">E-mail</h3>
             <div className="relative w-full">
               <MailIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#757575]" />
               <input
@@ -58,7 +69,7 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
 
           <div className="w-full flex flex-col gap-1 items-start">
             <div className="w-full flex justify-between items-center">
-              <h3 className="text-sm bp-1024:text-base">Senha</h3>
+              <h3 className="text-sm bp-1024:text-base text-white">Senha</h3>
               <Link href="/forgot-password" className="text-xs bp-1024:text-xs text-verdeNeon font-medium cursor-pointer hover:underline">
                 Esqueci minha senha
               </Link>
@@ -107,7 +118,7 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
               width={20}
               height={20}
             />
-            <span className="font-medium">
+            <span className="font-medium text-white">
               Entrar com Google
             </span>
           </button>
