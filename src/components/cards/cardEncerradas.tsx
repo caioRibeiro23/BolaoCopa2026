@@ -27,7 +27,7 @@ export default function CardEncerradas({ paisCasa, paisVisitante, grupo, placarC
         <div className="w-full flex flex-col bg-azulMedio rounded-2xl">
 
             {/* Cabeçalho do Card */}
-            <div className="w-full flex justify-between px-5 py-3 bg-[#FF4455]/5 shadow-inner rounded-t-2xl text-xs font-inter">
+            <div className="w-full flex justify-between px-5 py-3 bg-[#111a2e] shadow-inner rounded-t-2xl text-xs font-inter">
                 <div className="text-white w-full flex justify-start items-center gap-2">
                     <div className="w-2 h-2 aspect-square rounded-4xl bg-cinzaSuave"></div>
                     <span className="text-cinzaSuave tracking-[1px] font-bold font-inter">ENCERRADA</span> 

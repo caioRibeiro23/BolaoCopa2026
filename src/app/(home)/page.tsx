@@ -118,7 +118,7 @@ export default function Home() {
         <TitlePage title="Partidas de Hoje e Amanhã"/>
 
         {/*Partidas Abertas */}
-        <div className="w-full flex flex-col gap-3 ">
+        <div className="w-full flex flex-col gap-6 ">
           {/* Cabeçalho das Partidas Abertas */}
           <div className="w-full px-0.5 gap-2 flex flex-row items-center">
             <div className="w-2 h-2 aspect-square rounded-4xl bg-verdeNeon shadow-[0_0_8px_#39FF14]"></div>
@@ -144,7 +144,7 @@ export default function Home() {
         </div>
 
         {/* Partidas Ao Vivo */}
-        <div className="w-full flex flex-col gap-3 ">
+        <div className="w-full flex flex-col gap-6 ">
           {/* Cabeçalho das Partidas Ao Vivo */}
           <div className="w-full px-0.5 gap-2 flex flex-row items-center">
             <div className="w-2 h-2 aspect-square rounded-4xl bg-[#FF4455] shadow-[0_0_8px_#FF4455]"></div>
@@ -176,7 +176,7 @@ export default function Home() {
           )}
         </div>
 
-        <div className="w-full flex flex-col gap-3 ">
+        <div className="w-full flex flex-col gap-6 ">
           {/* Cabeçalho das Partidas Encerradas */}
           <div className="w-full px-0.5 gap-2 flex flex-row items-center">
             <div className="w-2 h-2 aspect-square rounded-4xl bg-cinzaSuave"></div>
