@@ -16,9 +16,9 @@ export default async function StatsPage() {
     }
     return(
         <div className="w-full px-8 py-16 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro">
-            <TitlePage title="Classificação e Progresso"/>
-            <GeneralTable userId={user.id}/>
-            <ChampionshipTable userId={user.id}/>
+            <TitlePage title="Minhas Estatísticas"/>
+            {/* <GeneralTable userId={user.id}/>
+            <ChampionshipTable userId={user.id}/> */}
             <ProgressTable userId={user.id}/>
             <HistoryTable userId={user.id}/>
         </div>

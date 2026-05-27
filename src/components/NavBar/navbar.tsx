@@ -8,8 +8,9 @@ import { useState } from "react";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/leaderboard", label: "Classificação" },
-  { href: "/stats", label: "Histórico" }
+  { href: "/leaderboard", label: "Torneios" },
+  { href: "/regras", label: "Regras" },
+  { href: "/extras", label: "Extra" }
 ];
 
 type NavBarProps = {
@@ -89,9 +90,11 @@ export default function NavBar({ userData }: NavBarProps) {
 
               {isSelectOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-[#1F2937] border border-gray-700 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
-                  <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors">
-                    Meu Perfil
-                  </button>
+                  <Link href="/stats">
+                    <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors">
+                      Meu Perfil
+                    </button>
+                  </Link>
                   <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors border-t border-gray-700">
                     Configurações
                   </button>
