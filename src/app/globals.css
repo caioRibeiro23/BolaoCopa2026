@@ -13,7 +13,7 @@
 }
 
 /* No Tailwind v4, colocar variáveis dentro de @theme estende o tema por padrão, 
-   mas certifique-se de não resetar o dicionário de cores nativo. */
+   mas certifique-se de não resetar o dicionário de cores nativo */
 @theme {
   --breakpoint-sm: 350px;
   --breakpoint-bp-540: 540px;
