@@ -15,10 +15,10 @@ interface CardAoVivoProps {
 
 export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante }: CardAoVivoProps) {
     return (
-        <div className="w-full flex flex-col bg-azulMedio rounded-2xl">
+        <div className="w-full flex flex-col bg-azulMedio rounded-2xl border border-gray-800 shadow-2xl">
 
             {/* Cabeçalho do Card */}
-            <div className="w-full flex justify-between px-5 py-3 bg-verdeNeon/5 shadow-inner rounded-t-2xl text-xs font-inter">
+            <div className="w-full flex justify-between px-5 py-3 bg-verdeNeon/5 shadow-inner rounded-t-2xl text-xs font-inter border-b border-gray-800">
                 <div className="text-white w-full flex justify-start items-center gap-2">
                     <div className="w-2 h-2 aspect-square rounded-4xl bg-vermelhoVibrante shadow-[0_0_8px_#FF4C4C]"></div>
                     <span className="text-vermelhoVibrante tracking-[1px]">Live</span> 

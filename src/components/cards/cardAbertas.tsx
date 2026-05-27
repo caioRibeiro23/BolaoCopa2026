@@ -127,10 +127,10 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
         }
     }
     return (
-        <form onSubmit={handleSendPrediction} className="w-full flex flex-col bg-azulMedio rounded-2xl">
+        <form onSubmit={handleSendPrediction} className="w-full flex flex-col bg-azulMedio rounded-2xl border border-gray-800 shadow-2xl">
 
             {/* Cabeçalho do Card */}
-            <div className="w-full flex justify-between px-5 py-3 bg-azulCinzado shadow-inner rounded-t-2xl text-xs font-inter">
+            <div className="w-full flex justify-between px-5 py-3 bg-azulCinzado shadow-inner rounded-t-2xl text-xs font-inter border-b border-gray-800">
                 <div className="text-white w-full flex justify-start items-center gap-2">
                     <div className="w-2 h-2 aspect-square rounded-4xl bg-verdeNeon shadow-[0_0_8px_#39FF14]"></div>
                     <span className="text-verdeNeon tracking-[1px]">OPEN</span> 
