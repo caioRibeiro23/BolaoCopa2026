@@ -36,8 +36,12 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
         redirect("/login");
     }
 
-    const playersPromise = getChampionshipLeaderboard(CHAMPIONSHIP_ID);
-    const players = await playersPromise;
+    const players = await getChampionshipLeaderboard(CHAMPIONSHIP_ID);
+    const currentUser = players.find((player) => player.user_id === user.id);
+
+    if (!currentUser) {
+        redirect("/");
+    }
 
     const allMatches = await getTournamentMatches();
     const phaseMatches = currentPhase === "all"
@@ -46,7 +50,6 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
     const defaultInitialPage = getDefaultPageForMatches(phaseMatches, MATCHES_PER_PAGE);
     const initialPage = resolvedSearchParams.page ? pageFromQuery : defaultInitialPage;
     const leader = players[0];
-    const currentUser = players.find((player) => player.user_id === user.id);
 
     return (
         <div className="w-full px-8 py-12 md:px-14 md:py-14 flex flex-col gap-10 bg-azulEscuro min-h-screen">
