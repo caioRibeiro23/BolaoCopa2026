@@ -132,7 +132,7 @@ export default async function MatchPage({ params }: MatchPageProps) {
             {canSeePredictions ? (
                 <>
                     <div className="flex w-full items-center justify-between">
-                        <h2 className="border-l-4 border-verdeNeon pl-4 font-bebas-neue text-2xl md:text-3xl">Palpites dos Participantes</h2>
+                        <h2 className="border-l-4 border-verdeNeon pl-4 font-bebas-neue text-2xl md:text-3xl text-white">Palpites dos Participantes</h2>
                         <p className="text-cinzaSuave font-inter text-xs font-bold uppercase">{resultText}</p>
                     </div>
                     <PredictionsTable predictions={participantPredictions} />
