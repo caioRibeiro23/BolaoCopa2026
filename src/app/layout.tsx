@@ -19,9 +19,9 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "Bolaço - Bolão da Copa 2026",
+  title: "Bolão Bolazzo",
   description:
-    "Participe do Bolão da Copa 2026 e teste seus palpites para os jogos!",
+    "Participe do Bolão Bolazzo da Copa do Mundo 2026 e teste seus palpites para os jogos!",
 };
 
 export default function RootLayout({

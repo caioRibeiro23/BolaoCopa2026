@@ -1,3 +1,5 @@
+"use client";
+
 import Flag from "./iconePais/flag";
 import CaixaPlacar from "./caixaPlacar/caixaPlacar";
 import { getCountryAbbr } from "./iconePais/countryAbbr";

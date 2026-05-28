@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import GameRules from "../../components/GameRules/gameRules";
@@ -202,7 +199,7 @@ export default function Home() {
           })}
 
           {partidasEncerradas.length === 0 && (
-            <p className="text-cinzaSuave text-base px-[2px]">Nenhum jogo encerrado recentemente.</p>
+            <p className="text-cinzaSuave text-base px-0.5">Nenhum jogo encerrado recentemente.</p>
           )}     
         </div>
 
