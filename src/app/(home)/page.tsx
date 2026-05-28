@@ -46,7 +46,7 @@ export default function Home() {
 
       // Configuração da data fictícia de testes (11 de Junho de 2026)
       const agora = new Date();
-      agora.setDate(23); //era 11
+      agora.setDate(30); //era 11
       agora.setMonth(4);  //era 5
       agora.setFullYear(2026);
 
