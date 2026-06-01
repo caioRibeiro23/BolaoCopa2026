@@ -110,8 +110,8 @@ export default function MatchesSection({ matches, initialPage, currentPhase }: M
     return(
         <section className="flex flex-col w-full gap-6">
             <div className="flex w-full items-center justify-between">
-                <h2 className="border-l-4 border-verdeNeon pl-4 font-bebas-neue text-5xl text-white">Partidas</h2>
-                <p className="text-cinzaSuave font-inter text-xs font-bold uppercase">Clique numa partida para ver os palpites</p>
+                <h2 className="border-l-4 border-verdeNeon pl-4 font-bebas-neue text-2xl md:text-3xl text-white">Partidas</h2>
+                <p className="text-cinzaSuave font-inter text-xs font-bold w-24 md:w-fit md:uppercase">Clique numa partida para ver os palpites</p>
             </div>
             <div className="flex flex-col gap-6">
                 <div className="flex w-full flex-wrap items-center gap-3">
