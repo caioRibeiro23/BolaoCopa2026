@@ -8,7 +8,7 @@ import { createClient } from "@/src/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function ClassificationPage() {
+export default async function MYTournamentsPage() {
   const supabase = await createClient();
 
   const {

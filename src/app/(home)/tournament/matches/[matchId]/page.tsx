@@ -2,6 +2,7 @@ import CardAbertas from "@/src/components/cards/cardAbertas";
 import CardAoVivo from "@/src/components/cards/cardAoVivo";
 import CardEncerradas from "@/src/components/cards/cardEncerradas";
 import TitlePage from "@/src/components/ui/titlepage";
+import BackButton from "@/src/components/ui/backButton";
 import PredictionsTable, { type ParticipantPrediction } from "@/src/components/Tournament/cards/predictionsTable";
 import { formatarDataBR } from "@/src/utils/formatar-data";
 import { formatarHoraBR } from "@/src/utils/formatar-hora";
@@ -101,6 +102,9 @@ export default async function MatchPage({ params }: MatchPageProps) {
 
     return(
         <div className="w-full px-8 py-12 md:px-14 md:py-14 flex flex-col gap-10 bg-azulEscuro min-h-screen">
+            <div className="flex items-start justify-start">
+                <BackButton />
+            </div>
             <TitlePage title="Detalhes do Jogo" />
             {match.status === "finished" ? (
                 <CardEncerradas

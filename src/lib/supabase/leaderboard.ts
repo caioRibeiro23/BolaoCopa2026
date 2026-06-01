@@ -82,6 +82,25 @@ export async function getChampionshipLeaderboard(championshipId: string) {
   }));
 }
 
+export async function getChampionshipName(championshipId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("championships")
+    .select("id, name")
+    .eq("id", championshipId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Erro ao buscar nome do campeonato:", error.message);
+    return null;
+  }
+
+  const championship = data as ChampionshipRow | null;
+
+  return championship?.name ?? null;
+}
+
 export async function getUserChampionships(
   userId: string
 ): Promise<UserChampionship[]> {
@@ -106,26 +125,24 @@ export async function getUserChampionships(
     return [];
   }
 
-  const memberships = (membershipData || []).map((membership, index) => ({
+  const memberships = (membershipData || []).map((membership) => ({
     championship_id: membership.championship_id,
     total_points: membership.total_points,
-    position: index + 1,
   }));
 
   if (memberships.length === 0) {
     return [];
   }
 
-  const championshipIds = Array.from(
-    new Set(memberships.map((membership) => membership.championship_id))
-  );
-
   const championshipNames = new Map<string, string>();
 
   const { data: championshipData, error: championshipError } = await supabase
     .from("championships")
     .select("id, name")
-    .in("id", championshipIds);
+    .in(
+      "id",
+      Array.from(new Set(memberships.map((membership) => membership.championship_id)))
+    );
 
   if (championshipError) {
     console.error(
@@ -138,15 +155,36 @@ export async function getUserChampionships(
     }
   }
 
-  return memberships.map((membership, index) => ({
-    championship_id: membership.championship_id,
+  const championshipsWithPosition = await Promise.all(
+    memberships.map(async (membership, index) => {
+      const { data: championshipLeaderboardData, error: championshipLeaderboardError } =
+        await supabase
+          .from("championship_leaderboard")
+          .select("user_id")
+          .eq("championship_id", membership.championship_id)
+          .order("total_points", { ascending: false });
 
-    championship_name:
-      championshipNames.get(membership.championship_id) ||
-      `Torneio ${index + 1}`,
+      let position = index + 1;
 
-    position: membership.position,
+      if (!championshipLeaderboardError) {
+        const championshipRanking = championshipLeaderboardData || [];
+        const userIndex = championshipRanking.findIndex((row) => row.user_id === userId);
 
-    total_points: membership.total_points,
-  }));
+        if (userIndex >= 0) {
+          position = userIndex + 1;
+        }
+      }
+
+      return {
+        championship_id: membership.championship_id,
+        championship_name:
+          championshipNames.get(membership.championship_id) ||
+          `Torneio ${index + 1}`,
+        position,
+        total_points: membership.total_points,
+      };
+    })
+  );
+
+  return championshipsWithPosition;
 }
