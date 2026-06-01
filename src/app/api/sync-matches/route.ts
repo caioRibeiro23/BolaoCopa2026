@@ -64,7 +64,7 @@ export async function GET() {
   // Se chegou aqui, é porque tem jogo AO VIVO ou que começa nas próximas 2 horas, então vamos buscar os dados atualizados na API de Futebol
   const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
   // Usando 'WC' para Copa do Mundo ou 'PL' para testes
-  const API_URL = 'https://api.football-data.org/v4/competitions/BSA/matches'; //mudar para 'WC' na url da API quando for época de Copa do Mundo, ou usar 'BSA' para testes com o Brasileirão
+  const API_URL = 'https://api.football-data.org/v4/competitions/WC/matches'; //mudar para 'WC' na url da API quando for época de Copa do Mundo, ou usar 'BSA' para testes com o Brasileirão
  
   if (!API_KEY) {
     return NextResponse.json({ error: "API Key não configurada" }, { status: 500 });
@@ -77,32 +77,7 @@ export async function GET() {
     });
 
     const data = await response.json();
-    if (data.matches && Array.isArray(data.matches)) {
-      const jogoEspecifico = data.matches.find((m: FootballMatchApiResponse) => {
-        const eVascoNaCasa = m.homeTeam?.name?.includes("Vasco");
-        const eBragantinoNoVisitante = m.awayTeam?.name?.includes("Bragantino");
-        
-        return eVascoNaCasa && eBragantinoNoVisitante;
-      });
-
-      console.log("============== ALVO: VASCO x BRAGANTINO ==============");
-      if (jogoEspecifico) {
-        console.log(`Confronto Real: ${jogoEspecifico.homeTeam?.name} x ${jogoEspecifico.awayTeam?.name}`);
-        console.log(`Data (UTC): ${jogoEspecifico.utcDate}`);
-        console.log(`Status na API: ${jogoEspecifico.status}`);
-        console.log(`Placar fullTime retornado:`, jogoEspecifico.score?.fullTime);
-        console.log(`Objeto score completo:`, JSON.stringify(jogoEspecifico.score, null, 2));
-      } else {
-        console.log("❌ O confronto específico 'Vasco x Bragantino' NÃO foi encontrado com esses nomes no JSON da API!");
-        
-        // Mostra os 3 primeiros jogos só para sabermos o formato dos nomes dos times vindo na API
-        console.log("\nExemplo de como os times estão escritos no payload:");
-        data.matches.slice(0, 3).forEach((m: FootballMatchApiResponse) => {
-          console.log(`- ${m.homeTeam?.name} x ${m.awayTeam?.name}`);
-        });
-      }
-      console.log("======================================================");
-    }
+    
     if (!data.matches) {
       return NextResponse.json({ error: "Dados não encontrados na API" }, { status: 404 });
     }

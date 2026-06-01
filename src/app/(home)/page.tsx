@@ -14,6 +14,7 @@ import TitlePage from "../../components/ui/titlepage";
 import { formatarHoraBR } from "../../utils/formatar-hora";
 import { t } from "../../utils/traducaoPaises";
 import { formatarDataBR } from "../../utils/formatar-data";
+import { formatarExtensoBR } from "../../utils/formatar-data-extenso";
 
 interface Match {
   id: string;
@@ -40,25 +41,25 @@ export default function Home() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [userBets, setUserBets] = useState<Record<string, UserBet>>({}); // Mapa de match_id para UserBet
 
+  const [dataSelecionada, setDataSelecionada] = useState<Date>(() => {
+    const hoje = new Date();
+    const dataInicialCopa = new Date(2026, 5, 11); // 11 de Julho de 2026
+    return hoje < dataInicialCopa ? dataInicialCopa : hoje;
+  });
+
   useEffect(() => {
     async function getHomeData() {
       const supabase = createClient();
 
-      // Configuração da data fictícia de testes (11 de Junho de 2026)
-      const agora = new Date();
-      agora.setDate(30); //era 11
-      agora.setMonth(4);  //era 5
-      agora.setFullYear(2026);
-
-      const hojeInicio = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 0, 0, 0, 0);
-      const amanhaFim = new Date(hojeInicio);
-      amanhaFim.setDate(hojeInicio.getDate() + 1);
-      amanhaFim.setHours(23, 59, 59, 999);
+      // Calcula o início (00:00) e o fim (23:59) estritamente do dia selecionado
+      const hojeInicio = new Date(dataSelecionada.getFullYear(), dataSelecionada.getMonth(), dataSelecionada.getDate(), 0, 0, 0, 0);
+      const hojeFim = new Date(hojeInicio);
+      hojeFim.setHours(23, 59, 59, 999);
 
       const dataInicioISO = hojeInicio.toISOString();
-      const dataFimISO = amanhaFim.toISOString();
+      const dataFimISO = hojeFim.toISOString();
 
-      // Busca as partidas do período
+      // Busca as partidas estritamente do dia filtrado
       const { data: matchesData, error: matchesError } = await supabase
         .from('matches')
         .select('*')
@@ -69,13 +70,11 @@ export default function Home() {
       if (!matchesError && matchesData) {
         setMatches(matchesData);
 
-        // Tenta pegar o usuário logado para buscar os palpites dele
         const { data: { user } } = await supabase.auth.getUser();
         
         if (user && matchesData.length > 0) {
           const matchIds = matchesData.map((m: Match) => m.id);
 
-          // Busca os palpites do usuário apenas para os jogos que estão na tela
           const { data: betsData } = await supabase
             .from('bets')
             .select('match_id, prediction_home, prediction_away')
@@ -83,7 +82,6 @@ export default function Home() {
             .in('match_id', matchIds);
 
           if (betsData) {
-            // Transforma o array de palpites em um mapa indexado por match_id para busca rápida O(1)
             const betsMap = betsData.reduce((acc: Record<string, UserBet>, bet: UserBet) => {
               acc[bet.match_id] = bet;
               return acc;
@@ -91,12 +89,21 @@ export default function Home() {
 
             setUserBets(betsMap);
           }
+        } else if (matchesData.length === 0) {
+          // Limpa os palpites em exibição se mudar para um dia vazio
+          setUserBets({});
         }
       }
     }
 
     getHomeData();
-  }, []);
+  }, [dataSelecionada]);
+
+  const alterarDia = (dias: number) => {
+    const novaData = new Date(dataSelecionada);
+    novaData.setDate(novaData.getDate() + dias);
+    setDataSelecionada(novaData);
+  };
 
   const partidasAbertas = matches.filter(m => m.status === 'scheduled' && new Date().getTime() < new Date(m.date_time).getTime());
   
@@ -112,10 +119,31 @@ export default function Home() {
       <HeroSection />
 
       {/* div de palpites da página inicial */}
-      <div className="w-full px-8 py-14 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro min-h-screen">
+      <div className="w-full px-8 py-14 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro min-h-screen justify-start items-center">
 
-        {/* Partidas de Hoje e Amanhã */}
-        <TitlePage title="Partidas de Hoje e Amanhã"/>
+
+        {/* Seletor de Data Estilizado em Linha */}
+        <div className="w-full flex items-center justify-between bg-azulCard/40 border border-verdeNeon/10 rounded-2xl p-4 md:p-5 select-none shadow-md">
+          <button 
+            onClick={() => alterarDia(-1)}
+            className="text-verdeNeon hover:text-verdeNeon text-xl md:text-2xl font-bold p-2 transition-colors cursor-pointer"
+            aria-label="Dia anterior"
+          >
+            &lt;
+          </button>
+          
+          <h2 className="text-white text-base md:text-xl font-inter font-semibold tracking-wide text-center">
+            {formatarExtensoBR(dataSelecionada)}
+          </h2>
+
+          <button 
+            onClick={() => alterarDia(1)}
+            className="text-verdeNeon hover:text-verdeNeon text-xl md:text-2xl font-bold p-2 transition-colors cursor-pointer"
+            aria-label="Próximo dia"
+          >
+            &gt;
+          </button>
+        </div>
 
         {/*Partidas Abertas */}
         <div className="w-full flex flex-col gap-6 ">
