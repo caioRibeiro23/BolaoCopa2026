@@ -16,6 +16,7 @@ import {
     resolvePageValue,
     resolvePhaseValue,
 } from "@/src/lib/supabase/tournament";
+import FullGeneralTable from "@/src/components/Stats/FullGeneralTable/fullGeneralTable";
 
 // const CHAMPIONSHIP_ID = "9f949a87-0b94-48ee-ae3d-aa65bd3478da";
 
@@ -88,8 +89,8 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
                 </div>
             </section>
 
-            <FullChampionshipTable userId={user.id} />
-
+            {isGeneralChampionship ? <FullGeneralTable userId={user.id} /> : <FullChampionshipTable userId={user.id} />}
+            
             <MatchesSection
                 matches={allMatches}
                 initialPage={initialPage}

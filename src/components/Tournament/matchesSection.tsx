@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import FilterCard from "./cards/filterCard"
 import MatchCard from "./cards/matchCard"
 import PaginationCard from "./cards/paginationCard"
+import { t } from "@/src/utils/traducaoPaises";
 
 interface MatchRow {
     id: string;
@@ -137,8 +138,8 @@ export default function MatchesSection({ matches, initialPage, currentPhase }: M
                         <MatchCard
                             key={match.id}
                             matchId={match.id}
-                            paisCasa={match.team_home}
-                            paisVisitante={match.team_away}
+                            paisCasa={t(match.team_home)}
+                            paisVisitante={t(match.team_away)}
                             placarCasa={match.goals_home}
                             placarVisitante={match.goals_away}
                             grupo={match.group_letter ? `Grupo ${match.group_letter}` : getPhaseLabel(match.phase)}

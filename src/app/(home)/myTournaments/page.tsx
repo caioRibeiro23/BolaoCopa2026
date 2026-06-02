@@ -67,7 +67,7 @@ export default async function MYTournamentsPage() {
 
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href="/leaderboard/general"
+                  href='/tournament?championshipId=general'
                   className="inline-flex items-center justify-center rounded-xl border border-verdeNeon/35 bg-verdeNeon/10 px-5 py-3 text-sm font-semibold text-verdeNeon transition-colors duration-200 hover:bg-verdeNeon/15"
                 >
                   Ver ranking geral
