@@ -31,7 +31,7 @@ export default function Footer() {
                         <Link href="/myTournaments" className="transition-colors hover:text-white">
                             Meus torneios
                         </Link>
-                        <Link href="/regras" className="transition-colors hover:text-white">
+                        <Link href="/rules" className="transition-colors hover:text-white">
                             Regras do bolão
                         </Link>
                         <Link href="/extras" className="transition-colors hover:text-white">
