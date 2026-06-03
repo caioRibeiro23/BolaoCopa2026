@@ -1,29 +1,28 @@
-
-
-
 "use client";
 
 import GameRules from "../../components/GameRules/gameRules";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/src/lib/supabase/client";
 import HeroSection from "../../components/HeroSection/herosection";
 import CardAbertas from "../../components/cards/cardAbertas";
 import CardAoVivo from "../../components/cards/cardAoVivo";
 import CardEncerradas from "../../components/cards/cardEncerradas";
-import TitlePage from "../../components/ui/titlepage";
 import { formatarHoraBR } from "../../utils/formatar-hora";
 import { t } from "../../utils/traducaoPaises";
 import { formatarDataBR } from "../../utils/formatar-data";
 import { formatarExtensoBR } from "../../utils/formatar-data-extenso";
+
+type MatchPhase = 'group_stage' | 'round_of_16' | 'quarter_final' | 'semi_final' | 'third_place' | 'final';
+type MatchStatus = 'scheduled' | 'live' | 'finished';
 
 interface Match {
   id: string;
   team_home: string;
   team_away: string;
   date_time: string;
-  
+  phase: MatchPhase;
   group_letter: string;
-  status: 'scheduled' | 'live' | 'finished';
+  status: MatchStatus;
   status_exibicao?: string;
   goals_home?: number;
   goals_away?: number;
@@ -36,45 +35,77 @@ interface UserBet {
   prediction_away: number;
 }
 
+// 📅 CALENDÁRIO OFICIAL CRONOLÓGICO DA COPA 2026
+const CRONOGRAMA_COPA = [
+  { nome: "Fase de Grupos - Rodada 1", fim: new Date(2026, 5, 17) },
+  { nome: "Fase de Grupos - Rodada 2", fim: new Date(2026, 5, 23) },
+  { nome: "Fase de Grupos - Rodada 3", fim: new Date(2026, 5, 27) },
+  { nome: "Dezesseis-avos de Final", fim: new Date(2026, 6, 3) },
+  { nome: "Oitavas de Final", fim: new Date(2026, 6, 7) },
+  { nome: "Quartas de Final", fim: new Date(2026, 6, 11) },
+  { nome: "Semifinais", fim: new Date(2026, 6, 15) },
+  { nome: "Decisão do 3º Lugar e Final", fim: new Date(2026, 6, 19) }
+];
+
+const OBTER_DATA_SISTEMA = () => {
+  const dataSimulada = new Date();
+  // dataSimulada.setFullYear(2026);
+  // dataSimulada.setMonth(5); // Junho
+  // dataSimulada.setDate(27); 
+  return dataSimulada;
+};
+
 export default function Home() {
-  
   const [matches, setMatches] = useState<Match[]>([]);
-  const [userBets, setUserBets] = useState<Record<string, UserBet>>({}); // Mapa de match_id para UserBet
+  const [userBets, setUserBets] = useState<Record<string, UserBet>>({});
+
+  const dataInicialCopa = new Date(2026, 5, 11, 0, 0, 0, 0); // 11 de Junho de 2026 cravado
 
   const [dataSelecionada, setDataSelecionada] = useState<Date>(() => {
-    const hoje = new Date();
-    const dataInicialCopa = new Date(2026, 5, 11); // 11 de Julho de 2026
-    return hoje < dataInicialCopa ? dataInicialCopa : hoje;
+    const hoje = OBTER_DATA_SISTEMA();
+    return hoje < dataInicialCopa ? dataInicialCopa : new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate(), 0, 0, 0, 0);
   });
 
+  // 🕒 1. Valores computados em tempo de renderização (Sempre atualizados)
+  const dataSelecionadaZerada = new Date(dataSelecionada.getFullYear(), dataSelecionada.getMonth(), dataSelecionada.getDate(), 0, 0, 0, 0);
+  const hojeSistema = OBTER_DATA_SISTEMA();
+  hojeSistema.setHours(0, 0, 0, 0);
+
+  // Encontra a qual bloco cronológico o DIA EXIBIDO na tela pertence
+  const blocoDaTela = CRONOGRAMA_COPA.find((fase) => dataSelecionadaZerada <= fase.fim) || CRONOGRAMA_COPA[CRONOGRAMA_COPA.length - 1];
+  // Encontra a qual bloco cronológico a DATA ATUAL REAL DO SISTEMA pertence
+  const blocoDoSistema = CRONOGRAMA_COPA.find((fase) => hojeSistema <= fase.fim) || CRONOGRAMA_COPA[CRONOGRAMA_COPA.length - 1];
+
+  const nomeRodadaExibicao = blocoDaTela.nome;
+  const ultimoDiaDaRodadaAtiva = blocoDaTela.fim;
+  const permitirAvancarRodada = hojeSistema.getTime() >= blocoDaTela.fim.getTime();
+
+  // 🛡️ LÓGICA DE TRAVAS DIÁRIAS CRUCIAIS (Comparação de Timestamps limpos)
+  const desabilitarAnterior = dataSelecionadaZerada.getTime() <= dataInicialCopa.getTime();
+  const desabilitarProximo = dataSelecionadaZerada.getTime() >= ultimoDiaDaRodadaAtiva.getTime() && !permitirAvancarRodada;
+
+  // 2️⃣ useEffect: Busca os jogos e palpites do dia selecionado
   useEffect(() => {
     async function getHomeData() {
       const supabase = createClient();
 
-      // Calcula o início (00:00) e o fim (23:59) estritamente do dia selecionado
       const hojeInicio = new Date(dataSelecionada.getFullYear(), dataSelecionada.getMonth(), dataSelecionada.getDate(), 0, 0, 0, 0);
       const hojeFim = new Date(hojeInicio);
       hojeFim.setHours(23, 59, 59, 999);
 
-      const dataInicioISO = hojeInicio.toISOString();
-      const dataFimISO = hojeFim.toISOString();
-
-      // Busca as partidas estritamente do dia filtrado
       const { data: matchesData, error: matchesError } = await supabase
         .from('matches')
         .select('*')
-        .gte('date_time', dataInicioISO)
-        .lte('date_time', dataFimISO)
+        .gte('date_time', hojeInicio.toISOString())
+        .lte('date_time', hojeFim.toISOString())
         .order('date_time', { ascending: true });
 
       if (!matchesError && matchesData) {
         setMatches(matchesData);
 
         const { data: { user } } = await supabase.auth.getUser();
-        
         if (user && matchesData.length > 0) {
           const matchIds = matchesData.map((m: Match) => m.id);
-
           const { data: betsData } = await supabase
             .from('bets')
             .select('match_id, prediction_home, prediction_away')
@@ -86,11 +117,9 @@ export default function Home() {
               acc[bet.match_id] = bet;
               return acc;
             }, {} as Record<string, UserBet>);
-
             setUserBets(betsMap);
           }
         } else if (matchesData.length === 0) {
-          // Limpa os palpites em exibição se mudar para um dia vazio
           setUserBets({});
         }
       }
@@ -102,32 +131,37 @@ export default function Home() {
   const alterarDia = (dias: number) => {
     const novaData = new Date(dataSelecionada);
     novaData.setDate(novaData.getDate() + dias);
+    // Zera as horas para manter consistência total nas travas
+    novaData.setHours(0, 0, 0, 0);
     setDataSelecionada(novaData);
   };
 
-  const partidasAbertas = matches.filter(m => m.status === 'scheduled' && new Date().getTime() < new Date(m.date_time).getTime());
-  
-  const partidasAoVivo = matches.filter(m => 
-    m.status === 'live' || 
-    (m.status === 'scheduled' && new Date().getTime() >= new Date(m.date_time).getTime())
-  );
-  
+  // Filtros dos cards usando a data controlada do sistema
+  const tempoAtualMilissegundos = OBTER_DATA_SISTEMA().getTime();
+  const partidasAbertas = matches.filter(m => m.status === 'scheduled' && tempoAtualMilissegundos < new Date(m.date_time).getTime());
+  const partidasAoVivo = matches.filter(m => m.status === 'live' || (m.status === 'scheduled' && tempoAtualMilissegundos >= new Date(m.date_time).getTime()));
   const partidasEncerradas = matches.filter(m => m.status === 'finished');
 
   return (
     <div>
       <HeroSection />
 
-      {/* div de palpites da página inicial */}
       <div className="w-full px-8 py-14 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro min-h-screen justify-start items-center">
 
+        {/* Título da Rodada */}
+        <div className="text-center -mb-4">
+          <span className="text-verdeNeon font-inter text-xs font-bold tracking-[3px] uppercase bg-verdeNeon/10 border border-verdeNeon/20 px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(57,255,20,0.1)]">
+            {nomeRodadaExibicao}
+          </span>
+        </div>
 
-        {/* Seletor de Data Estilizado em Linha */}
+        {/* Seletor de Data */}
         <div className="w-full flex items-center justify-between bg-azulCard/40 border border-verdeNeon/10 rounded-2xl p-4 md:p-5 select-none shadow-md">
           <button 
             onClick={() => alterarDia(-1)}
-            className="text-verdeNeon hover:text-verdeNeon text-xl md:text-2xl font-bold p-2 transition-colors cursor-pointer"
+            className={`text-xl md:text-2xl font-bold p-2 transition-colors ${desabilitarAnterior ? "text-cinzaSuave/30 cursor-default" : "text-verdeNeon hover:text-verdeNeon cursor-pointer"}`}
             aria-label="Dia anterior"
+            disabled={desabilitarAnterior}
           >
             &lt;
           </button>
@@ -138,24 +172,23 @@ export default function Home() {
 
           <button 
             onClick={() => alterarDia(1)}
-            className="text-verdeNeon hover:text-verdeNeon text-xl md:text-2xl font-bold p-2 transition-colors cursor-pointer"
+            className={`text-xl md:text-2xl font-bold p-2 transition-colors ${desabilitarProximo ? "text-cinzaSuave/30 cursor-default" : "text-verdeNeon hover:text-verdeNeon cursor-pointer"}`}
             aria-label="Próximo dia"
+            disabled={desabilitarProximo}
           >
             &gt;
           </button>
         </div>
 
-        {/*Partidas Abertas */}
+        {/* Listas de Cards (Abertas, Ao Vivo, Encerradas) */}
         <div className="w-full flex flex-col gap-6 ">
-          {/* Cabeçalho das Partidas Abertas */}
           <div className="w-full px-0.5 gap-2 flex flex-row items-center">
             <div className="w-2 h-2 aspect-square rounded-4xl bg-verdeNeon shadow-[0_0_8px_#39FF14]"></div>
             <span className="text-verdeNeon text-xs font-inter tracking-[1.5px] font-bold">ABERTAS</span>
             <div className="h-px flex-1 bg-linear-to-r from-verdeNeon/40 to-verdeNeon/0"></div>
           </div>
 
-          {/*Lista de partidas abertas*/}
-        {partidasAbertas.map(jogo => (
+          {partidasAbertas.map(jogo => (
             <CardAbertas 
               key={jogo.id}
               paisCasa={t(jogo.team_home)} 
@@ -173,7 +206,6 @@ export default function Home() {
 
         {/* Partidas Ao Vivo */}
         <div className="w-full flex flex-col gap-6 ">
-          {/* Cabeçalho das Partidas Ao Vivo */}
           <div className="w-full px-0.5 gap-2 flex flex-row items-center">
             <div className="w-2 h-2 aspect-square rounded-4xl bg-[#FF4455] shadow-[0_0_8px_#FF4455]"></div>
             <span className="text-[#FF4455] text-xs font-inter tracking-[1.5px] font-bold">AO VIVO</span>
@@ -182,7 +214,7 @@ export default function Home() {
 
           {partidasAoVivo.map(jogo => {
             const palpite = userBets[jogo.id];
-            const apiAtrasada = jogo.status === 'scheduled' && new Date().getTime() >= new Date(jogo.date_time).getTime();
+            const apiAtrasada = jogo.status === 'scheduled' && OBTER_DATA_SISTEMA().getTime() >= new Date(jogo.date_time).getTime();
             const statusTempo = apiAtrasada ? "Aguardando início..." : jogo.status_exibicao || "Ao Vivo";  
 
             return (
@@ -204,17 +236,15 @@ export default function Home() {
           )}
         </div>
 
+        {/* Partidas Encerradas */}
         <div className="w-full flex flex-col gap-6 ">
-          {/* Cabeçalho das Partidas Encerradas */}
           <div className="w-full px-0.5 gap-2 flex flex-row items-center">
             <div className="w-2 h-2 aspect-square rounded-4xl bg-cinzaSuave"></div>
             <span className="text-cinzaSuave text-xs font-inter tracking-[1.5px] font-bold">ENCERRADAS</span>
             <div className="h-px flex-1 bg-linear-to-r from-cinzaSuave/40 to-cinzaSuave/0"></div>
           </div>
           {partidasEncerradas.map(jogo => {
-            // Recupera o palpite feito para este jogo específico dentro do mapa de palpites
             const palpite = userBets[jogo.id];
-
             return (
               <CardEncerradas 
                 key={jogo.id}
@@ -223,12 +253,11 @@ export default function Home() {
                 grupo={jogo.group_letter} 
                 placarCasa={jogo.goals_home ?? 0}
                 placarVisitante={jogo.goals_away ?? 0}
-                palpiteCasa={palpite?.prediction_home} // Envia se houver, ou undefined se não houver aposta
+                palpiteCasa={palpite?.prediction_home}
                 palpiteVisitante={palpite?.prediction_away}
               />
             );
           })}
-
           {partidasEncerradas.length === 0 && (
             <p className="text-cinzaSuave text-base px-[2px]">Nenhum jogo encerrado recentemente.</p>
           )}     
