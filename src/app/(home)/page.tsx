@@ -49,9 +49,9 @@ const CRONOGRAMA_COPA = [
 
 const OBTER_DATA_SISTEMA = () => {
   const dataSimulada = new Date();
-  // dataSimulada.setFullYear(2026);
-  // dataSimulada.setMonth(5); // Junho
-  // dataSimulada.setDate(27); 
+  dataSimulada.setFullYear(2026);
+  dataSimulada.setMonth(6); // Junho
+  dataSimulada.setDate(6); 
   return dataSimulada;
 };
 
@@ -78,12 +78,33 @@ export default function Home() {
 
   const nomeRodadaExibicao = blocoDaTela.nome;
   const ultimoDiaDaRodadaAtiva = blocoDaTela.fim;
-  const permitirAvancarRodada = hojeSistema.getTime() >= blocoDaTela.fim.getTime();
+
+  // 1️⃣ Encontra a posição numérica (índice) de cada bloco dentro do cronograma oficial
+  const indexFaseTela = CRONOGRAMA_COPA.findIndex((fase) => dataSelecionadaZerada <= fase.fim);
+  const indexFaseSistema = CRONOGRAMA_COPA.findIndex((fase) => hojeSistema <= fase.fim);
+
+  // 💡 Resolve o caso do último elemento (se não achar os índices no findIndex)
+  const idxTela = indexFaseTela !== -1 ? indexFaseTela : CRONOGRAMA_COPA.length - 1;
+  const idxSistema = indexFaseSistema !== -1 ? indexFaseSistema : CRONOGRAMA_COPA.length - 1;
+
+  // 2️⃣ Calcula o penúltimo dia baseado estritamente na rodada que o sistema (vida real) está processando agora
+  const rodadaRealDoSistema = CRONOGRAMA_COPA[idxSistema];
+  const penultimoDiaDoSistema = new Date(rodadaRealDoSistema.fim.getFullYear(), rodadaRealDoSistema.fim.getMonth(), rodadaRealDoSistema.fim.getDate(), 0, 0, 0, 0);
+  penultimoDiaDoSistema.setDate(penultimoDiaDoSistema.getDate() - 1);
+
+  // 🔓 REGRA DE OURO CRONOLÓGICA (Inquebrável):
+  // - Se a tela está na mesma fase do sistema ou em fases anteriores, a navegação é totalmente liberada (true).
+  // - Se a tela tenta entrar na fase imediatamente seguinte (fase do sistema + 1), ela só libera se hoje já for o PENÚLTIMO DIA da fase atual.
+  // - Se a tela tentar pular duas ou mais fases à frente, o bloqueio é imediato e absoluto (false).
+  const permitirAvancarRodada = idxTela < idxSistema 
+    ? true 
+    : idxTela === idxSistema 
+      ? hojeSistema.getTime() >= penultimoDiaDoSistema.getTime() 
+      : false;
 
   // 🛡️ LÓGICA DE TRAVAS DIÁRIAS CRUCIAIS (Comparação de Timestamps limpos)
   const desabilitarAnterior = dataSelecionadaZerada.getTime() <= dataInicialCopa.getTime();
   const desabilitarProximo = dataSelecionadaZerada.getTime() >= ultimoDiaDaRodadaAtiva.getTime() && !permitirAvancarRodada;
-
   // 2️⃣ useEffect: Busca os jogos e palpites do dia selecionado
   useEffect(() => {
     async function getHomeData() {
