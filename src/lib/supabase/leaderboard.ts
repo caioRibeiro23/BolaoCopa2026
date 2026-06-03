@@ -24,6 +24,18 @@ interface ChampionshipLeaderboardUser {
   total_bets: number;
 }
 
+interface ChampionshipRow {
+  id: string;
+  name: string | null;
+}
+
+export interface UserChampionship {
+  championship_id: string;
+  championship_name: string;
+  position: number;
+  total_points: number;
+}
+
 export async function getLeaderboard(): Promise<LeaderboardUser[]> {
 
   const supabase = await createClient();
@@ -68,4 +80,111 @@ export async function getChampionshipLeaderboard(championshipId: string) {
     ...player,
     position: index + 1,
   }));
+}
+
+export async function getChampionshipName(championshipId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("championships")
+    .select("id, name")
+    .eq("id", championshipId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Erro ao buscar nome do campeonato:", error.message);
+    return null;
+  }
+
+  const championship = data as ChampionshipRow | null;
+
+  return championship?.name ?? null;
+}
+
+export async function getUserChampionships(
+  userId: string
+): Promise<UserChampionship[]> {
+  if (!userId) {
+    return [];
+  }
+
+  const supabase = await createClient();
+
+  const { data: membershipData, error: membershipError } = await supabase
+    .from("championship_leaderboard")
+    .select("championship_id, total_points")
+    .eq("user_id", userId)
+    .order("total_points", { ascending: false });
+
+  if (membershipError) {
+    console.error(
+      "Erro ao buscar campeonatos do usuario:",
+      membershipError.message
+    );
+
+    return [];
+  }
+
+  const memberships = (membershipData || []).map((membership) => ({
+    championship_id: membership.championship_id,
+    total_points: membership.total_points,
+  }));
+
+  if (memberships.length === 0) {
+    return [];
+  }
+
+  const championshipNames = new Map<string, string>();
+
+  const { data: championshipData, error: championshipError } = await supabase
+    .from("championships")
+    .select("id, name")
+    .in(
+      "id",
+      Array.from(new Set(memberships.map((membership) => membership.championship_id)))
+    );
+
+  if (championshipError) {
+    console.error(
+      "Erro ao buscar nomes dos campeonatos:",
+      championshipError.message
+    );
+  } else {
+    for (const championship of championshipData || []) {
+      championshipNames.set(championship.id, championship.name || "");
+    }
+  }
+
+  const championshipsWithPosition = await Promise.all(
+    memberships.map(async (membership, index) => {
+      const { data: championshipLeaderboardData, error: championshipLeaderboardError } =
+        await supabase
+          .from("championship_leaderboard")
+          .select("user_id")
+          .eq("championship_id", membership.championship_id)
+          .order("total_points", { ascending: false });
+
+      let position = index + 1;
+
+      if (!championshipLeaderboardError) {
+        const championshipRanking = championshipLeaderboardData || [];
+        const userIndex = championshipRanking.findIndex((row) => row.user_id === userId);
+
+        if (userIndex >= 0) {
+          position = userIndex + 1;
+        }
+      }
+
+      return {
+        championship_id: membership.championship_id,
+        championship_name:
+          championshipNames.get(membership.championship_id) ||
+          `Torneio ${index + 1}`,
+        position,
+        total_points: membership.total_points,
+      };
+    })
+  );
+
+  return championshipsWithPosition;
 }

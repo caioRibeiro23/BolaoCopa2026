@@ -3,7 +3,6 @@ import Flag from "../../cards/iconePais/flag";
 import { formatarDataBR } from "@/src/utils/formatar-data";
 import { formatarHoraBR } from "@/src/utils/formatar-hora";
 import { getCountryAbbr } from "../../cards/iconePais/countryAbbr";
-import { t } from "@/src/utils/traducaoPaises";
 
 interface MatchCardProps {
     matchId: string;
@@ -46,7 +45,7 @@ export default function MatchCard({ matchId, paisCasa, paisVisitante, placarCasa
     return (
         <Link
             href={`/tournament/matches/${matchId}`}
-            aria-label={`Ver palpites dos participantes da partida entre ${t(paisCasa)} e ${t(paisVisitante)}`}
+            aria-label={`Ver palpites dos participantes da partida entre ${paisCasa} e ${paisVisitante}`}
             className="group block rounded-2xl focus:outline-none focus:ring-2 focus:ring-verdeNeon/30"
         >
             <article className="flex flex-col gap-5 rounded-2xl border border-azulCinzado bg-azulMedio p-4 shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:border-verdeNeon/20 hover:shadow-[0_0_18px_rgba(57,255,20,0.06)]">
@@ -58,8 +57,8 @@ export default function MatchCard({ matchId, paisCasa, paisVisitante, placarCasa
                 <div className="flex items-center justify-between gap-4 font-bold text-sm text-[#E8EDF5]">
                     <div className="flex min-w-0 flex-1 flex-col items-center gap-2 text-center">
                         <Flag country={paisCasa} />
-                        <div className="truncate">{t(paisCasa)}</div>
-                        <span className="text-[11px] font-inter text-cinzaSuave md:hidden">{getCountryAbbr(t(paisCasa))}</span>
+                        <div className="truncate hidden md:flex">{paisCasa}</div>
+                        <span className="text-[11px] font-inter text-cinzaSuave md:hidden">{getCountryAbbr(paisCasa)}</span>
                     </div>
 
                     <div className="flex min-w-24 flex-col items-center gap-2">
@@ -73,8 +72,8 @@ export default function MatchCard({ matchId, paisCasa, paisVisitante, placarCasa
 
                     <div className="flex min-w-0 flex-1 flex-col items-center gap-2 text-center">
                         <Flag country={paisVisitante} />
-                        <div className="truncate">{t(paisVisitante)}</div>
-                        <span className="text-[11px] font-inter text-cinzaSuave md:hidden">{getCountryAbbr(t(paisVisitante))}</span>
+                        <div className="truncate hidden md:flex">{paisVisitante}</div>
+                        <span className="text-[11px] font-inter text-cinzaSuave md:hidden">{getCountryAbbr(paisVisitante)}</span>
                     </div>
                 </div>
 

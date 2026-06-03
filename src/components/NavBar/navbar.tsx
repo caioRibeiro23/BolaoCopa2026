@@ -8,8 +8,8 @@ import { useState } from "react";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/leaderboard", label: "Torneios" },
-  { href: "/regras", label: "Regras" },
+  { href: "/myTournaments", label: "Torneios" },
+  { href: "/rules", label: "Regras" },
   { href: "/extras", label: "Extra" }
 ];
 

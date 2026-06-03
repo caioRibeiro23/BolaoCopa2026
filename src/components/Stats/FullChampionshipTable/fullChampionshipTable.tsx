@@ -9,28 +9,6 @@ export default async function FullChampionshipTable({
 }: {
   userId: string;
 }) {
-  // const supabase = await createClient();
-
-  // // 🔐 1. VERIFICA PARTICIPAÇÃO
-  // const { data: participant } = await supabase
-  //   .from("championship_participants")
-  //   .select("id")
-  //   .eq("championship_id", CHAMPIONSHIP_ID)
-  //   .eq("user_id", userId)
-  //   .single();
-
-  // // 🚫 2. BLOQUEIA ACESSO
-  // if (!participant) {
-  //   return (
-  //     <div className="bg-azulMedio border border-azulCinzado rounded-2xl p-6 text-center">
-  //       <p className="text-cinzaSuave text-sm">
-  //         Você não está participando deste campeonato.
-  //       </p>
-  //     </div>
-  //   );
-  // }
-
-  // ✅ 3. BUSCA RANKING (SÓ SE PARTICIPA)
   const players =
     (await getChampionshipLeaderboard(CHAMPIONSHIP_ID)) || [];
 

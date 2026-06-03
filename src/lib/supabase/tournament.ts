@@ -16,6 +16,18 @@ export interface MatchRow {
     goals_away: number | null;
 }
 
+export interface MatchBetRow {
+    user_id: string;
+    prediction_home: number;
+    prediction_away: number;
+    points_earned: number | null;
+}
+
+export interface MatchParticipantPrediction extends MatchBetRow {
+    full_name: string;
+    username: string;
+}
+
 export function resolvePageValue(pageValue?: string | string[]) {
     const rawValue = Array.isArray(pageValue) ? pageValue[0] : pageValue;
     const parsedValue = Number.parseInt(rawValue ?? "1", 10);
@@ -66,4 +78,72 @@ export async function getTournamentMatches() {
     }
 
     return (data || []) as MatchRow[];
+}
+
+export async function getMatchById(matchId: string) {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+        .from("matches")
+        .select("id, team_home, team_away, date_time, group_letter, phase, status, goals_home, goals_away")
+        .eq("id", matchId)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Erro ao carregar a partida:", error.message);
+        return null;
+    }
+
+    return data as MatchRow | null;
+}
+
+export async function getMatchParticipantPredictions(matchId: string) {
+    const supabase = await createClient();
+
+    const { data: betsData, error: betsError } = await supabase
+        .from("bets")
+        .select("user_id, prediction_home, prediction_away, points_earned")
+        .eq("match_id", matchId)
+        .order("points_earned", { ascending: false });
+
+    if (betsError) {
+        console.error("Erro ao carregar palpites da partida:", betsError.message);
+        return [];
+    }
+
+    const bets = (betsData || []) as MatchBetRow[];
+
+    if (bets.length === 0) {
+        return [];
+    }
+
+    const userIds = Array.from(new Set(bets.map((bet) => bet.user_id)));
+
+    const { data: profilesData, error: profilesError } = await supabase
+        .from("user_profiles")
+        .select("id, full_name, username")
+        .in("id", userIds);
+
+    if (profilesError) {
+        console.error("Erro ao carregar perfis dos participantes:", profilesError.message);
+        return bets.map((bet) => ({
+            ...bet,
+            full_name: "Participante",
+            username: "participante",
+        }));
+    }
+
+    const profilesById = new Map(
+        (profilesData || []).map((profile) => [profile.id, profile])
+    );
+
+    return bets.map((bet) => {
+        const profile = profilesById.get(bet.user_id);
+
+        return {
+            ...bet,
+            full_name: profile?.full_name ?? "Participante",
+            username: profile?.username ?? "participante",
+        };
+    }) as MatchParticipantPrediction[];
 }

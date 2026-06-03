@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import FilterCard from "./cards/filterCard"
 import MatchCard from "./cards/matchCard"
 import PaginationCard from "./cards/paginationCard"
+import { t } from "@/src/utils/traducaoPaises";
 
 interface MatchRow {
     id: string;
@@ -110,8 +111,8 @@ export default function MatchesSection({ matches, initialPage, currentPhase }: M
     return(
         <section className="flex flex-col w-full gap-6">
             <div className="flex w-full items-center justify-between">
-                <h2 className="border-l-4 border-verdeNeon pl-4 font-bebas-neue text-5xl">Partidas</h2>
-                <p className="text-cinzaSuave font-inter text-xs font-bold uppercase">Clique numa partida para ver os palpites</p>
+                <h2 className="border-l-4 border-verdeNeon pl-4 font-bebas-neue text-2xl md:text-3xl text-white">Partidas</h2>
+                <p className="text-cinzaSuave font-inter text-xs font-bold w-24 md:w-fit md:uppercase">Clique numa partida para ver os palpites</p>
             </div>
             <div className="flex flex-col gap-6">
                 <div className="flex w-full flex-wrap items-center gap-3">
@@ -137,8 +138,8 @@ export default function MatchesSection({ matches, initialPage, currentPhase }: M
                         <MatchCard
                             key={match.id}
                             matchId={match.id}
-                            paisCasa={match.team_home}
-                            paisVisitante={match.team_away}
+                            paisCasa={t(match.team_home)}
+                            paisVisitante={t(match.team_away)}
                             placarCasa={match.goals_home}
                             placarVisitante={match.goals_away}
                             grupo={match.group_letter ? `Grupo ${match.group_letter}` : getPhaseLabel(match.phase)}

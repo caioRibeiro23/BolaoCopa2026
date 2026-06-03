@@ -52,6 +52,27 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
           </div>
         )}
 
+        <form action={loginWithGoogle} className="w-full">
+          <button type="submit" className="w-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-[10px] py-2 bp-1024:py-4 px-6 flex items-center justify-center gap-3 cursor-pointer">
+            <Image
+              src="google-logo.svg"
+              alt="Google"
+              className="w-5 h-5"
+              width={20}
+              height={20}
+            />
+            <span className="font-medium text-white">
+              Entrar com Google
+            </span>
+          </button>
+        </form>
+
+        <div className="w-full flex items-center gap-3">
+          <div className="flex-1 h-px bg-white/10" />
+          <span className="text-xs text-white/40">ou</span>
+          <div className="flex-1 h-px bg-white/10" />
+        </div>
+
         <form action={formAction} className="w-full flex flex-col items-start gap-3.5">
           <div className="w-full flex flex-col gap-1 items-start">
             <h3 className="text-sm bp-1024:text-base text-white">E-mail</h3>
@@ -70,7 +91,7 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
           <div className="w-full flex flex-col gap-1 items-start">
             <div className="w-full flex justify-between items-center">
               <h3 className="text-sm bp-1024:text-base text-white">Senha</h3>
-              <Link href="/forgot-password" className="text-xs bp-1024:text-xs text-verdeNeon font-medium cursor-pointer hover:underline">
+              <Link href="/recovery-acess" className="text-xs bp-1024:text-xs text-verdeNeon font-medium cursor-pointer hover:underline">
                 Esqueci minha senha
               </Link>
             </div>
@@ -103,26 +124,7 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
           </button>
         </form>
 
-        <div className="w-full flex items-center gap-3">
-          <div className="flex-1 h-px bg-white/10" />
-          <span className="text-xs text-white/40">ou</span>
-          <div className="flex-1 h-px bg-white/10" />
-        </div>
-
-        <form action={loginWithGoogle} className="w-full">
-          <button type="submit" className="w-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-[10px] py-2 bp-1024:py-4 px-6 flex items-center justify-center gap-3 cursor-pointer">
-            <Image
-              src="google-logo.svg"
-              alt="Google"
-              className="w-5 h-5"
-              width={20}
-              height={20}
-            />
-            <span className="font-medium text-white">
-              Entrar com Google
-            </span>
-          </button>
-        </form>
+        
 
         <p className="w-full text-xs bp-1024:text-sm text-white/40 text-center">
           Ainda não tem uma conta? <Link href="/register" className="text-verdeNeon font-medium hover:underline">Cadastre-se grátis!</Link>
