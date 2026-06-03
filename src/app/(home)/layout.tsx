@@ -1,4 +1,4 @@
-import NavBar from "@/src/components/Navbar/navbar";
+import NavBar from "@/src/components/NavBar/navbar";
 import Footer from "@/src/components/Footer/footer";
 import { requireUser } from "@/src/lib/supabase/auth-actions";
 import { getUserData } from "@/src/lib/supabase/user-actions";
