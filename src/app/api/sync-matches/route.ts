@@ -44,22 +44,22 @@ const supabase = createClient(
 
 export async function GET() {
 
-  // //bloco de verificação para poupar a API de chamadas desnecessárias
-  // const agora = new Date();
-  // const duasHorasDepois = new Date(agora.getTime() + 2 * 60 * 60 * 1000);
+  //bloco de verificação para poupar a API de chamadas desnecessárias
+  const agora = new Date();
+  const duasHorasDepois = new Date(agora.getTime() + 2 * 60 * 60 * 1000);
 
-  // // 2. Busca no banco se há jogos AO VIVO ou que começam nas próximas 2 horas
-  // const { data: jogosProximos, error } = await supabase
-  //   .from('matches')
-  //   .select('id, status, date_time')
-  //   .or(`status.eq.live,and(status.eq.scheduled,date_time.lte.${duasHorasDepois.toISOString()})`);
+  // 2. Busca no banco se há jogos AO VIVO ou que começam nas próximas 2 horas
+  const { data: jogosProximos, error } = await supabase
+    .from('matches')
+    .select('id, status, date_time')
+    .or(`status.eq.live,and(status.eq.scheduled,date_time.lte.${duasHorasDepois.toISOString()})`);
 
-  // // 3. Se o banco estiver baleado ou se realmente não tiver jogo perto, poupa a API
-  // if (error || !jogosProximos || jogosProximos.length === 0) {
-  //   return NextResponse.json({ 
-  //     message: "Nenhum jogo ao vivo ou próximo de começar. Requisição externa poupada." 
-  //   });
-  // }
+  // 3. Se o banco estiver baleado ou se realmente não tiver jogo perto, poupa a API
+  if (error || !jogosProximos || jogosProximos.length === 0) {
+    return NextResponse.json({ 
+      message: "Nenhum jogo ao vivo ou próximo de começar. Requisição externa poupada." 
+    });
+  }
 
   // Se chegou aqui, é porque tem jogo AO VIVO ou que começa nas próximas 2 horas, então vamos buscar os dados atualizados na API de Futebol
   const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
