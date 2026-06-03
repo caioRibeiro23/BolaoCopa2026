@@ -49,9 +49,9 @@ const CRONOGRAMA_COPA = [
 
 const OBTER_DATA_SISTEMA = () => {
   const dataSimulada = new Date();
-  dataSimulada.setFullYear(2026);
-  dataSimulada.setMonth(6); // Junho
-  dataSimulada.setDate(6); 
+  // dataSimulada.setFullYear(2026);
+  // dataSimulada.setMonth(5); // Junho
+  // dataSimulada.setDate(11); 
   return dataSimulada;
 };
 
