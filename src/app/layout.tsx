@@ -33,9 +33,10 @@ export default function RootLayout({
     <html
       lang="pt-br"
       className={`${roboto.variable} ${inter.variable} ${bebasNeue.variable} h-full antialiased`}
+      suppressHydrationWarning // Evita que extensões que mexem no HTML quebrem o app
     >
-      <body className="min-h-full flex flex-col">
-        <main>{children}</main>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
         </body>
     </html>
   );

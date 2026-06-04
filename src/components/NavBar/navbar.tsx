@@ -91,15 +91,12 @@ export default function NavBar({ userData }: NavBarProps) {
               {isSelectOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-[#1F2937] border border-gray-700 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
                   <Link href="/stats">
-                    <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors">
+                    <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors hover:cursor-pointer">
                       Meu Perfil
                     </button>
                   </Link>
-                  <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors border-t border-gray-700">
-                    Configurações
-                  </button>
                   <form action={logoutAction}>
-                    <button type="submit" className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors border-t border-gray-700">
+                    <button type="submit" className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors border-t border-gray-700 hover:cursor-pointer">
                       Sair
                     </button>
                   </form>

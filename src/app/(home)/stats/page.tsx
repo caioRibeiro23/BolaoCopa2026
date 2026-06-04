@@ -5,6 +5,7 @@ import ProgressTable from "@/src/components/Stats/Progress/progressTable";
 import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
 import GeneralTable from "@/src/components/Stats/GeneralTable/generalTable";
+import ProfileSection from "@/src/components/ProfileSection/profileSection";
 
 export default async function StatsPage() {
     const supabase = await createClient();
@@ -19,6 +20,7 @@ export default async function StatsPage() {
             <TitlePage title="Minhas Estatísticas"/>
             {/* <GeneralTable userId={user.id}/>
             <ChampionshipTable userId={user.id}/> */}
+            <ProfileSection userId={user.id} />
             <ProgressTable userId={user.id}/>
             <HistoryTable userId={user.id}/>
         </div>

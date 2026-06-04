@@ -21,6 +21,7 @@ export async function getUserData() {
 
   return {
     name: user.user_metadata.full_name,
-    pts: data.total_points
+    pts: data.total_points,
+    avatarUrl: user.user_metadata.avatar_url || "/copa.png"
   }
 }
