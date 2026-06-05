@@ -22,7 +22,7 @@ export default function LoginForm({ action, registered }: LoginFormProps) {
   const [state, formAction, pending] = useActionState(action, initialState)
 
   return (
-    <div className="flex items-center justify-center bg-[url('/background/fundoLogin.png')] bg-cover bg-center h-screen font-inter gap-5 ">
+    <div className="flex min-h-dvh w-full items-center justify-center overflow-y-auto bg-[url('/background/fundoLogin.png')] bg-cover bg-center px-4 py-6 font-inter gap-5">
       <div className="w-11/12 md:w-7/12 bp-1024:w-6/12 lg:w-4/12 bg-azulEscuro/82 border border-[#FFFFFF]/10 rounded-2xl flex flex-col items-start px-9 py-10 gap-6">
         <div className="flex w-full justify-center items-center gap-2">
               <Image
