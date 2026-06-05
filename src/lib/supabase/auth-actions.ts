@@ -111,7 +111,7 @@ export async function loginWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://localhost:3000/auth/callback",
+      redirectTo: "http://bolaobolazzo.com.br/auth/callback",
     },
   })
 

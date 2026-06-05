@@ -34,9 +34,9 @@ export default function Footer() {
                         <Link href="/rules" className="transition-colors hover:text-white">
                             Regras do bolão
                         </Link>
-                        <Link href="/extras" className="transition-colors hover:text-white">
+                        {/* <Link href="/extras" className="transition-colors hover:text-white">
                             Extras e novidades
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
             </div>
