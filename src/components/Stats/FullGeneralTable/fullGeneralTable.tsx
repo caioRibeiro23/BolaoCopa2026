@@ -11,7 +11,7 @@ export default async function FullGeneralTable({
   return (
     <div className="flex flex-col bg-azulMedio rounded-2xl border border-azulCinzado w-full shadow-sm">
 
-      <div className="w-full flex items-center justify-between px-6 py-4 bg-white/5">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between px-6 py-4 bg-white/5">
         <h2 className="text-[#FFD700] font-bebas-neue text-xl">
           🏆 Tabela Geral Completa
         </h2>

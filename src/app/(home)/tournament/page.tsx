@@ -75,13 +75,13 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
     const leader = players[0];
 
     return (
-        <div className="w-full px-8 py-12 md:px-14 md:py-14 flex flex-col gap-10 bg-azulEscuro min-h-screen">
+        <div className="w-full px-6 py-12 md:px-14 md:py-14 flex flex-col gap-10 bg-azulEscuro min-h-screen">
             <TitlePage title="Torneio" />
 
             <HeaderTournamentSection leader={leader} tournamentName={tournamentName} />
 
             <section>
-                <div className="grid gap-3 sm:grid-cols-4">
+                <div className="grid gap-3 md:grid-cols-4">
                     <CardStats titleCard="Participantes" valueCard={players.length} />
                     <CardStats titleCard="Minha posição" valueCard={currentUser ? currentUser.position : "-"} />
                     <CardStats titleCard="Placares Exatos" valueCard={leader?.exact_scores ?? 0} />

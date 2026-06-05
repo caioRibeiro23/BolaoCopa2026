@@ -16,8 +16,10 @@ export default function HeaderTournamentSection({ leader, tournamentName }: Head
                 </div>
             </div>
 
-            <div className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,16rem)]">
-                <div className="flex flex-col items-start justify-center gap-5">
+            {/* Adicionado items-center e justify-items-center para centralizar o card no grid em qualquer tela */}
+            <div className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,16rem)] items-center justify-items-center lg:justify-items-stretch">
+                
+                <div className="flex flex-col items-start justify-center gap-5 w-full">
                     <div className="flex flex-col gap-2">
                         <p className="font-inter text-xs font-bold tracking-[2px] text-verdeNeon">
                             CAMPEONATO PRINCIPAL
@@ -32,8 +34,10 @@ export default function HeaderTournamentSection({ leader, tournamentName }: Head
                     </div>
                 </div>
 
-                <aside className="self-start flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-[#FFFFFF]/3 py-5 md:w-48 lg:w-52 text-center">
+                {/* Removido as larguras fixas limitantes (md:w-48) no mobile para ele centralizar de forma fluida com max-w-xs */}
+                <aside className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/10 bg-[#FFFFFF]/3 py-5 px-6 w-full max-w-[16rem] text-center shadow-inner">
                     <div className="flex flex-col items-center justify-center gap-4 w-full">
+                        
                         <div className="flex items-center justify-center">
                             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#FFD700]/10 text-2xl shadow-[0_0_18px_rgba(255,215,0,0.12)]">
                                 🏆
@@ -44,7 +48,7 @@ export default function HeaderTournamentSection({ leader, tournamentName }: Head
                             <p className="font-inter text-xs font-bold tracking-[1.5px] text-cinzaSuave">
                                 LÍDER DO TORNEIO
                             </p>
-                            <h2 className="mt-1 font-bebas-neue text-2xl tracking-[1.5px] text-[#E8EDF5]">
+                            <h2 className="mt-1 font-bebas-neue text-2xl tracking-[1.5px] text-[#E8EDF5] break-words px-2">
                                 {leader?.full_name ?? "Sem líder definido"}
                             </h2>
                         </div>
@@ -57,6 +61,7 @@ export default function HeaderTournamentSection({ leader, tournamentName }: Head
                         </div>
                     </div>
                 </aside>
+
             </div>
         </section>
     )

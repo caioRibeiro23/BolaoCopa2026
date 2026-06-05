@@ -5,7 +5,7 @@ interface CardStatsProps {
 
 export default function CardStats({ titleCard, valueCard }: CardStatsProps) {
     return (
-        <div className="rounded-2xl border border-azulCinzado bg-azulMedio px-4 py-4 flex flex-col justify-center">
+        <div className="rounded-2xl border border-azulCinzado bg-azulMedio px-4 py-4 flex flex-col justify-center items-center md:items-start">
             <p className="font-inter text-[11px] uppercase tracking-[1.5px] text-cinzaSuave">
                 {titleCard}
             </p>
