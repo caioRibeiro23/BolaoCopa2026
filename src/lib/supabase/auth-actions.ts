@@ -108,10 +108,12 @@ export async function requireUser() {
 export async function loginWithGoogle() {
   const supabase = await createClient()
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bolaobolazzo.com.br"
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: "http://bolaobolazzo.com.br/auth/callback",
+      redirectTo: `${baseUrl}/auth/callback`,
     },
   })
 

@@ -139,7 +139,7 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
                     <span className="text-cinzaSuave whitespace-nowrap">{hora}</span>
                 </div>
                 <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
-                <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +3 pts placar exato / +1 pt resultado</div>
+                <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +9 pts placar exato / +3 pt resultado</div>
             </div>
 
             {/* Corpo do Card */}
