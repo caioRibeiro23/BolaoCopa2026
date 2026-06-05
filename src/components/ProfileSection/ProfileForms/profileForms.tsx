@@ -100,7 +100,6 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </div>
       </div>
 
-      {/* Conteúdo Alongado */}
       {/* md:flex-row divide o card em colunas horizontais em telas maiores */}
       <form onSubmit={handleSave} className="flex flex-col md:flex-row items-center md:items-end justify-between gap-8 p-6 w-full">
         
