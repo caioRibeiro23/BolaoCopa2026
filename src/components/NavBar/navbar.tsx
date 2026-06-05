@@ -82,8 +82,8 @@ export default function NavBar({ userData }: NavBarProps) {
                 onClick={() => setIsSelectOpen(!isSelectOpen)}
                 className="flex items-center gap-3 bg-[#1F2937] border border-gray-700 hover:border-gray-500 hover:cursor-pointer px-3 py-1.5 rounded-full transition-all text-white focus:outline-none"
               >
-                <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-600 bg-white flex-shrink-0">
-                  <Image src={userAvatar} alt="Perfil" fill className="object-contain p-0.5" />
+                <div className="relative w-8 h-8 shrink-0 overflow-hidden rounded-full border border-gray-600 bg-white">
+                  <Image src={userAvatar} alt="Perfil" fill className="object-cover" />
                 </div>
                 <span className="font-medium text-sm">{currentUser?.name || "Jogador"}</span>
                 <ChevronDown size={16} className={`transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} />
@@ -116,8 +116,8 @@ export default function NavBar({ userData }: NavBarProps) {
             {/* Bloco de Perfil Dedicado dentro do Hambúrguer */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#1F2937]/50 p-4 rounded-2xl border border-gray-700/60 mb-2">
               <div className="flex items-center gap-3">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-600 bg-white flex-shrink-0">
-                  <Image src={userAvatar} alt="Perfil" fill className="object-contain p-0.5" />
+                <div className="relative w-12 h-12 shrink-0 overflow-hidden rounded-full border-2 border-gray-600 bg-white">
+                  <Image src={userAvatar} alt="Perfil" fill className="object-cover" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-bold text-white text-base">{currentUser?.name || "Jogador"}</span>

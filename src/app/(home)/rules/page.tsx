@@ -12,7 +12,7 @@ const scoreRules = [
     },
     {
         title: "Resultado da partida",
-        points: 1,
+        points: 3,
         description: "Acertou quem vence ou se termina empatado.",
         icon: ShieldCheck,
         color: "text-[#5ED5FF]",
@@ -142,9 +142,9 @@ export default function RulesPage() {
                         </div>
 
                         <p className="mt-4 font-inter text-sm leading-6 text-cinzaSuave">
-                            Os usuarios podem apostar apenas nos jogos dos
-                            <span className="mx-1 font-semibold text-[#E8EDF5]">3 dias mais proximos</span>.
-                            Partidas fora desse intervalo permanecem bloqueadas ate entrarem na janela de abertura.
+                            Os usuários podem apostar em todos os jogos da 
+                            <span className="mx-1 font-semibold text-[#E8EDF5]">rodada atual até o seu último dia.</span>
+                            Faltando 2 dias para a rodada terminar, os palpites da próxima rodada serão abertos automaticamente.
                         </p>
                     </article>
                 </section>
@@ -162,18 +162,18 @@ export default function RulesPage() {
                         sem acesso aos dados dos demais participantes.
                     </p>
 
-                    <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <div className="mt-5 grid grid-cols-1 gap-3 justify-center">
                         {extraPredictions.map((item) => (
                             <div
                                 key={item.label}
-                                className="rounded-xl border border-white/10 bg-white/5 px-4 py-4"
+                                className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-white/5 px-4 py-4 sm:px-5"
                             >
-                                <p className="font-inter text-xs font-semibold uppercase tracking-[1.5px] text-cinzaSuave">
+                                <p className="wrap-break-word font-inter text-[11px] font-semibold uppercase leading-4 tracking-[1.3px] text-cinzaSuave sm:text-xs">
                                     {item.label}
                                 </p>
-                                <div className="mt-2 flex items-center gap-2">
-                                    <Trophy size={16} className="text-[#FFD700]" />
-                                    <span className="font-bebas-neue text-3xl tracking-[1.5px] text-[#FFD700]">
+                                <div className="mt-3 flex items-center gap-2">
+                                    <Trophy size={16} className="shrink-0 text-[#FFD700]" />
+                                    <span className="min-w-0 font-bebas-neue text-2xl tracking-[1.5px] text-[#FFD700] sm:text-3xl">
                                         +{item.points}
                                     </span>
                                 </div>

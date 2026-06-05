@@ -12,13 +12,13 @@ export default function GameRules() {
       icon: <Star className="text-yellow-400" size={28} />,
       title: "Some pontos",
       description:
-        "+3 pts para placar exato • +1 pt para resultado correto • 0 pts para palpite incorreto",
+        "+9 pts para placar exato • +3 pts para resultado correto • +1 pt para acertar os gols de um time • +5 pts o combo das duas anteriores • 0 pts para palpite incorreto",
     },
     {
       icon: <Rocket className="text-purple-400" size={28} />,
-      title: "Rodadas Bônus",
+      title: "Até o último minuto",
       description:
-        "Partidas da fase eliminatória valem pontos em dobro. Palpites para a partida final rendem pontos em triplo.",
+        "A esperança é a última que morre. Acertar o placar exato na final vale o dobro de pontos. Aqui você tem chance até o último minuto",
     },
     {
       icon: <Trophy className="text-red-400" size={28} />,

@@ -143,7 +143,7 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
             </div>
 
             {/* Corpo do Card */}
-            <div className="w-full px-2 bp-540:px-6 py-5 flex flex-row items-center">
+            <div className="w-full px-2 bp-540:px-6 py-8 flex flex-row items-center">
                 <div className="w-full py-2 text-start text-cinzaSuave font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3">
                     <Flag country={paisCasa} />
                     <span className="md:hidden text-base tracking-[1px] text-cinzaSuave">{getCountryAbbr(paisCasa)}</span>
