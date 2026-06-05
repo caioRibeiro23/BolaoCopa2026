@@ -75,9 +75,10 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       alert("Perfil updated com sucesso!");
       router.refresh();
 
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       console.error("Erro ao salvar:", error);
-      alert(`Erro ao salvar: ${error.message || error}`);
+      alert(`Erro ao salvar: ${errorMessage}`);
     } finally {
       setIsUpdating(false);
     }
@@ -104,9 +105,9 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
       <form onSubmit={handleSave} className="flex flex-col md:flex-row items-center md:items-end justify-between gap-8 p-6 w-full">
         
         {/* Lado Esquerdo: Foto de Perfil */}
-        <div className="flex flex-col items-center md:items-start gap-2 flex-shrink-0">
+        <div className="flex flex-col items-center md:items-start gap-2 shrink-0">
           <div className="relative group cursor-pointer w-24 h-24 rounded-full overflow-hidden border-2 border-azulCinzado bg-white shadow-inner">
-            <Image src={previewUrl} alt="Perfil" fill className="object-contain p-1" unoptimized={!!avatarFile} />
+            <Image src={previewUrl} alt="Perfil" fill className="object-cover" unoptimized={!!avatarFile} />
             <label className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-white text-xs gap-1 font-semibold">
               <Camera size={16} className="text-verdeNeon" />
               Alterar Foto
@@ -132,7 +133,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         </div>
 
         {/* Lado Direito: Botão de Salvar (Ajustado para o fluxo horizontal) */}
-        <div className="w-full md:w-auto flex-shrink-0">
+        <div className="w-full md:w-auto shrink-0">
           <button
             type="submit"
             disabled={isUpdating}
