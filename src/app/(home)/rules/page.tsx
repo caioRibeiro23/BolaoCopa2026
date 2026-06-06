@@ -175,7 +175,7 @@ export default function RulesPage() {
                                 */
                                 className="min-w-0 w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 flex flex-col justify-between gap-2 transform-gpu [backface-visibility:hidden]"
                             >
-                                <p className="break-words font-inter text-[11px] font-semibold uppercase leading-4 tracking-[1.3px] text-cinzaSuave sm:text-xs">
+                                <p className="break-all font-inter text-[11px] font-semibold uppercase leading-4 tracking-[1.3px] text-cinzaSuave sm:text-xs">
                                     {item.label}
                                 </p>
                                 <div className="mt-1 flex items-center gap-2">
