@@ -6,24 +6,32 @@ import { TeamAutocomplete } from "../ui/teamAutoComplete";
 import { selecoesCopa2026 } from "@/src/utils/traducaoPaises";
 import { saveExtraPrediction } from "@/src/lib/supabase/extra-predictions";
 
-type FormFeedback = {
-    campea: string;
-    artilheiro: string;
-    vice: string;
-};
+interface ExtraPicksFormProps {
+    initialPrediction?: {
+        champion_team: string;
+        runner_up_team: string;
+        top_scorer: string;
+    } | null;
+}
 
-const initialFeedback = {
-    campea: "",
-    artilheiro: "",
-    vice: "",
-};
 
-export default function ExtraPicksForm() {
+export default function ExtraPicksForm({ initialPrediction }: ExtraPicksFormProps) {
     const [pending, setPending] = useState(false);
-    const [feedback, setFeedback] = useState<FormFeedback>(initialFeedback);
+    const [feedback, setFeedback] = useState({
+        campea: initialPrediction?.champion_team ?? "",
+        vice: initialPrediction?.runner_up_team ?? "",
+        artilheiro: initialPrediction?.top_scorer ?? "",
+    });
+
+    const DEADLINE = new Date("2026-06-18T00:00:00-03:00");
+    const isClosed = new Date() >= DEADLINE;
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        if(isClosed) {
+             return;
+        }
 
         try{
             const formData = new FormData(event.currentTarget);
@@ -84,12 +92,21 @@ export default function ExtraPicksForm() {
                 </div>
             </div>
 
+            {isClosed && (
+                <div className="mt-5 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+                    <p className="text-sm font-medium text-red-300">
+                        O prazo para envio dos palpites extras foi encerrado.
+                    </p>
+                </div>
+            )}
+
             <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
                 <TeamAutocomplete
                     label="Seleção campeã"
                     name="campea"
                     placeholder="Ex: Brasil"
                     teams={selecoesCopa2026}
+                    disabled={isClosed}
                 />
 
                 <TeamAutocomplete
@@ -97,6 +114,7 @@ export default function ExtraPicksForm() {
                     name="vice"
                     placeholder="Ex: Argentina"
                     teams={selecoesCopa2026}
+                    disabled={isClosed}
                 />
 
                 <label className="flex flex-col gap-2">
@@ -110,6 +128,7 @@ export default function ExtraPicksForm() {
                             placeholder="Ex: Rayan"
                             required
                             className="w-full rounded-[10px] border border-[#FFFFFF]/12 bg-transparent py-3 px-4 font-inter text-white placeholder-[#757575] transition-all duration-200 focus:border-verdeNeon/30 focus:outline-none focus:ring-2 focus:ring-verdeNeon/20"
+                            disabled={isClosed}
                         />
                     </div>
                 </label>
@@ -127,11 +146,17 @@ export default function ExtraPicksForm() {
 
                 <button
                     type="submit"
-                    disabled={pending}
+                    disabled={isClosed || pending}
                     className="mt-2 inline-flex items-center justify-center gap-2 rounded-[10px] bg-linear-to-r from-verdeNeon to-[#22C55E] px-6 py-3 font-inter text-sm font-bold text-black transition-all duration-300 hover:scale-[1.01] hover:shadow-lg hover:shadow-verdeNeon/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
                 >
                     {pending && <Loader2 size={18} className="animate-spin" />}
-                    {pending ? "Preparando envio..." : "Salvar palpites"}
+                    {
+                        isClosed
+                            ? "Prazo encerrado"
+                            : pending
+                                ? "Preparando envio..."
+                                : "Salvar palpites"
+                    }
                 </button>
             </form>
         </section>

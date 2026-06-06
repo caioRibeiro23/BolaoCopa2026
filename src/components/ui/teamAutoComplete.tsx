@@ -5,6 +5,7 @@ interface TeamAutocompleteProps {
   name: string;
   placeholder: string;
   teams: string[];
+  disabled?: boolean;
 }
 
 export function TeamAutocomplete({
@@ -12,6 +13,7 @@ export function TeamAutocomplete({
   name,
   placeholder,
   teams,
+  disabled = false,
 }: TeamAutocompleteProps) {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -59,6 +61,7 @@ export function TeamAutocomplete({
       placeholder={placeholder}
       autoComplete="off"
       className="w-full rounded-[10px] border border-[#FFFFFF]/12 bg-transparent py-3 px-4 text-white placeholder-[#757575] transition-all duration-200 focus:border-verdeNeon/30 focus:outline-none focus:ring-2 focus:ring-verdeNeon/20"
+      disabled={disabled}
     />
 
     {open && filteredTeams.length > 0 && (

@@ -15,33 +15,65 @@ export async function saveExtraPrediction({
 }: SaveExtraPredictionParams) {
   const supabase = await createClient();
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+    const {
+        data: { user },
+        error: userError,
+    } = await supabase.auth.getUser();
 
-  if (userError || !user) {
-    throw new Error("Usuário não autenticado");
-  }
+    if (userError || !user) {
+        throw new Error("Usuário não autenticado");
+    }
 
-  const { error } = await supabase
-    .from("extra_predictions")
-    .upsert(
-      {
-        user_id: user.id,
-        champion_team: championTeam,
-        runner_up_team: runnerUpTeam,
-        top_scorer: topScorer,
-        updated_at: new Date().toISOString(),
-      },
-      {
-        onConflict: "user_id",
-      }
-    );
+    const DEADLINE = new Date("2026-06-18T00:00:00-03:00");
 
-  if (error) {
-    throw new Error(error.message);
-  }
+    if (new Date() >= DEADLINE) {
+        throw new Error(
+            "O prazo para envio dos palpites extras foi encerrado."
+        );
+    }
 
-  return true;
+    const { error } = await supabase
+        .from("extra_predictions")
+        .upsert(
+        {
+            user_id: user.id,
+            champion_team: championTeam,
+            runner_up_team: runnerUpTeam,
+            top_scorer: topScorer,
+            updated_at: new Date().toISOString(),
+        },
+        {
+            onConflict: "user_id",
+        }
+        );
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return true;
+}
+
+export async function getExtraPrediction() {
+    const supabase = await createClient();
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+        throw new Error("Usuário não autenticado");
+    }
+
+    const { data, error } = await supabase
+        .from("extra_predictions")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
 }

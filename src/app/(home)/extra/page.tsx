@@ -1,6 +1,7 @@
 import TitlePage from "@/src/components/ui/titlepage";
 import ExtraPicksForm from "@/src/components/extra/extraForm";
 import { Crown, Medal, Trophy } from "lucide-react";
+import { getExtraPrediction } from "@/src/lib/supabase/extra-predictions";
 
 const extraRules = [
     {
@@ -29,7 +30,10 @@ const extraRules = [
     },
 ];
 
-export default function ExtraPage() {
+export default async function ExtraPage() {
+
+    const prediction = await getExtraPrediction();
+
     return (
         <div className="min-h-screen w-full bg-azulEscuro px-8 py-16 md:px-14 md:py-17">
             <div className="flex flex-col gap-8">
@@ -87,7 +91,7 @@ export default function ExtraPage() {
                     </div>
                 </section>
 
-                <ExtraPicksForm />
+                <ExtraPicksForm initialPrediction={prediction} />
             </div>
         </div>
     );
