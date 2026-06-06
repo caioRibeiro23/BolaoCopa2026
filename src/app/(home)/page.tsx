@@ -74,7 +74,6 @@ export default function Home() {
   // Encontra a qual bloco cronológico o DIA EXIBIDO na tela pertence
   const blocoDaTela = CRONOGRAMA_COPA.find((fase) => dataSelecionadaZerada <= fase.fim) || CRONOGRAMA_COPA[CRONOGRAMA_COPA.length - 1];
   // Encontra a qual bloco cronológico a DATA ATUAL REAL DO SISTEMA pertence
-  const blocoDoSistema = CRONOGRAMA_COPA.find((fase) => hojeSistema <= fase.fim) || CRONOGRAMA_COPA[CRONOGRAMA_COPA.length - 1];
 
   const nomeRodadaExibicao = blocoDaTela.nome;
   const ultimoDiaDaRodadaAtiva = blocoDaTela.fim;
@@ -285,6 +284,10 @@ export default function Home() {
         </div>
 
       </div>
+
+              
+      
+
       <GameRules/>
     </div>
   );

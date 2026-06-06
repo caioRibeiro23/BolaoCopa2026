@@ -10,7 +10,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/myTournaments", label: "Torneios" },
   { href: "/rules", label: "Regras" },
-  // { href: "/extras", label: "Extra" }
+  { href: "/extra", label: "Extra" }
 ];
 
 type NavBarProps = {
