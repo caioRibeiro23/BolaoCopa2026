@@ -51,8 +51,8 @@ export default function ExtraPage() {
                                 Para que servem esses palpites
                             </h2>
                             <p className="max-w-3xl font-inter text-sm leading-6 text-cinzaSuave md:text-base">
-                                Esses palpites valem pontos extras e ficam visiveis apenas para o proprio usuario.
-                                Eles ajudam a premiar previsoes de longo prazo sobre a campea, o vice e o artilheiro da Copa.
+                                Esses palpites valem pontos extras e ficam visíveis apenas para o próprio usuário.
+                                Eles ajudam a premiar previsões de longo prazo sobre a campeã, o vice e o artilheiro da Copa.
                             </p>
                         </div>
 

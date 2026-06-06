@@ -67,7 +67,9 @@ const traducaoPaises: { [key: string]: string } = {
     "New Zealand": "Nova Zelândia"
 };
 
-export const selecoesCopa2026 = Array.from(new Set(Object.values(traducaoPaises)));
+export const selecoesCopa2026 = Array.from(
+  new Set(Object.values(traducaoPaises))
+).sort((a, b) => a.localeCompare(b, "pt-BR"));
 
 export const t = (nome: string | undefined | null) => {
   if (!nome) return "TBD"; // "To Be Defined" para jogos sem time
