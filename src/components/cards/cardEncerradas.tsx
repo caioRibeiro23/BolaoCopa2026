@@ -14,14 +14,30 @@ interface CardAoVivoProps {
     palpiteVisitante?: number;
 }
 
+export type StatusPontuacao = "exato" | "combo" | "resultado" | "um_gol" | "incorreto" | undefined;
+
 export default function CardEncerradas({ paisCasa, paisVisitante, grupo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante }: CardAoVivoProps) {
-    let status: "exato" | "resultado" | "incorreto" | undefined;
-    status = undefined;
-    if(palpiteCasa !==undefined && palpiteVisitante !==undefined) {
+    let status: StatusPontuacao = undefined;
+    if (palpiteCasa !== undefined && palpiteVisitante !== undefined) {
+        const acertouGolCasa = palpiteCasa === placarCasa;
+        const acertouGolVisitante = palpiteVisitante === placarVisitante;
+        
         const saldoPalpite = palpiteCasa - palpiteVisitante;
         const saldoReal = placarCasa - placarVisitante;
         const acertouVencedor = Math.sign(saldoPalpite) === Math.sign(saldoReal);
-        status = (acertouVencedor ? (palpiteCasa === placarCasa && palpiteVisitante === placarVisitante ? "exato" : "resultado") : "incorreto");
+
+        // 🧠 Árvore de Decisão do Front (Espelhando o seu banco de dados)
+        if (acertouGolCasa && acertouGolVisitante) {
+            status = "exato"; // 9 pontos
+        } else if (acertouVencedor && (acertouGolCasa || acertouGolVisitante)) {
+            status = "combo"; // 5 pontos
+        } else if (acertouVencedor) {
+            status = "resultado"; // 3 pontos
+        } else if (acertouGolCasa || acertouGolVisitante) {
+            status = "um_gol"; // 1 ponto
+        } else {
+            status = "incorreto"; // 0 pontos
+        }
     }
     return (
         <div className="w-full flex flex-col bg-azulMedio rounded-2xl border border-gray-800 shadow-2xl">
