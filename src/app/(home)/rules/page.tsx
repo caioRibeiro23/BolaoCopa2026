@@ -149,40 +149,45 @@ export default function RulesPage() {
                     </article>
                 </section>
 
+                {/* Seção Pontos Extras Privados */}
                 <section className="rounded-2xl border border-azulCinzado bg-azulMedio px-4 py-5 sm:px-6 sm:py-6 shadow-sm w-full overflow-hidden">
-    <div className="flex items-center gap-2">
-        <Lock size={16} className="text-[#FF8FB1] shrink-0" />
-        <p className="font-inter text-xs font-bold tracking-[1.5px] text-[#FF8FB1]">
-            PONTOS EXTRAS PRIVADOS
-        </p>
-    </div>
+                    <div className="flex items-center gap-2">
+                        <Lock size={16} className="text-[#FF8FB1] shrink-0" />
+                        <p className="font-inter text-xs font-bold tracking-[1.5px] text-[#FF8FB1]">
+                            PONTOS EXTRAS PRIVADOS
+                        </p>
+                    </div>
 
-    <p className="mt-4 max-w-3xl font-inter text-sm leading-6 text-cinzaSuave">
-        Os palpites extras sao individuais: cada usuario visualiza apenas os proprios extras,
-        sem acesso aos dados dos demais participantes.
-    </p>
+                    <p className="w-full mt-4  font-inter text-sm leading-6 text-cinzaSuave">
+                        Os palpites extras sao individuais: cada usuario visualiza apenas os proprios extras,
+                        sem acesso aos dados dos demais participantes.
+                    </p>
 
-    {/* Configurado para se ajustar em colunas no tablet/PC e ficar em lista no celular */}
-    <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
-        {extraPredictions.map((item) => (
-            <div
-                key={item.label}
-                className="min-w-0 w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 flex flex-col justify-between gap-2"
-            >
-                {/* CORRIGIDO: de 'wrap-break-word' para 'break-words' para evitar a quebra no mobile */}
-                <p className="break-words font-inter text-[11px] font-semibold uppercase leading-4 tracking-[1.3px] text-cinzaSuave sm:text-xs">
-                    {item.label}
-                </p>
-                <div className="mt-1 flex items-center gap-2">
-                    <Trophy size={16} className="shrink-0 text-[#FFD700]" />
-                    <span className="min-w-0 font-bebas-neue text-2xl tracking-[1.5px] text-[#FFD700] sm:text-3xl">
-                        +{item.points}
-                    </span>
-                </div>
-            </div>
-        ))}
-    </div>
-</section>
+                    {/* Grid de Cards Extras */}
+                    <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+                        {extraPredictions.map((item) => (
+                            <div
+                                key={item.label}
+                                /* 
+                                🎯 SOLUÇÃO DO BUG GRÁFICO:
+                                - transform-gpu: Força uma camada 3D limpa na GPU
+                                - [backface-visibility:hidden]: Impede que renderizações fantasmas se sobreponham
+                                */
+                                className="min-w-0 w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 p-4 flex flex-col justify-between gap-2 transform-gpu [backface-visibility:hidden]"
+                            >
+                                <p className="break-words font-inter text-[11px] font-semibold uppercase leading-4 tracking-[1.3px] text-cinzaSuave sm:text-xs">
+                                    {item.label}
+                                </p>
+                                <div className="mt-1 flex items-center gap-2">
+                                    <Trophy size={16} className="shrink-0 text-[#FFD700]" />
+                                    <span className="min-w-0 font-bebas-neue text-2xl tracking-[1.5px] text-[#FFD700] sm:text-3xl">
+                                        +{item.points}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
             </div>
         </div>
     );
