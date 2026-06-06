@@ -1,4 +1,4 @@
-import { StatusPontuacao } from "../components/CardEncerradas";
+import type { StatusPontuacao } from "../../components/cards/cardEncerradas";
 
 interface ResultCardProps {
     status: StatusPontuacao;
