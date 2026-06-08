@@ -5,7 +5,7 @@ const scoreRules = [
     {
         title: "Placar exato",
         points: 9,
-        description: "Acertou os gols dos dois times com exatidao.",
+        description: "Acertou os gols dos dois times com exatidão.",
         icon: Goal,
         color: "text-verdeNeon",
         glow: "shadow-[0_0_14px_rgba(57,255,20,0.4)]",
@@ -21,7 +21,7 @@ const scoreRules = [
     {
         title: "Gols de um time",
         points: 1,
-        description: "Acertou a quantidade de gols de pelo menos uma selecao.",
+        description: "Acertou a quantidade de gols de pelo menos uma seleção.",
         icon: Medal,
         color: "text-[#FFD86B]",
         glow: "shadow-[0_0_14px_rgba(255,216,107,0.35)]",
@@ -34,11 +34,11 @@ const extraPredictions = [
         points: 9,
     },
     {
-        label: "Campeao",
+        label: "Campeão",
         points: 10,
     },
     {
-        label: "Vice-campeao",
+        label: "Vice-campeão",
         points: 5,
     },
 ];
@@ -62,11 +62,11 @@ export default function RulesPage() {
 
                         <div className="space-y-3">
                             <h2 className="font-bebas-neue text-4xl tracking-[2px] text-[#E8EDF5] md:text-5xl">
-                                Como funciona a pontuacao
+                                Como funciona a pontuação
                             </h2>
                             <p className="max-w-3xl font-inter text-sm leading-6 text-cinzaSuave md:text-base">
                                 Cada partida pode render pontos por acerto de placar, resultado e gols por equipe.
-                                Alem disso, existem previsoes extras de longo prazo e regras especiais para as fases finais.
+                                Além disso, existem previsões extras de longo prazo e regras especiais para as fases finais.
                             </p>
                         </div>
                     </div>
@@ -159,7 +159,7 @@ export default function RulesPage() {
                     </div>
 
                     <p className="w-full mt-4  font-inter text-sm leading-6 text-cinzaSuave">
-                        Os palpites extras sao individuais: cada usuario visualiza apenas os proprios extras,
+                        Os palpites extras são individuais: cada usuario visualiza apenas os próprios extras,
                         sem acesso aos dados dos demais participantes.
                     </p>
 
