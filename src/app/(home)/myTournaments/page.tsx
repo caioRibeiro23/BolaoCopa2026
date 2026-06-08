@@ -46,8 +46,8 @@ export default async function MYTournamentsPage() {
           <div className="absolute -left-16 top-8 h-40 w-40 rounded-full bg-verdeNeon/10 blur-3xl" />
           <div className="absolute -bottom-20 right-0 h-56 w-56 rounded-full bg-amarelo/10 blur-3xl" />
 
-          <div className="relative space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-amarelo/30 bg-amarelo/10 px-3 py-1 text-xs font-semibold uppercase tracking-[1.5px] text-amarelo">
+          <div className="relative flex flex-col items-center space-y-6 text-center md:items-start md:text-left">
+            <div className="inline-flex items-center gap-2 rounded-full border border-verdeNeon/30 bg-verdeNeon/10 px-3 py-1 text-xs font-semibold uppercase tracking-[1.5px] text-verdeNeon">
               Liga Premiada
             </div>
 
@@ -69,9 +69,9 @@ export default async function MYTournamentsPage() {
               </p>
             </div>
 
-            <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-xl border border-amarelo/20 bg-amarelo/5 p-4">
-                <p className="text-sm font-semibold text-amarelo">
+            <div className="grid w-full gap-6 md:grid-cols-2">
+              <div className="rounded-xl border border-white/20 bg-white/5 p-4">
+                <p className="text-sm font-semibold text-white">
                   💰 Entrada única
                 </p>
                 <p className="mt-1 text-cinzaSuave">
@@ -89,8 +89,8 @@ export default async function MYTournamentsPage() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-amarelo/20 bg-amarelo/5 p-4">
-              <p className="font-semibold text-amarelo">
+            <div className="rounded-xl border border-white/20 bg-white/5 p-4 w-full">
+              <p className="font-semibold text-white">
                 ⏰ Inscrições abertas até sábado, dia 13
               </p>
               <p className="mt-1 text-sm text-cinzaSuave">
@@ -98,7 +98,7 @@ export default async function MYTournamentsPage() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
               <Link
                 href="https://forms.gle/6drStjfACv2wGtEcA"
                 target="_blank"

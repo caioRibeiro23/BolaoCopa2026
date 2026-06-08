@@ -34,7 +34,7 @@ export default function HeroSection() {
         </section>
 
         <div className="w-full bg-azulEscuro/90 border-t border-azulCinzado">
-            <div className="max-w-6xl mx-auto px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+            <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between text-center gap-3">
                 <p className="text-sm text-cinzaSuave">
                     ⏱ A seção de palpites extras está aberta até <span className="font-semibold text-white">dia 17</span>.
                 </p>
