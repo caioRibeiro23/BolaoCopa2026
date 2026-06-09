@@ -39,6 +39,7 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
     try {
       let currentAvatarUrl = previewUrl;
 
+      // 1. Upload do Avatar para o Storage (Se houver novo arquivo)
       if (avatarFile) {
         const fileExt = avatarFile.name.split('.').pop();
         const fileName = `${initialData.id}-${Math.random()}.${fileExt}`;
@@ -57,22 +58,30 @@ export default function ProfileForm({ initialData }: ProfileFormProps) {
         currentAvatarUrl = publicUrl;
       }
 
-      const { data: { user }, error } = await supabase.auth.updateUser({
+      // 2. Sincroniza os Metadados do Auth (Mantém consistência no estado da sessão)
+      const { error: authError } = await supabase.auth.updateUser({
         data: { 
           full_name: name,
           avatar_url: currentAvatarUrl
         }
       });
+      if (authError) throw authError;
 
-      if (error) throw error;
+      // 3. 🔥 A CORREÇÃO: Faz o update explícito na tabela física do seu Banco de Dados
+      const { error: dbError } = await supabase
+        .from("user_profiles")
+        .update({
+          full_name: name,           // Atualiza o Caio de Alvarenga Ribeiro completo
+          avatar_url: currentAvatarUrl
+        })
+        .eq("id", initialData.id);   // Filtra pelo UUID do usuário logado
 
-      if (user?.user_metadata) {
-        setName(user.user_metadata.full_name || name);
-        setPreviewUrl(user.user_metadata.avatar_url || currentAvatarUrl);
-      }
-      
+      if (dbError) throw dbError;
+
       setAvatarFile(null);
-      alert("Perfil updated com sucesso!");
+      alert("Perfil atualizado com sucesso!");
+      
+      // Força o Next.js a revalidar os dados do servidor (initialData virá atualizado)
       router.refresh();
 
     } catch (error) {
