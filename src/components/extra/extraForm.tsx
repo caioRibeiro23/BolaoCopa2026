@@ -137,10 +137,10 @@ export default function ExtraPicksForm({ initialPrediction }: ExtraPicksFormProp
                     <p className="font-inter text-xs font-semibold uppercase tracking-[1.5px] text-cinzaSuave">
                         Último envio registrado
                     </p>
-                    <div className="mt-3 grid gap-2 text-sm text-[#E8EDF5] sm:grid-cols-3">
-                        <span className="truncate">Campeã: {feedback.campea || "-"}</span>
-                        <span className="truncate">Artilheiro: {feedback.artilheiro || "-"}</span>
-                        <span className="truncate">Vice-campeão: {feedback.vice || "-"}</span>
+                    <div className="w-full mt-3 flex flex-col gap-2 text-sm text-[#E8EDF5]">
+                        <span className="truncate w-full md:w-auto">Campeã: {feedback.campea || "-"}</span>
+                        <span className="truncate w-full md:w-auto">Vice-campeã: {feedback.vice || "-"}</span>
+                        <span className="truncate w-full md:w-auto">Artilheiro: {feedback.artilheiro || "-"}</span>
                     </div>
                 </div>
 
