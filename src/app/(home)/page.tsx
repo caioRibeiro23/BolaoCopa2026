@@ -49,15 +49,17 @@ const CRONOGRAMA_COPA = [
 
 const OBTER_DATA_SISTEMA = () => {
   const dataSimulada = new Date();
-  // dataSimulada.setFullYear(2026);
-  // dataSimulada.setMonth(5); // Junho
-  // dataSimulada.setDate(11); 
+  dataSimulada.setFullYear(2026);
+  dataSimulada.setMonth(5); // Junho
+  dataSimulada.setDate(20); 
+  dataSimulada.setHours(22, 0, 0, 0); // Meio-dia para evitar problemas de fuso horário
   return dataSimulada;
 };
 
 export default function Home() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [userBets, setUserBets] = useState<Record<string, UserBet>>({});
+  const [avisoCronograma, setAvisoCronograma] = useState<string | null>(null);
 
   const dataInicialCopa = new Date(2026, 5, 11, 0, 0, 0, 0); // 11 de Junho de 2026 cravado
 
@@ -149,17 +151,41 @@ export default function Home() {
   }, [dataSelecionada]);
 
   const alterarDia = (dias: number) => {
-    const novaData = new Date(dataSelecionada);
-    novaData.setDate(novaData.getDate() + dias);
-    // Zera as horas para manter consistência total nas travas
-    novaData.setHours(0, 0, 0, 0);
-    setDataSelecionada(novaData);
+  const novaData = new Date(dataSelecionada);
+  novaData.setDate(novaData.getDate() + dias);
+  novaData.setHours(0, 0, 0, 0);
+  setDataSelecionada(novaData);
+  setAvisoCronograma(null); // Limpa o aviso ao mudar de dia válido
+};
+  const lidarCliqueProximo = () => {
+  if (desabilitarProximo) {
+    // Se a trava disparar porque ele tentou avançar além do limite permitido da rodada atual
+    setAvisoCronograma(`Os palpites da próxima rodada abrem automaticamente 2 dias antes da atual terminar!`);
+    
+    // Remove o aviso sumir sozinho após 5 segundos para não poluir a tela
+    setTimeout(() => setAvisoCronograma(null), 5000);
+    return;
+  }
+  
+  alterarDia(1);
   };
 
   // Filtros dos cards usando a data controlada do sistema
   const tempoAtualMilissegundos = OBTER_DATA_SISTEMA().getTime();
-  const partidasAbertas = matches.filter(m => m.status === 'scheduled' && tempoAtualMilissegundos < new Date(m.date_time).getTime());
-  const partidasAoVivo = matches.filter(m => m.status === 'live' || (m.status === 'scheduled' && tempoAtualMilissegundos >= new Date(m.date_time).getTime()));
+  const obterTimestampGarantido = (dateTimeStr: string) => {
+    // 1. Substitui o espaço por 'T' para ficar no padrão ISO internacional
+    let isoStr = dateTimeStr.replace(" ", "T");
+    
+    // 2. Se a string não terminar com 'Z', nós injetamos o 'Z' para forçar o JS 
+    // a ler esse horário como UTC puro (GTM 0) antes de converter para o fuso do usuário
+    if (!isoStr.endsWith("Z") && !isoStr.includes("-03")) {
+      isoStr = `${isoStr}Z`;
+    }
+    
+    return new Date(isoStr).getTime();
+  };
+  const partidasAbertas = matches.filter(m => m.status === 'scheduled' && tempoAtualMilissegundos < obterTimestampGarantido(m.date_time));
+  const partidasAoVivo = matches.filter(m => m.status === 'live' || (m.status === 'scheduled' && tempoAtualMilissegundos >= obterTimestampGarantido(m.date_time)));
   const partidasEncerradas = matches.filter(m => m.status === 'finished');
 
   return (
@@ -191,15 +217,20 @@ export default function Home() {
           </h2>
 
           <button 
-            onClick={() => alterarDia(1)}
+            onClick={lidarCliqueProximo}
             className={`text-xl md:text-2xl font-bold p-2 transition-colors ${desabilitarProximo ? "text-cinzaSuave/30 cursor-default" : "text-verdeNeon hover:text-verdeNeon cursor-pointer"}`}
             aria-label="Próximo dia"
-            disabled={desabilitarProximo}
           >
             &gt;
           </button>
         </div>
-
+        {avisoCronograma && (
+          <div className="w-full text-center bg-azulCard/80 border border-yellow-500/35 rounded-xl p-3 animate-fade-in">
+            <p className="text-yellow-400 font-inter text-xs md:text-sm font-medium">
+              ⚠️ {avisoCronograma}
+            </p>
+          </div>
+        )}
         {/* Listas de Cards (Abertas, Ao Vivo, Encerradas) */}
         <div className="w-full flex flex-col gap-6 ">
           <div className="w-full px-0.5 gap-2 flex flex-row items-center">
@@ -234,8 +265,8 @@ export default function Home() {
 
           {partidasAoVivo.map(jogo => {
             const palpite = userBets[jogo.id];
-            const apiAtrasada = jogo.status === 'scheduled' && OBTER_DATA_SISTEMA().getTime() >= new Date(jogo.date_time).getTime();
-            const statusTempo = apiAtrasada ? "Aguardando início..." : jogo.status_exibicao || "Ao Vivo";  
+            const apiAtrasada = jogo.status === 'scheduled' && tempoAtualMilissegundos >= obterTimestampGarantido(jogo.date_time);
+            const statusTempo = apiAtrasada ? "Aguardando início..." : jogo.status_exibicao || "Ao Vivo"; 
 
             return (
               <CardAoVivo 
