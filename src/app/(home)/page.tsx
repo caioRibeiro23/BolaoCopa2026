@@ -49,10 +49,10 @@ const CRONOGRAMA_COPA = [
 
 const OBTER_DATA_SISTEMA = () => {
   const dataSimulada = new Date();
-  dataSimulada.setFullYear(2026);
-  dataSimulada.setMonth(5); // Junho
-  dataSimulada.setDate(20); 
-  dataSimulada.setHours(22, 0, 0, 0); // Meio-dia para evitar problemas de fuso horário
+  // dataSimulada.setFullYear(2026);
+  // dataSimulada.setMonth(5); // Junho
+  // dataSimulada.setDate(20); 
+  // dataSimulada.setHours(22, 0, 0, 0); // Meio-dia para evitar problemas de fuso horário
   return dataSimulada;
 };
 
