@@ -39,7 +39,7 @@ export default function HeroSection() {
 
           <div className="w-full px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3 bg-[#FFD700]/7 border border-[#FFD700]/25 rounded-lg">
             <p className="text-sm text-[#E8EDF5] text-center md:text-left">
-              Entre na <span className="font-semibold text-[#FFD700]">Liga Premiada</span> até <span className="font-semibold text-white">dia 13</span> e não perca a chance de disputar o prêmio final da Copa.
+              Entre na <span className="font-semibold text-[#FFD700]">Liga Premiada</span> até <span className="font-semibold text-white">dia 14</span> e não perca a chance de disputar o prêmio final da Copa.
             </p>
             <Link href="https://docs.google.com/forms/d/e/1FAIpQLSdaUDdA5kN_MStkDsNWx3zcxpAlAO1UJoO0Ltxv2qR7j7wkgA/viewform?usp=dialog" 
             target="_blank" className="inline-block px-4 py-2 rounded-lg bg-[#FFD700] text-[#1A1300] font-semibold text-sm shadow-[0_0_10px_rgba(255,215,0,0.18)] hover:brightness-95 transition">
