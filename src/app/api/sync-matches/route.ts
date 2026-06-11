@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 interface FootballMatch {
   homeTeam: { name: string };
@@ -140,6 +141,8 @@ export async function GET() {
       });
 
     if (error) throw error;
+    
+    revalidatePath("/");
 
     return NextResponse.json({ 
       success: true, 
