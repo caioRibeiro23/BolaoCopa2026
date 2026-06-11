@@ -16,7 +16,7 @@ interface MatchWithBet {
     }[];
 }
 interface HistoryRowProps {
-    status: "exato" | "resultado" | "errado" | "nulo";
+    status: "exato" | "resultado" | "errado" | "nulo" | "combo" | "um_gol" | "incorreto";
     match: MatchWithBet;
 }
 
