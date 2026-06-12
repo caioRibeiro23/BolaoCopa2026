@@ -1,6 +1,6 @@
 'use client'
 
-type PredictionStatus = "exato" | "combo" | "resultado" |"um_gol" | "incorreto";
+type PredictionStatus = "exato" | "combo" | "resultado" |"um_gol" | "incorreto" | "nulo";
 
 export interface ParticipantPrediction {
     id: string;
@@ -37,6 +37,10 @@ const statusStyles: Record<PredictionStatus, { label: string; className: string 
         label: "Incorreto",
         className: "bg-vermelhoVibrante/8 text-vermelhoVibrante border-vermelhoVibrante/20",
     },
+    nulo: {
+        label: "Nulo",
+        className: "bg-cinza/10 text-cinza border-cinza/20",
+    }
 };
 
 function getPointsLabel(points: number) {
@@ -66,9 +70,12 @@ export default function PredictionsTable({ predictions }: PredictionsTableProps)
             {predictions.length > 0 ? (
                 predictions.map((prediction, index) => {
                     const isLastRow = index === predictions.length - 1;
-                    const predictionLabel = prediction.status === "incorreto"
-                        ? "-- x --"
-                        : `${prediction.predictionHome ?? "--"} x ${prediction.predictionAway ?? "--"}`;
+                    const hasPrediction = prediction.status !== "nulo"
+                        && prediction.predictionHome !== null
+                        && prediction.predictionAway !== null;
+                    const predictionLabel = hasPrediction
+                        ? `${prediction.predictionHome} x ${prediction.predictionAway}`
+                        : "-- x --";
 
                     return (
                         <div
