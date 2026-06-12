@@ -91,11 +91,51 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
 
             {isGeneralChampionship ? <FullGeneralTable userId={user.id} /> : <FullChampionshipTable userId={user.id} />}
             
-            <MatchesSection
-                matches={allMatches}
-                initialPage={initialPage}
-                currentPhase={currentPhase}
-            />
+            {isGeneralChampionship ? (
+                <div className="rounded-2xl border border-azulCinzado bg-azulMedio px-6 py-8 text-center">
+                    <h3 className="font-bebas-neue text-2xl text-white mb-3">
+                        🔒 Palpites Exclusivos da Liga Premiada
+                    </h3>
+
+                    <p className="font-inter text-sm text-cinzaSuave mb-4">
+                        Os palpites dos participantes ficam disponíveis apenas na Liga
+                        Premiada. Se você já participa da Liga Premiada, basta acessar a
+                        classificação da liga para acompanhar os palpites e o desempenho dos
+                        concorrentes ao longo da Copa.
+                    </p>
+
+                    <a
+                        href="/tournament?championshipId=9f949a87-0b94-48ee-ae3d-aa65bd3478da"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full items-center justify-center rounded-lg border border-verdeNeon bg-azulEscuro/20 px-5 py-2 text-center font-inter text-sm font-semibold text-verdeNeon transition-all duration-200 hover:scale-105 hover:bg-azulEscuro/60 hover:brightness-105 md:w-auto md:text-base"
+                    >
+                        Classificação da Liga Premiada
+                    </a>
+
+                    <p className="font-inter text-sm text-cinzaSuave mt-8 mb-6">
+                        Ainda não faz parte? As inscrições continuam abertas e você ainda pode
+                        garantir sua participação para disputar as premiações.
+                    </p>
+
+                    <a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSdaUDdA5kN_MStkDsNWx3zcxpAlAO1UJoO0Ltxv2qR7j7wkgA/viewform?usp=dialog"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full items-center justify-center rounded-lg border border-[#FFD700]/40 bg-[#FFD700] px-5 py-2 text-center font-inter text-sm font-semibold text-[#1A1300] shadow-[0_0_10px_rgba(255,215,0,0.18)] transition-all duration-200 hover:scale-105 hover:brightness-95 md:w-auto md:text-base"
+                    >
+                        Participar da Liga Premiada
+                    </a>
+                </div>
+            ) : (
+                <MatchesSection
+                    matches={allMatches}
+                    initialPage={initialPage}
+                    currentPhase={currentPhase}
+                    championshipId={championshipId}
+                />
+            )}
+            
         </div>
     );
 }

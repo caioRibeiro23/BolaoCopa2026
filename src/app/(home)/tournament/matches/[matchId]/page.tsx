@@ -1,6 +1,6 @@
 import CardAbertas from "@/src/components/cards/cardAbertas";
 import CardAoVivo from "@/src/components/cards/cardAoVivo";
-import CardEncerradas from "@/src/components/cards/cardEncerradas";
+import CardEncerradas, { StatusPontuacao } from "@/src/components/cards/cardEncerradas";
 import TitlePage from "@/src/components/ui/titlepage";
 import BackButton from "@/src/components/ui/backButton";
 import PredictionsTable, { type ParticipantPrediction } from "@/src/components/Tournament/cards/predictionsTable";
@@ -10,9 +10,11 @@ import { t } from "@/src/utils/traducaoPaises";
 import { getCountryAbbr } from "@/src/components/cards/iconePais/countryAbbr";
 import { notFound } from "next/navigation";
 import { getMatchById, getMatchParticipantPredictions } from "@/src/lib/supabase/tournament";
+import { createClient } from "@/src/lib/supabase/server";
 
 interface MatchPageProps {
     params: Promise<{ matchId: string }> | { matchId: string };
+    searchParams?: Promise<{ championshipId?: string }> | { championshipId?: string };
 }
 
 function getPhaseLabel(phase: string) {
@@ -32,39 +34,50 @@ function getPhaseLabel(phase: string) {
     }
 }
 
-function getDisplayPoints(points: number | null) {
-    if (points === null || points === undefined) {
-        return 0;
-    }
 
-    if (points >= 10) {
-        return 3;
-    }
+function getPredictionStatus(palpiteCasa: number , palpiteVisitante: number, placarCasa: number, placarVisitante: number) {
+    let status: StatusPontuacao = "incorreto";
+    let points = 0;
 
-    if (points >= 5) {
-        return 1;
-    }
+    if (palpiteCasa !== undefined && palpiteVisitante !== undefined) {
+        const acertouGolCasa = palpiteCasa === placarCasa;
+        const acertouGolVisitante = palpiteVisitante === placarVisitante;
+        
+        const saldoPalpite = palpiteCasa - palpiteVisitante;
+        const saldoReal = placarCasa - placarVisitante;
+        const acertouVencedor = Math.sign(saldoPalpite) === Math.sign(saldoReal);
 
-    return points;
+        // 🧠 Árvore de Decisão do Front (Espelhando o seu banco de dados)
+        if (acertouGolCasa && acertouGolVisitante) {
+            status = "exato";
+            points = 9;
+        } else if (acertouVencedor && (acertouGolCasa || acertouGolVisitante)) {
+            status = "combo"; // 5 pontos
+            points = 5;
+        } else if (acertouVencedor) {
+            status = "resultado"; // 3 pontos
+            points = 3;
+        } else if (acertouGolCasa || acertouGolVisitante) {
+            status = "um_gol"; // 1 ponto
+            points = 1;
+        } else {
+            status = "incorreto"; // 0 pontos
+            points = 0;
+        }
+    }
+    return { status, points };
 }
 
-function getPredictionStatus(points: number | null): "exato" | "resultado" | "nulo" {
-    const displayPoints = getDisplayPoints(points);
-
-    if (displayPoints >= 3) {
-        return "exato";
-    }
-
-    if (displayPoints >= 1) {
-        return "resultado";
-    }
-
-    return "nulo";
-}
-
-export default async function MatchPage({ params }: MatchPageProps) {
+export default async function MatchPage({ params, searchParams }: MatchPageProps) {
     const resolvedParams = await params;
+    const resolvedSearchParams = searchParams ? await searchParams : {};
     const match = await getMatchById(resolvedParams.matchId);
+
+    const supabase = await createClient();
+
+    const {
+    data: { user },
+    } = await supabase.auth.getUser();
 
     if (!match) {
         notFound();
@@ -76,8 +89,8 @@ export default async function MatchPage({ params }: MatchPageProps) {
     const isLive = match.status === "live";
     const canSeePredictions = isLive || isFinished;
     const participantPredictions: ParticipantPrediction[] = canSeePredictions
-        ? (await getMatchParticipantPredictions(match.id)).map((prediction) => {
-            const displayPoints = getDisplayPoints(prediction.points_earned);
+        ? (await getMatchParticipantPredictions(match.id, resolvedSearchParams.championshipId)).map((prediction) => {
+            // const displayPoints = getDisplayPoints(prediction.points_earned);
             const nameParts = prediction.full_name.trim().split(/\s+/).filter(Boolean);
             const initials = nameParts.length > 1
                 ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase()
@@ -89,11 +102,15 @@ export default async function MatchPage({ params }: MatchPageProps) {
                 initials,
                 predictionHome: prediction.prediction_home,
                 predictionAway: prediction.prediction_away,
-                status: getPredictionStatus(prediction.points_earned),
-                points: displayPoints,
+                status: getPredictionStatus(prediction.prediction_home, prediction.prediction_away, match.goals_home ?? 0, match.goals_away ?? 0).status,
+                points: getPredictionStatus(prediction.prediction_home, prediction.prediction_away, match.goals_home ?? 0, match.goals_away ?? 0).points,
             };
         })
         : [];
+
+    const myPrediction = participantPredictions.find((prediction) => prediction.id === user?.id);
+
+
     const resultText = isFinished
         ? `Resultado da Partida: ${getCountryAbbr(t(match.team_home))} ${match.goals_home} x ${match.goals_away} ${getCountryAbbr(t(match.team_away))}`
         : isLive
@@ -113,6 +130,8 @@ export default async function MatchPage({ params }: MatchPageProps) {
                     grupo={groupLabel}
                     placarCasa={match.goals_home ?? 0}
                     placarVisitante={match.goals_away ?? 0}
+                    palpiteCasa={myPrediction?.predictionHome ?? undefined}
+                    palpiteVisitante={myPrediction?.predictionAway ?? undefined}
                 />
             ) : match.status === "live" ? (
                 <CardAoVivo
@@ -122,6 +141,8 @@ export default async function MatchPage({ params }: MatchPageProps) {
                     tempo={formatarHoraBR(match.date_time)}
                     placarCasa={match.goals_home ?? 0}
                     placarVisitante={match.goals_away ?? 0}
+                    palpiteCasa={myPrediction?.predictionHome ?? undefined}
+                    palpiteVisitante={myPrediction?.predictionAway ?? undefined}
                 />
             ) : (
                 <CardAbertas
