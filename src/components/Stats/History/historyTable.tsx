@@ -21,6 +21,8 @@ interface MatchWithBet {
     }[];
 }
 
+export type StatusLinhaHistorico = "exato" | "combo" | "resultado" | "um_gol" | "incorreto" | "nulo";
+
 export default async function historyTable({ userId }: HistoryTableProps) {
     const supabase = createClient();
 
@@ -63,21 +65,35 @@ export default async function historyTable({ userId }: HistoryTableProps) {
             {matches.map((jogo) => {
                 const palpite = jogo.bets && jogo.bets.length > 0 ? jogo.bets[0] : null;
                 
-                // Lógica para definir o status visual da linha
-                let statusLinha: "exato" | "resultado" | "errado" | "nulo" = "nulo";
+                // 1️⃣ Inicializa como nulo caso o usuário não tenha dado palpite
+                let statusLinha: StatusLinhaHistorico = "nulo";
 
                 if (palpite) {
-                    if (palpite.points_earned === 10) {
-                        statusLinha = "exato";
-                    } else if (palpite.points_earned === 5) {
-                        statusLinha = "resultado";
-                    } else if (palpite.points_earned === 0) {
-                        statusLinha = "errado";
-                    }
-                } else {
-                    statusLinha = "nulo"; // Jogo sem palpite
-                }
+                    const placarCasa = jogo.goals_home;
+                    const placarVisitante = jogo.goals_away;
+                    const palpiteCasa = palpite.prediction_home;
+                    const palpiteVisitante = palpite.prediction_away;
 
+                    const acertouGolCasa = palpiteCasa === placarCasa;
+                    const acertouGolVisitante = palpiteVisitante === placarVisitante;
+                    
+                    const saldoPalpite = palpiteCasa - palpiteVisitante;
+                    const saldoReal = placarCasa - placarVisitante;
+                    const acertouVencedor = Math.sign(saldoPalpite) === Math.sign(saldoReal);
+
+                    // 🧠 2️⃣ Espelhamento exato da Árvore de Decisão do seu Card da Home
+                    if (acertouGolCasa && acertouGolVisitante) {
+                        statusLinha = "exato";       // Acertou o placar em cheio (9 pts)
+                    } else if (acertouVencedor && (acertouGolCasa || acertouGolVisitante)) {
+                        statusLinha = "combo";       // Vencedor + gol de um dos times (5 pts)
+                    } else if (acertouVencedor) {
+                        statusLinha = "resultado";   // Acertou apenas a tendência/vencedor (3 pts)
+                    } else if (acertouGolCasa || acertouGolVisitante) {
+                        statusLinha = "um_gol";      // Errou o vencedor mas acertou o gol de um time (1 pt)
+                    } else {
+                        statusLinha = "incorreto";   // Errou tudo (0 pts)
+                    }
+                }
                 return (
                     <HistoryRow 
                         key={jogo.id}
