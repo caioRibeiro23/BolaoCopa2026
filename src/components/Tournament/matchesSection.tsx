@@ -22,6 +22,7 @@ interface MatchesSectionProps {
     matches: MatchRow[];
     initialPage: number;
     currentPhase: "all" | "groups" | "round_16" | "quarterfinals" | "semifinals" | "final";
+    championshipId?: string;
 }
 
 const phaseFilters = [
@@ -70,7 +71,7 @@ function getPaginationItems(totalPages: number, currentPage: number) {
     return items;
 }
 
-export default function MatchesSection({ matches, initialPage, currentPhase }: MatchesSectionProps) {
+export default function MatchesSection({ matches, initialPage, currentPhase, championshipId }: MatchesSectionProps) {
     const [selectedPhase, setSelectedPhase] = useState(currentPhase);
     const [currentPage, setCurrentPage] = useState(initialPage);
     const isFirstRender = useRef(true);
@@ -138,6 +139,7 @@ export default function MatchesSection({ matches, initialPage, currentPhase }: M
                         <MatchCard
                             key={match.id}
                             matchId={match.id}
+                            championshipId={championshipId}
                             paisCasa={t(match.team_home)}
                             paisVisitante={t(match.team_away)}
                             placarCasa={match.goals_home}

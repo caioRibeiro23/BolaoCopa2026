@@ -6,6 +6,7 @@ import { getCountryAbbr } from "../../cards/iconePais/countryAbbr";
 
 interface MatchCardProps {
     matchId: string;
+    championshipId?: string;
     paisCasa: string;
     paisVisitante: string;
     placarCasa: number | null;
@@ -37,14 +38,15 @@ function getStatusClass(status: MatchCardProps["status"]) {
     }
 }
 
-export default function MatchCard({ matchId, paisCasa, paisVisitante, placarCasa, placarVisitante, grupo, status, dateTime }: MatchCardProps) {
+export default function MatchCard({ matchId, championshipId, paisCasa, paisVisitante, placarCasa, placarVisitante, grupo, status, dateTime }: MatchCardProps) {
     const hasScore = placarCasa !== null && placarVisitante !== null;
     const data = formatarDataBR(dateTime);
     const hora = formatarHoraBR(dateTime);
+    const href = championshipId ? `/tournament/matches/${matchId}?championshipId=${championshipId}` : `/tournament/matches/${matchId}`;
 
     return (
         <Link
-            href={`/tournament/matches/${matchId}`}
+            href={href}
             aria-label={`Ver palpites dos participantes da partida entre ${paisCasa} e ${paisVisitante}`}
             className="group block rounded-2xl focus:outline-none focus:ring-2 focus:ring-verdeNeon/30"
         >
@@ -79,7 +81,7 @@ export default function MatchCard({ matchId, paisCasa, paisVisitante, placarCasa
 
                 <div className="flex flex-col gap-3 pt-4 text-xs font-inter text-cinzaSuave">
                     <div className="h-px w-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
-                    <span className="inline-flex items-center gap-2 font-bold text-verdeNeon opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:translate-y-0">
+                    <span className="inline-flex items-center gap-2 font-bold text-verdeNeon bp-840:opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:translate-y-0">
                         Ver palpites dos participantes
                         <span aria-hidden="true">→</span>
                     </span>

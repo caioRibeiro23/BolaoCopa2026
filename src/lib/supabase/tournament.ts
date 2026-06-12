@@ -97,14 +97,39 @@ export async function getMatchById(matchId: string) {
     return data as MatchRow | null;
 }
 
-export async function getMatchParticipantPredictions(matchId: string) {
+export async function getMatchParticipantPredictions(matchId: string, championshipId?: string) {
     const supabase = await createClient();
 
-    const { data: betsData, error: betsError } = await supabase
+    let memberUserIds: string[] | null = null;
+
+    if (championshipId && championshipId !== "general") {
+        const { data: membersData, error: membersError } = await supabase
+            .from("championship_members")
+            .select("user_id")
+            .eq("championship_id", championshipId);
+
+        if (membersError) {
+            console.error("Erro ao carregar participantes do torneio:", membersError.message);
+            return [];
+        }
+
+        memberUserIds = (membersData || []).map((member) => member.user_id);
+
+        if (memberUserIds.length === 0) {
+            return [];
+        }
+    }
+
+    let betsQuery = supabase
         .from("bets")
         .select("user_id, prediction_home, prediction_away, points_earned")
-        .eq("match_id", matchId)
-        .order("points_earned", { ascending: false });
+        .eq("match_id", matchId);
+
+    if (memberUserIds) {
+        betsQuery = betsQuery.in("user_id", memberUserIds);
+    }
+
+    const { data: betsData, error: betsError } = await betsQuery.order("points_earned", { ascending: false });
 
     if (betsError) {
         console.error("Erro ao carregar palpites da partida:", betsError.message);

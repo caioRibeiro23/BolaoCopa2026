@@ -1,6 +1,6 @@
 'use client'
 
-type PredictionStatus = "exato" | "resultado" | "nulo";
+type PredictionStatus = "exato" | "combo" | "resultado" |"um_gol" | "incorreto";
 
 export interface ParticipantPrediction {
     id: string;
@@ -19,15 +19,23 @@ interface PredictionsTableProps {
 const statusStyles: Record<PredictionStatus, { label: string; className: string }> = {
     exato: {
         label: "Exato",
-        className: "text-verdeNeon bg-verdeNeon/10 border-verdeNeon/20",
+        className: "bg-verdeNeon/8 text-verdeNeon border-verdeNeon/20",
     },
     resultado: {
         label: "Resultado",
-        className: "text-[#FFD700] bg-[#FFD700]/10 border-[#FFD700]/25",
+        className: "bg-[#FFD700]/10 text-[#FFD700] border-[#FFD700]/25",
     },
-    nulo: {
-        label: "Nulo",
-        className: "text-cinzaSuave bg-cinzaSuave/5 border-cinzaSuave/20",
+    combo: {
+        label: "Combo",
+        className: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+    },
+    um_gol: {
+        label: "Um Gol",
+        className: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+    },
+    incorreto: {
+        label: "Incorreto",
+        className: "bg-vermelhoVibrante/8 text-vermelhoVibrante border-vermelhoVibrante/20",
     },
 };
 
@@ -58,7 +66,7 @@ export default function PredictionsTable({ predictions }: PredictionsTableProps)
             {predictions.length > 0 ? (
                 predictions.map((prediction, index) => {
                     const isLastRow = index === predictions.length - 1;
-                    const predictionLabel = prediction.status === "nulo"
+                    const predictionLabel = prediction.status === "incorreto"
                         ? "-- x --"
                         : `${prediction.predictionHome ?? "--"} x ${prediction.predictionAway ?? "--"}`;
 
@@ -90,7 +98,7 @@ export default function PredictionsTable({ predictions }: PredictionsTableProps)
                             </div>
 
                             <div className="flex flex-col items-center justify-center text-center">
-                                <span className={`font-roboto text-base font-bold tabular-nums ${prediction.points === 3 ? "text-verdeNeon" : prediction.points === 1 ? "text-[#FFD700]" : "text-cinzaSuave"}`}>
+                                <span className={`font-roboto text-base font-bold tabular-nums ${prediction.points === 9 ? "text-verdeNeon" :  "text-cinzaSuave"}`}>
                                     {getPointsLabel(prediction.points)}
                                 </span>
                             </div>
