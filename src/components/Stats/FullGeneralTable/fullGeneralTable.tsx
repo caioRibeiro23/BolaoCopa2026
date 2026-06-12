@@ -3,8 +3,10 @@ import GeneralRow from "../GeneralTable/generalRow";
 
 export default async function FullGeneralTable({
   userId,
+  championshipId,
 }: {
   userId: string;
+  championshipId: string
 }) {
   const players = (await getLeaderboard()) || [];
 

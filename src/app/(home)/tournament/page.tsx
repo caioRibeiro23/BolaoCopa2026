@@ -17,6 +17,8 @@ import {
     resolvePhaseValue,
 } from "@/src/lib/supabase/tournament";
 import FullGeneralTable from "@/src/components/Stats/FullGeneralTable/fullGeneralTable";
+import GeneralTable from "@/src/components/Stats/GeneralTable/generalTable";
+import ChampionshipTable from "@/src/components/Stats/ChampionshipTable/championshipTable";
 
 // const CHAMPIONSHIP_ID = "9f949a87-0b94-48ee-ae3d-aa65bd3478da";
 
@@ -89,7 +91,11 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
                 </div>
             </section>
 
-            {isGeneralChampionship ? <FullGeneralTable userId={user.id} /> : <FullChampionshipTable userId={user.id} />}
+            {isGeneralChampionship ? (
+    <GeneralTable userId={user.id} championshipId={championshipId} currentPage={pageFromQuery} />
+) : (
+    <ChampionshipTable userId={user.id} championshipId={championshipId} currentPage={pageFromQuery} />
+)}
             
             {isGeneralChampionship ? (
                 <div className="rounded-2xl border border-azulCinzado bg-azulMedio px-6 py-8 text-center">
