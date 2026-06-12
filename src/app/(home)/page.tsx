@@ -195,7 +195,7 @@ export default function Home() {
 
       <div className="w-full px-6 py-14 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro min-h-screen justify-start items-center">
 
-        {/* Título da Rodada */}
+        {/* Título da Rodada  */}
         <div className="text-center -mb-4">
           <span className="text-verdeNeon font-inter text-xs font-bold tracking-[1px] sm:tracking-[3px] uppercase bg-verdeNeon/10 border border-verdeNeon/20 px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(57,255,20,0.1)]">
             {nomeRodadaExibicao}
