@@ -80,7 +80,7 @@ export default function PredictionsTable({ predictions }: PredictionsTableProps)
                     return (
                         <div
                             key={prediction.id}
-                            className={`flex flex-col min-[541px]:grid min-[541px]:grid-cols-[minmax(0,1fr)_4.5rem_5.5rem_4rem] md:grid-cols-[minmax(0,2fr)_6.5rem_7rem_5rem] gap-3 px-5 py-4 min-[541px]:py-3 items-stretch min-[541px]:items-center ${!isLastRow ? "border-b border-cinzaSuave/10" : ""}`}
+                            className={`flex flex-col min-[541px]:grid min-[541px]:grid-cols-[minmax(0,1fr)_4.5rem_5.5rem_4rem] md:grid-cols-[minmax(0,2fr)_6.5rem_7rem_5rem] gap-3 px-5 py-4 min-[541px]:py-3 items-stretch min-[541px]:items-center ${!isLastRow ? "border-b border-cinzaSuave/30 bp-540:border-cinzaSuave/10" : ""}`}
                         >
                             <div className="flex min-w-0 items-center gap-3">
                                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-r from-[#F59E0B] to-[#EF4444] font-inter text-sm font-bold text-black">
@@ -96,7 +96,8 @@ export default function PredictionsTable({ predictions }: PredictionsTableProps)
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between min-[541px]:justify-center mt-2 min-[541px]:mt-0 bg-black/10 min-[541px]:bg-transparent rounded-xl px-3 py-2 min-[541px]:p-0 border border-white/[0.02] min-[541px]:border-0">
+                            {/* No mobile, essa linha ganha uma borda superior discreta para isolar os dados */}
+                            <div className="flex items-center justify-between min-[541px]:justify-center mt-2 min-[541px]:mt-0 bg-black/10 min-[541px]:bg-transparent rounded-xl px-3 py-2 min-[541px]:p-0 border border-white/[0.02] min-[541px]:border-0 border-t border-cinzaSuave/5 pt-4 min-[541px]:pt-0">
                                 <div className="text-center font-bebas-neue text-2xl tracking-[2px] text-[#E8EDF5] tabular-nums">
                                     {predictionLabel}
                                 </div>
