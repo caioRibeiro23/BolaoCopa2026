@@ -24,7 +24,7 @@ export default function GameRules() {
       icon: <Trophy className="text-red-400" size={28} />,
       title: "Vença o Campeonato",
       description:
-        "O maior pontuador após a final leva o grande prêmio. Critérios de desempate: maior número de placares exatos, seguido pelo menor número de palpites perdidos.",
+        "O maior pontuador após a final leva o grande prêmio. Critérios de desempate: 1º Placares Exatos • 2º Combos • 3º Resultados Corretos.",
     },
   ];
 

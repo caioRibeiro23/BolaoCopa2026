@@ -1,5 +1,5 @@
 import TitlePage from "@/src/components/ui/titlepage";
-import { CalendarClock, Goal, Lock, Medal, ShieldCheck, Trophy } from "lucide-react";
+import { CalendarClock, Goal, ListOrdered, Lock, Medal, ShieldCheck, Trophy } from "lucide-react";
 
 const scoreRules = [
     {
@@ -41,6 +41,14 @@ const extraPredictions = [
         label: "Vice-campeão",
         points: 5,
     },
+];
+
+const tiebreakers = [
+    { num: "1º", label: "Placares Exatos", desc: "Mais palpites de 9 pontos acumulados." },
+    { num: "2º", label: "Combos", desc: "Mais acertos combinados de 5 pontos." },
+    { num: "3º", label: "Resultados", desc: "Mais resultados corretos de 3 pontos." },
+    { num: "4º", label: "Um dos Gols", desc: "Mais acertos de gols individuais de 1 ponto." },
+    { num: "5º", label: "Menos Erros", desc: "Menor quantidade de palpites zerados (0 pts)." },
 ];
 
 export default function RulesPage() {
@@ -147,6 +155,39 @@ export default function RulesPage() {
                             Faltando 2 dias para a rodada terminar, os palpites da próxima rodada serão abertos automaticamente.
                         </p>
                     </article>
+                </section>
+
+                <section className="rounded-2xl border border-azulCinzado bg-azulMedio px-6 py-6 shadow-sm">
+                    <div className="flex items-center gap-2">
+                        <ListOrdered size={16} className="text-verdeNeon" />
+                        <p className="font-inter text-xs font-bold tracking-[1.5px] text-verdeNeon uppercase">
+                            Critérios de Desempate
+                        </p>
+                    </div>
+                    <p className="mt-3 font-inter text-sm leading-6 text-cinzaSuave">
+                        Caso dois ou mais participantes terminem com a mesma pontuação geral, a classificação do ranking será definida seguindo estritamente a ordem de prioridade abaixo:
+                    </p>
+                    
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-1 bp-540:grid-cols-2 lg:grid-cols-5 gap-3 w-full">
+                        {tiebreakers.map((crit) => (
+                            <div 
+                                key={crit.num}
+                                className="min-w-0 w-full rounded-xl border border-white/10 bg-white/5 p-4 flex flex-col gap-1 transform-gpu [backface-visibility:hidden]"
+                            >
+                                <div className="flex items-center justify-between">
+                                    <span className="font-bebas-neue text-2xl tracking-[1px] text-verdeNeon">
+                                        {crit.num}
+                                    </span>
+                                </div>
+                                <p className="font-inter text-xs font-bold uppercase tracking-[1px] text-[#E8EDF5] mt-1 truncate">
+                                    {crit.label}
+                                </p>
+                                <p className="font-inter text-[11px] leading-4 text-cinzaSuave mt-1">
+                                    {crit.desc}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
                 </section>
 
                 {/* Seção Pontos Extras Privados */}
