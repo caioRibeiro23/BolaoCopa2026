@@ -317,15 +317,6 @@ export default function Home() {
 
       </div>
 
-      <div className="w-full bg-azulEscuro/90 border-t border-azulCinzado">
-            <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between text-center gap-3">
-                <p className="text-sm text-cinzaSuave">
-                    ⏱ A seção de palpites extras está aberta até <span className="font-semibold text-white">dia 17</span>.
-                </p>
-                <Link href="/extra" className="inline-block px-4 py-2 rounded-lg bg-transparent border border-verdeNeon text-verdeNeon font-semibold text-sm shadow-[0_0_10px_rgba(57,255,20,0.12)] hover:bg-azulEscuro transition">Ir para palpites extras</Link>
-            </div>
-            
-        </div>
       
 
       <GameRules/>
