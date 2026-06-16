@@ -1,6 +1,6 @@
 'use client'
 
-type PredictionStatus = "exato" | "combo" | "resultado" |"um_gol" | "incorreto" | "nulo";
+type PredictionStatus = "exato" | "combo" | "resultado" | "um_gol" | "incorreto" | "nulo";
 
 export interface ParticipantPrediction {
     id: string;
@@ -60,7 +60,7 @@ function PredictionStatusBadge({ status }: { status: PredictionStatus }) {
 export default function PredictionsTable({ predictions }: PredictionsTableProps) {
     return (
         <div className="flex flex-col rounded-2xl border border-azulCinzado bg-azulMedio shadow-sm overflow-hidden">
-            <div className="grid grid-cols-[minmax(0,1fr)_4.5rem_5.5rem_4rem] gap-3 border-b border-cinzaSuave/10 bg-[#FFFFFF]/5 px-5 py-4 text-[11px] font-inter uppercase tracking-[1.5px] text-cinzaSuave md:grid-cols-[minmax(0,2fr)_6.5rem_7rem_5rem]">
+            <div className="hidden min-[541px]:grid min-[541px]:grid-cols-[minmax(0,1fr)_4.5rem_5.5rem_4rem] md:grid-cols-[minmax(0,2fr)_6.5rem_7rem_5rem] gap-3 border-b border-cinzaSuave/10 bg-[#FFFFFF]/5 px-5 py-4 text-[11px] font-inter uppercase tracking-[1.5px] text-cinzaSuave">
                 <span>Participante</span>
                 <span className="text-center">Palpite</span>
                 <span className="text-center">Status</span>
@@ -80,14 +80,14 @@ export default function PredictionsTable({ predictions }: PredictionsTableProps)
                     return (
                         <div
                             key={prediction.id}
-                            className={`grid grid-cols-[minmax(0,1fr)_4.5rem_5.5rem_4rem] gap-3 px-5 py-3 items-center ${!isLastRow ? "border-b border-cinzaSuave/10" : ""} md:grid-cols-[minmax(0,2fr)_6.5rem_7rem_5rem]`}
+                            className={`flex flex-col min-[541px]:grid min-[541px]:grid-cols-[minmax(0,1fr)_4.5rem_5.5rem_4rem] md:grid-cols-[minmax(0,2fr)_6.5rem_7rem_5rem] gap-3 px-5 py-4 min-[541px]:py-3 items-stretch min-[541px]:items-center ${!isLastRow ? "border-b border-cinzaSuave/10" : ""}`}
                         >
                             <div className="flex min-w-0 items-center gap-3">
                                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-r from-[#F59E0B] to-[#EF4444] font-inter text-sm font-bold text-black">
                                     {prediction.initials}
                                 </div>
-                                <div className="min-w-0">
-                                    <p className="truncate font-roboto text-sm font-medium text-[#E8EDF5]">
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate font-roboto text-sm font-semibold min-[541px]:font-medium text-[#E8EDF5]">
                                         {prediction.name}
                                     </p>
                                     <p className="hidden md:flex text-[11px] text-cinzaSuave">
@@ -96,16 +96,25 @@ export default function PredictionsTable({ predictions }: PredictionsTableProps)
                                 </div>
                             </div>
 
-                            <div className="text-center font-bebas-neue text-2xl tracking-[2px] text-[#E8EDF5] tabular-nums">
-                                {predictionLabel}
+                            <div className="flex items-center justify-between min-[541px]:justify-center mt-2 min-[541px]:mt-0 bg-black/10 min-[541px]:bg-transparent rounded-xl px-3 py-2 min-[541px]:p-0 border border-white/[0.02] min-[541px]:border-0">
+                                <div className="text-center font-bebas-neue text-2xl tracking-[2px] text-[#E8EDF5] tabular-nums">
+                                    {predictionLabel}
+                                </div>
+
+                                <div className="flex min-[541px]:hidden items-center gap-3">
+                                    <PredictionStatusBadge status={prediction.status} />
+                                    <span className={`font-roboto text-sm font-bold tabular-nums ${prediction.points === 9 ? "text-verdeNeon" : "text-cinzaSuave"}`}>
+                                        {getPointsLabel(prediction.points)}
+                                    </span>
+                                </div>
                             </div>
 
-                            <div className="flex justify-center">
+                            <div className="hidden min-[541px]:flex justify-center">
                                 <PredictionStatusBadge status={prediction.status} />
                             </div>
 
-                            <div className="flex flex-col items-center justify-center text-center">
-                                <span className={`font-roboto text-base font-bold tabular-nums ${prediction.points === 9 ? "text-verdeNeon" :  "text-cinzaSuave"}`}>
+                            <div className="hidden min-[541px]:flex flex-col items-center justify-center text-center">
+                                <span className={`font-roboto text-base font-bold tabular-nums ${prediction.points === 9 ? "text-verdeNeon" : "text-cinzaSuave"}`}>
                                     {getPointsLabel(prediction.points)}
                                 </span>
                             </div>
