@@ -18,6 +18,8 @@ export default function Flag({ country }: { country: string }) {
     }
     if (country.toLowerCase() === "escócia") {
         cod = "gb-sct"; 
+    } else if (country.toLowerCase() === "rd congo" || country.toLowerCase() === "congo" || country.toLowerCase() === "república democrática do congo") {
+        cod = "cd"; // 🔥 Força o código ISO correto da República Democrática do Congo
     }
     return (
         <div className="w-12 h-12 px-3 bg-azulCinzado rounded-2xl shadow-xl flex items-center justify-center">
