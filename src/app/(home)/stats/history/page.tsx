@@ -70,7 +70,7 @@ export default async function historyPage() {
 
     return(
         <div className="w-full min-h-screen px-8 py-16 md:px-14 md:py-17 flex flex-col gap-8 bg-azulEscuro">
-            {/* Botão Voltar Minimalista */}
+            {/*Botão Voltar Minimalista*/}
             <div className="flex items-center">
               <Link
                 href="/stats"
