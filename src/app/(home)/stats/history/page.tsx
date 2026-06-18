@@ -83,7 +83,7 @@ export default async function historyPage() {
               </Link>
             </div>
 
-            <TitlePage title="Classificação Completa" />
+            <TitlePage title="Histórico Completo" />
             <div className="flex flex-col bg-azulMedio rounded-2xl border border-azulCinzado w-full shadow-sm">
                 <div className="w-full flex items-center justify-between px-6 py-4 bg-[#FFFFFF]/2 ">
                     <h2 className="text-[#E8EDF5] font-bebas-neue text-xl"> Histórico de Partidas</h2>
