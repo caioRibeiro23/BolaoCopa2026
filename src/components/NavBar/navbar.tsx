@@ -8,8 +8,8 @@ import { useState } from "react";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/myTournaments", label: "Torneios" },
-  { href: "/rules", label: "Regras" },
+  { href: "/meusTorneios", label: "Torneios" },
+  { href: "/regras", label: "Regras" },
   { href: "/extra", label: "Extra" }
 ];
 
@@ -91,7 +91,7 @@ export default function NavBar({ userData }: NavBarProps) {
 
               {isSelectOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-[#1F2937] border border-gray-700 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
-                  <Link href="/stats">
+                  <Link href="/perfil">
                     <button className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-[#39FF141A] hover:text-verdeNeon transition-colors hover:cursor-pointer">
                       Meu Perfil
                     </button>
@@ -122,7 +122,7 @@ export default function NavBar({ userData }: NavBarProps) {
                 <div className="flex flex-col">
                   <span className="font-bold text-white text-base">{currentUser?.name || "Jogador"}</span>
                   <Link 
-                    href="/stats" 
+                    href="/perfil" 
                     onClick={() => setIsNavOpen(false)}
                     className="text-xs text-verdeNeon hover:underline flex items-center gap-1 mt-0.5"
                   >

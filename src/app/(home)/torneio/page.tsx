@@ -111,7 +111,7 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
                     </p>
 
                     <a
-                        href="/tournament?championshipId=9f949a87-0b94-48ee-ae3d-aa65bd3478da"
+                        href="/torneio?championshipId=9f949a87-0b94-48ee-ae3d-aa65bd3478da"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex w-full items-center justify-center rounded-lg border border-verdeNeon bg-azulEscuro/20 px-5 py-2 text-center font-inter text-sm font-semibold text-verdeNeon transition-all duration-200 hover:scale-105 hover:bg-azulEscuro/60 hover:brightness-105 md:w-auto md:text-base"

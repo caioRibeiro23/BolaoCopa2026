@@ -28,7 +28,7 @@ export default async function FullTablePage({ searchParams }: FullTablePageProps
       {/* Botão Voltar Minimalista */}
       <div className="flex items-center">
         <Link
-          href={`/tournament?championshipId=${championshipId || "general"}`}
+          href={`/torneio?championshipId=${championshipId || "general"}`}
           className="flex items-center gap-2 text-xs font-inter uppercase tracking-wider text-cinzaSuave/60 hover:text-verdeNeon transition-colors duration-200 group"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1">
