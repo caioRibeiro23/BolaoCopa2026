@@ -1,10 +1,8 @@
 import TitlePage from "@/src/components/ui/titlepage";
-import ChampionshipTable from "@/src/components/Stats/ChampionshipTable/championshipTable";
 import HistoryTable from "@/src/components/Stats/History/historyTable";
 import ProgressTable from "@/src/components/Stats/Progress/progressTable";
 import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
-import GeneralTable from "@/src/components/Stats/GeneralTable/generalTable";
 import ProfileSection from "@/src/components/ProfileSection/profileSection";
 
 export default async function StatsPage() {

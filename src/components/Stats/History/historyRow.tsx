@@ -1,5 +1,6 @@
 import { getCountryAbbr } from "../../cards/iconePais/countryAbbr";
 import HistoryResultCard from "../../ui/historyResultCard";
+import { t } from "../../../utils/traducaoPaises";
 
 interface MatchWithBet {
     id: string;
@@ -38,7 +39,7 @@ export default function historyRow({ status, match }: HistoryRowProps) {
         <div className="w-full grid grid-cols-[minmax(0,1fr)_4.5rem_5.5rem] md:grid-cols-[minmax(0,1fr)_6rem_7rem] px-3 md:px-5 py-2.5 gap-2 md:gap-4 items-center border-b border-cinzaSuave/10">
             <div className="min-w-0 flex flex-col py-0.5 font-inter">
                 <p className="font-bold text-sm text-[#E8EDF5] md:hidden">{getCountryAbbr(match.team_home)} vs {getCountryAbbr(match.team_away)}</p>
-                <p className="font-bold text-sm text-[#E8EDF5] hidden md:flex">{match.team_home} vs {match.team_away}</p>
+                <p className="font-bold text-sm text-[#E8EDF5] hidden md:flex">{t(match.team_home)} vs {t(match.team_away)}</p>
                 <span className="text-xs text-cinzaSuave">{infoPartida}</span>
             </div>
             <div className="flex flex-col items-center justify-center p-1 w-full gap-0.5 md:gap-1">
