@@ -8,10 +8,12 @@ export default async function ChampionshipTable({
     userId,
     championshipId,
     currentPage = 1, // 1. Recebe a página atual (padrão é 1)
+    hasSpecialAccess = false // 2. Novo prop para controle de acesso especial
 }: {
     userId: string;
     championshipId: string;
     currentPage?: number;
+    hasSpecialAccess?: boolean; // 3. Prop opcional para indicar acesso especial
 }) {
     // 2. Corrigido: Usando o championshipId dinâmico que vem por props
     const players = await getChampionshipLeaderboard(championshipId);
@@ -23,8 +25,29 @@ export default async function ChampionshipTable({
     
     const paginatedPlayers = players.slice(startIndex, endIndex);
 
+    
+
+    
     // Localiza os dados do usuário atual e checa visibilidade
-    const currentUserPlayer = players.find((player) => player.user_id === userId);
+    let currentUserPlayer = players.find((player) => player.user_id === userId);
+    
+
+
+    if (!currentUserPlayer && hasSpecialAccess) {
+        currentUserPlayer = {
+            user_id: userId,
+            championship_id: championshipId, // 🔥 Injetado para respeitar a tipagem estrita
+            username: "Admin/Viewer",
+            full_name: "Visualizador Convidado",
+            avatar_url: null,
+            total_points: 0,
+            exact_scores: 0,
+            correct_results: 0,
+            total_bets: 0,
+            position: 0
+        };
+    }
+    
     const isCurrentUserVisible = paginatedPlayers.some((player) => player.user_id === userId);
 
     return (

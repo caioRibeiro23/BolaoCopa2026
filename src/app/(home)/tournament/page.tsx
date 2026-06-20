@@ -62,7 +62,27 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
     const players = isGeneralChampionship
         ? await getLeaderboard()
         : await getChampionshipLeaderboard(championshipId);
-    const currentUser = players.find((player) => player.user_id === user.id);
+    let currentUser = players.find((player) => player.user_id === user.id);
+
+    const MASTER_USER_ID = "2709dba4-7bac-4625-bbda-bbaa64bf3c32"; 
+
+    const hasSpecialAccess = user.id === MASTER_USER_ID;
+
+
+    // Se ele tiver o acesso especial, simulamos o objeto do usuário para a página renderizar sem quebrar
+    if (!currentUser && hasSpecialAccess) {
+        currentUser = {
+            user_id: user.id,
+            username: "Admin/Viewer",
+            full_name: "Visualizador Convidado",
+            avatar_url: null,
+            total_points: 0,
+            exact_scores: 0,
+            correct_results: 0,
+            total_bets: 0,
+            position: 0 // Não ganha rank oficial por estar fora da liga
+        };
+    }
 
     if (!currentUser) {
         redirect("/");
@@ -94,7 +114,7 @@ export default async function TournamentPage({ searchParams }: TournamentPagePro
             {isGeneralChampionship ? (
     <GeneralTable userId={user.id} championshipId={championshipId} currentPage={pageFromQuery} />
 ) : (
-    <ChampionshipTable userId={user.id} championshipId={championshipId} currentPage={pageFromQuery} />
+    <ChampionshipTable userId={user.id} championshipId={championshipId} currentPage={pageFromQuery} hasSpecialAccess={hasSpecialAccess} />
 )}
             
             {isGeneralChampionship ? (
