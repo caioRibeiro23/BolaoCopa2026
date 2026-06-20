@@ -28,10 +28,10 @@ export default function Footer() {
                         Informações úteis
                     </p>
                     <div className="flex flex-col gap-1 text-sm text-cinzaSuave">
-                        <Link href="/myTournaments" className="transition-colors hover:text-white">
+                        <Link href="/meusTorneios" className="transition-colors hover:text-white">
                             Meus torneios
                         </Link>
-                        <Link href="/rules" className="transition-colors hover:text-white">
+                        <Link href="/regras" className="transition-colors hover:text-white">
                             Regras do bolão
                         </Link>
                         <Link href="/extra" className="transition-colors hover:text-white">

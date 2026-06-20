@@ -110,7 +110,7 @@ export default async function historyTable({ userId }: HistoryTableProps) {
                 </div>
             )}
             <div className="flex justify-center items-center px-5 py-4 bg-[#FFFFFF]/2">
-                <Link href="/stats/history" className="text-cinzaSuave hover:underline text-sm font-inter">
+                <Link href={`/perfil/historico?userId=${userId}`} className="text-cinzaSuave hover:underline text-sm font-inter">
                     Ver todos os palpites e resultados
                 </Link>
             </div>

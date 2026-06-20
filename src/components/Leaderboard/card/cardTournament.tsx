@@ -13,7 +13,7 @@ export default function CardTournament({ championship }: CardTournamentProps) {
     return (
         <Link
             key={championship.championship_id}
-            href={`/tournament?championshipId=${championship.championship_id}`}
+            href={`/torneio?championshipId=${championship.championship_id}`}
             className="group relative flex flex-col overflow-hidden rounded-2xl border border-azulCinzado bg-linear-to-br from-azulMedio via-azulCinzado to-azulEscuro p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-verdeNeon/60 hover:shadow-[0_12px_40px_rgba(57,255,20,0.12)]"
         >
             <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-verdeNeon/10 blur-xl transition-all duration-300 group-hover:scale-125" />

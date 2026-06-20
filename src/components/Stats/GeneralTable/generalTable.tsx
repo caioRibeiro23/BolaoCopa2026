@@ -71,7 +71,7 @@ export default async function GeneralTable({
                 <div className="flex items-center justify-between px-6 py-2 border-t border-azulCinzado/10 text-sm font-inter text-cinzaSuave bg-transparent select-none">
                     {/* Seta Anterior */}
                     <Link
-                        href={`/tournament?championshipId=${championshipId}&page=${currentPage - 1}`}
+                        href={`/torneio?championshipId=${championshipId}&page=${currentPage - 1}`}
                         scroll={false}
                         className={`p-1.5 rounded-lg text-cinzaSuave/60 hover:text-verdeNeon transition-colors duration-200 ${
                             currentPage <= 1 ? "pointer-events-none opacity-10" : ""
@@ -89,7 +89,7 @@ export default async function GeneralTable({
 
                     {/* Seta Próxima */}
                     <Link
-                        href={`/tournament?championshipId=${championshipId}&page=${currentPage + 1}`}
+                        href={`/torneio?championshipId=${championshipId}&page=${currentPage + 1}`}
                         scroll={false}
                         className={`p-1.5 rounded-lg text-cinzaSuave/60 hover:text-verdeNeon transition-colors duration-200 ${
                             currentPage >= totalPages ? "pointer-events-none opacity-10" : ""
@@ -103,7 +103,7 @@ export default async function GeneralTable({
             )}
 
             <div className="flex justify-center items-center px-5 py-4 bg-[#FFFFFF]/2 border-t border-azulCinzado/20">
-                <Link href={`/tournament/fullTable?championshipId=${championshipId}`} className="text-cinzaSuave hover:underline text-sm font-inter">
+                <Link href={`/torneio/fullTable?championshipId=${championshipId}`} className="text-cinzaSuave hover:underline text-sm font-inter">
                     Mostrar tabela completa
                 </Link>
             </div>

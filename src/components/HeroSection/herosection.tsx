@@ -11,8 +11,8 @@ export default function HeroSection() {
                     <p className="font-inter text-sm text-cinzaSuave">Acompanhe todos os jogos, registre suas previsões e dispute com seus amigos no ranking em tempo real.</p>
                     <div className="w-full mt-4 md:mt-6">
                         <div className="flex flex-col md:flex-row md:items-center md:gap-3 w-full">
-                            <Link href="/rules" aria-label="Ver Regras" className="inline-block w-full md:w-auto text-center px-5 py-2 rounded-lg bg-verdeNeon text-[#061014] font-semibold shadow-[0_0_12px_rgba(57,255,20,0.18)] hover:brightness-105 transition-all duration-200 text-sm md:text-base hover:scale-105 border border-verdeNeon">Ver Regras</Link>
-                            <Link href="/myTournaments" aria-label="Ver Torneios" className="inline-block w-full md:w-auto text-center px-5 py-2 rounded-lg mt-3 md:mt-0 bg-azulEscuro/20 border border-verdeNeon text-verdeNeon font-semibold hover:bg-azulEscuro/60 transition duration-200 text-sm md:text-base">Ver Torneios</Link>
+                            <Link href="/regras" aria-label="Ver Regras" className="inline-block w-full md:w-auto text-center px-5 py-2 rounded-lg bg-verdeNeon text-[#061014] font-semibold shadow-[0_0_12px_rgba(57,255,20,0.18)] hover:brightness-105 transition-all duration-200 text-sm md:text-base hover:scale-105 border border-verdeNeon">Ver Regras</Link>
+                            <Link href="/meusTorneios" aria-label="Ver Torneios" className="inline-block w-full md:w-auto text-center px-5 py-2 rounded-lg mt-3 md:mt-0 bg-azulEscuro/20 border border-verdeNeon text-verdeNeon font-semibold hover:bg-azulEscuro/60 transition duration-200 text-sm md:text-base">Ver Torneios</Link>
                         </div>
                     </div>
                 </div>

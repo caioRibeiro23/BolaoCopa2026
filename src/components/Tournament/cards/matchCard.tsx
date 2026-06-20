@@ -42,7 +42,7 @@ export default function MatchCard({ matchId, championshipId, paisCasa, paisVisit
     const hasScore = placarCasa !== null && placarVisitante !== null;
     const data = formatarDataBR(dateTime);
     const hora = formatarHoraBR(dateTime);
-    const href = championshipId ? `/tournament/matches/${matchId}?championshipId=${championshipId}` : `/tournament/matches/${matchId}`;
+    const href = championshipId ? `/torneio/matches/${matchId}?championshipId=${championshipId}` : `/torneio/matches/${matchId}`;
 
     return (
         <Link
