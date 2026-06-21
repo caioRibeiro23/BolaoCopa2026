@@ -1,38 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
 
 interface FootballMatch {
   homeTeam: { name: string };
   awayTeam: { name: string };
   utcDate: string;
   status: string;
-  minute?: number | string;
-  time?: string;
-  score: { 
-    fullTime: { home: number | null; away: number | null };
-    halfTime?: { home: number | null; away: number | null } | null;
-    regularTime?: { home: number | null; away: number | null } | null;
-  };
+  score: Record<string, Record<string, number | null> | null | undefined>;
   stage?: string;
   group?: string;
-}
-
-interface FootballMatchApiResponse {
-  homeTeam?: { name?: string };
-  awayTeam?: { name?: string };
-}
-
-interface TransformedMatch {
-  team_home: string;
-  team_away: string;
-  date_time: string;
-  status: string;
-  status_exibicao: string;
-  goals_home: number | null;
-  goals_away: number | null;
-  phase: string;
-  group_letter: string | null;
 }
 
 // Inicializa o cliente do Supabase
@@ -41,31 +17,24 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-
-
 export async function GET() {
-
-  //bloco de verificação para poupar a API de chamadas desnecessárias
   const agora = new Date();
   const duasHorasDepois = new Date(agora.getTime() + 2 * 60 * 60 * 1000);
 
-  // 2. Busca no banco se há jogos AO VIVO ou que começam nas próximas 2 horas
+  // Busca se há jogos próximos apenas para passar pela validação inicial
   const { data: jogosProximos, error } = await supabase
     .from('matches')
     .select('id, status, date_time')
     .or(`status.eq.live,and(status.eq.scheduled,date_time.lte.${duasHorasDepois.toISOString()})`);
 
-  // 3. Se o banco estiver baleado ou se realmente não tiver jogo perto, poupa a API
   if (error || !jogosProximos || jogosProximos.length === 0) {
     return NextResponse.json({ 
       message: "Nenhum jogo ao vivo ou próximo de começar. Requisição externa poupada." 
     });
   }
 
-  // Se chegou aqui, é porque tem jogo AO VIVO ou que começa nas próximas 2 horas, então vamos buscar os dados atualizados na API de Futebol
   const API_KEY = process.env.FOOTBALL_DATA_API_KEY;
-  // Usando 'WC' para Copa do Mundo ou 'PL' para testes
-  const API_URL = 'https://api.football-data.org/v4/competitions/WC/matches'; //mudar para 'WC' na url da API quando for época de Copa do Mundo, ou usar 'BSA' para testes com o Brasileirão
+  const API_URL = 'https://api.football-data.org/v4/competitions/WC/matches'; 
  
   if (!API_KEY) {
     return NextResponse.json({ error: "API Key não configurada" }, { status: 500 });
@@ -83,80 +52,32 @@ export async function GET() {
       return NextResponse.json({ error: "Dados não encontrados na API" }, { status: 404 });
     }
 
-    // Mapeamento tipado para o seu banco de dados
-    const matchesToUpsert = data.matches.map((match: FootballMatch) => {
-      // Define o status dinamicamente baseado na API de Futebol
-      let status: 'scheduled' | 'live' | 'finished' = 'scheduled';
-      
-      if (match.status === 'IN_PLAY' || match.status === 'PAUSED') {
-        status = 'live';
-      } else if (match.status === 'FINISHED') {
-        status = 'finished';
-      }
-
-      let statusExibicao = 'Ainda não começou';
-  
-      if (match.status === 'SCHEDULED') {
-        statusExibicao = 'Ainda não começou';
-      } else if (match.status === 'PAUSED') {
-        statusExibicao = 'Intervalo';
-      } else if (match.status === 'FINISHED') {
-        statusExibicao = 'Encerrado';
-      } else if (match.status === 'IN_PLAY') {
-        // Checa se o primeiro tempo já terminou olhando os dados do halfTime
-        const jaTeveIntervalo = match.score?.halfTime?.home !== null && match.score?.halfTime?.away !== null;
-        statusExibicao = jaTeveIntervalo ? '2º Tempo' : '1º Tempo';
-      }
-
-      const golsCasaAPI = match.score.fullTime.home;
-      const golsCasaRegular = match.score.regularTime?.home;
-      const goals_home_final = golsCasaRegular !== undefined && golsCasaRegular !== null && golsCasaRegular > (golsCasaAPI ?? 0)
-        ? golsCasaRegular
-        : golsCasaAPI;
-
-      const golsFormatadoAway = match.score.fullTime.away;
-      const golsAwayRegular = match.score.regularTime?.away;
-      const goals_away_final = golsAwayRegular !== undefined && golsAwayRegular !== null && golsAwayRegular > (golsFormatadoAway ?? 0)
-        ? golsAwayRegular
-        : golsFormatadoAway;
-
-      return {
-          team_home: match.homeTeam.name,
-          team_away: match.awayTeam.name,
-          date_time: match.utcDate,
-          status: status,
-          // Garante que o placar seja atualizado em tempo real no banco
-          status_exibicao: statusExibicao,
-          goals_home: goals_home_final,
-          goals_away: goals_away_final,
-          phase: match.stage ? match.stage.toLowerCase() : 'groups',
-          group_letter: match.group ? match.group.replace('GROUP_', '') : null
-        };
-    }).filter((match: TransformedMatch) => match.team_home !== null && match.team_away !== null);
-    // Upsert para salvar/atualizar
-    const { error } = await supabase
-      .from('matches')
-      .upsert(matchesToUpsert, { 
-        onConflict: 'team_home, team_away, date_time' 
-      });
-
-    if (error) throw error;
+    console.log("\n==============================================");
+    console.log("🔍 INSPEÇÃO FILTRADA: APENAS JOGOS JÁ INICIADOS/ENCERRADOS");
+    console.log("==============================================");
     
-    revalidatePath("/");
+    data.matches.forEach((match: FootballMatch) => {
+      // FILTRO: Só deixa passar o que estiver ao vivo, no intervalo ou finalizado pela API gringa
+      if (match.status === 'IN_PLAY' || match.status === 'PAUSED' || match.status === 'FINISHED') {
+        console.log(`\n⚽ JOGO: ${match.homeTeam.name} x ${match.awayTeam.name}`);
+        console.log(`   ⏱️ Status API: ${match.status}`);
+        console.log(`   📊 Objeto 'score' completo:`);
+        console.log(JSON.stringify(match.score, null, 2));
+        console.log(`   ---------------------------------------------`);
+      }
+    });
+
+    console.log("\n==============================================");
 
     return NextResponse.json({ 
       success: true, 
-      count: matchesToUpsert.length 
+      message: "Dados dos jogos iniciados impressos no terminal do VS Code.",
+      count: data.matches.length 
     });
 
   } catch (err: unknown) {
-    console.error("ERRO DETALHADO:", err); // Isso vai aparecer no seu terminal do VS Code
+    console.error("ERRO DETALHADO:", err);
     const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    const errorStack = err instanceof Error ? err.stack : undefined;
-    return NextResponse.json({ 
-        success: false, 
-        error: errorMessage,
-        stack: errorStack 
-    }, { status: 500 });
-    }
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
+  }
 }
