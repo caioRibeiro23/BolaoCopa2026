@@ -83,11 +83,23 @@ export default async function MatchPage({ params, searchParams }: MatchPageProps
         notFound();
     }
 
+    const tempoAtualMilissegundos = new Date().getTime();
+    
+    const obterTimestampGarantido = (dateTimeStr: string) => {
+        let isoStr = dateTimeStr.replace(" ", "T");
+        if (!isoStr.endsWith("Z") && !isoStr.includes("-03")) {
+            isoStr = `${isoStr}Z`;
+        }
+        return new Date(isoStr).getTime();
+    };
+
+    const jogoEstorouHorario = tempoAtualMilissegundos >= obterTimestampGarantido(match.date_time);
+
     const matchDate = `${formatarDataBR(match.date_time)} - ${formatarHoraBR(match.date_time)}`;
     const groupLabel = match.group_letter ? `Grupo ${match.group_letter}` : getPhaseLabel(match.phase);
     const isFinished = match.status === "finished" && match.goals_home !== null && match.goals_away !== null;
     const isLive = match.status === "live";
-    const canSeePredictions = isLive || isFinished;
+    const canSeePredictions = isLive || isFinished || jogoEstorouHorario;
     const participantPredictions: ParticipantPrediction[] = canSeePredictions
         ? (await getMatchParticipantPredictions(match.id, resolvedSearchParams.championshipId)).map((prediction) => {
             // const displayPoints = getDisplayPoints(prediction.points_earned);
@@ -110,7 +122,10 @@ export default async function MatchPage({ params, searchParams }: MatchPageProps
 
     const myPrediction = participantPredictions.find((prediction) => prediction.id === user?.id);
 
-
+    const statusTempo = (match.status === "scheduled" || !isLive) && jogoEstorouHorario
+        ? "Aguardando início..."
+        : formatarHoraBR(match.date_time);
+        
     const resultText = isFinished
         ? `Resultado da Partida: ${getCountryAbbr(t(match.team_home))} ${match.goals_home} x ${match.goals_away} ${getCountryAbbr(t(match.team_away))}`
         : isLive
@@ -133,12 +148,12 @@ export default async function MatchPage({ params, searchParams }: MatchPageProps
                     palpiteCasa={myPrediction?.predictionHome ?? undefined}
                     palpiteVisitante={myPrediction?.predictionAway ?? undefined}
                 />
-            ) : match.status === "live" ? (
+            ) : match.status === "live" || jogoEstorouHorario ? (
                 <CardAoVivo
                     paisCasa={t(match.team_home)}
                     paisVisitante={t(match.team_away)}
                     grupo={groupLabel}
-                    tempo={formatarHoraBR(match.date_time)}
+                    tempo={statusTempo}
                     placarCasa={match.goals_home ?? 0}
                     placarVisitante={match.goals_away ?? 0}
                     palpiteCasa={myPrediction?.predictionHome ?? undefined}

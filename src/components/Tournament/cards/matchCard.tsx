@@ -38,12 +38,25 @@ function getStatusClass(status: MatchCardProps["status"]) {
     }
 }
 
-export default function MatchCard({ matchId, championshipId, paisCasa, paisVisitante, placarCasa, placarVisitante, grupo, status, dateTime }: MatchCardProps) {
+export default function MatchCard({ matchId, championshipId, paisCasa, paisVisitante, placarCasa, placarVisitante, grupo, status:statusOriginal, dateTime }: MatchCardProps) {
     const hasScore = placarCasa !== null && placarVisitante !== null;
     const data = formatarDataBR(dateTime);
     const hora = formatarHoraBR(dateTime);
     const href = championshipId ? `/torneio/matches/${matchId}?championshipId=${championshipId}` : `/torneio/matches/${matchId}`;
 
+    const tempoAtualMilissegundos = new Date().getTime();
+    
+    const obterTimestampGarantido = (dateTimeStr: string) => {
+        let isoStr = dateTimeStr.replace(" ", "T");
+        if (!isoStr.endsWith("Z") && !isoStr.includes("-03")) {
+            isoStr = `${isoStr}Z`;
+        }
+        return new Date(isoStr).getTime();
+    };
+
+    const jogoEstorouHorario = tempoAtualMilissegundos >= obterTimestampGarantido(dateTime);
+
+    const status = (statusOriginal === "scheduled" && jogoEstorouHorario) ? "live" : statusOriginal;
     return (
         <Link
             href={href}
