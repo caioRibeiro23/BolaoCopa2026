@@ -52,7 +52,7 @@ export async function GET() {
   // 2. Busca no banco se há jogos AO VIVO ou que começam nas próximas 2 horas
   const { data: jogosProximos, error } = await supabase
     .from('matches')
-    .select('id, status, date_time')
+    .select('id, status, date_time, team_home, team_away')
     .or(`status.eq.live,and(status.eq.scheduled,date_time.lte.${duasHorasDepois.toISOString()})`);
 
   // 3. Se o banco estiver baleado ou se realmente não tiver jogo perto, poupa a API
@@ -134,9 +134,21 @@ export async function GET() {
         };
     }).filter((match: TransformedMatch) => {
     // 🎯 SE O STATUS FOR FINISHED, NÃO ATUALIZA (IGNORA O UPSERT)
-    if (match.status === 'finished') {
+   const correspondenteNoBanco = jogosProximos.find(
+        j => j.team_home === match.team_home && j.team_away === match.team_away
+      );
+
+      // Se o jogo NÃO foi encontrado na lista de ativos (ou seja, já está como 'finished' no seu banco), barra!
+      // Isso protege o 4x0 da Espanha de ser sobrescrito pelo 5x0.
+      if (!correspondenteNoBanco && match.status === 'finished') {
         return false;
-    }
+      }
+
+      // Se o jogo for da Bélgica ou Irã e você quer travar o placar na mão até eles arrumarem a sincronização:
+      const timesBugados = ['Iran', 'Belgium'];
+      if (timesBugados.includes(match.team_home) || timesBugados.includes(match.team_away)) {
+         return false; // Ignora o pacote deles temporariamente para não estragar o front
+      }
     
     return match.team_home !== null && match.team_away !== null;
     });
