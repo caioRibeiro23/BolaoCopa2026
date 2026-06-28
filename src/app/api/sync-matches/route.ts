@@ -108,17 +108,9 @@ export async function GET() {
         statusExibicao = jaTeveIntervalo ? '2º Tempo' : '1º Tempo';
       }
 
-      const golsCasaAPI = match.score.fullTime.home;
-      const golsCasaRegular = match.score.regularTime?.home;
-      const goals_home_final = golsCasaRegular !== undefined && golsCasaRegular !== null && golsCasaRegular > (golsCasaAPI ?? 0)
-        ? golsCasaRegular
-        : golsCasaAPI;
-
-      const golsFormatadoAway = match.score.fullTime.away;
-      const golsAwayRegular = match.score.regularTime?.away;
-      const goals_away_final = golsAwayRegular !== undefined && golsAwayRegular !== null && golsAwayRegular > (golsFormatadoAway ?? 0)
-        ? golsAwayRegular
-        : golsFormatadoAway;
+      // O 'fullTime' da API já acumula os gols dos 90 min + os 30 min da prorrogação quando o status é FINISHED ou IN_PLAY.
+      const goals_home_final = match.score.fullTime.home ?? 0;
+      const goals_away_final = match.score.fullTime.away ?? 0;
 
       return {
           team_home: match.homeTeam.name,
