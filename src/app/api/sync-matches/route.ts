@@ -9,10 +9,13 @@ interface FootballMatch {
   status: string;
   minute?: number | string;
   time?: string;
-  score: { 
+ score: { 
+    extraTime?: { home: number | null; away: number | null } | null;
+    duration: string; // 🎯 Adicionado para validar a checagem de PENALTY_SHOOTOUT
     fullTime: { home: number | null; away: number | null };
     halfTime?: { home: number | null; away: number | null } | null;
     regularTime?: { home: number | null; away: number | null } | null;
+    penalties?: { home: number | null; away: number | null } | null; // 🎯 Adicionado para mapear as penalidades
   };
   stage?: string;
   group?: string;
@@ -83,6 +86,42 @@ export async function GET() {
       return NextResponse.json({ error: "Dados não encontrados na API" }, { status: 404 });
     }
 
+    console.log("\n==============================================");
+    console.log("🔍 ANÁLISE DETALHADA DE TEMPOS: GERMANY x PARAGUAY");
+    console.log("==============================================");
+    
+    const jogoAlemanha = data.matches.find(
+      (m: FootballMatch) => 
+        (m.homeTeam.name === 'Germany' && m.awayTeam.name === 'Paraguay') || 
+        (m.homeTeam.name === 'Paraguay' && m.awayTeam.name === 'Germany')
+    );
+
+    if (jogoAlemanha) {
+      console.log(`⏱️ Status Geral da API : ${jogoAlemanha.status}`);
+      console.log(`⏱️ Duration da API     : ${jogoAlemanha.score?.duration}`);
+      console.log(`----------------------------------------------`);
+      console.log(`📊 [halfTime]    (1º Tempo)     => Casa: ${jogoAlemanha.score.halfTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.halfTime?.away ?? 'null'}`);
+      console.log(`📊 [regularTime] (90 Minutos)    => Casa: ${jogoAlemanha.score.regularTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.regularTime?.away ?? 'null'}`);
+      console.log(`📊 [extraTime]   (Prorrogação)   => Casa: ${jogoAlemanha.score.extraTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.extraTime?.away ?? 'null'}`);
+      console.log(`📊 [penalties]   (Pênaltis)      => Casa: ${jogoAlemanha.score.penalties?.home ?? 'null'} | Fora: ${jogoAlemanha.score.penalties?.away ?? 'null'}`);
+      console.log(`📊 [fullTime]    (Placar API)    => Casa: ${jogoAlemanha.score.fullTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.fullTime?.away ?? 'null'}`);
+      console.log(`----------------------------------------------`);
+      
+      // Validação da nossa fórmula matemática atual baseada em tempos limpos
+      const gols90Home = jogoAlemanha.score.regularTime?.home ?? jogoAlemanha.score.fullTime.home ?? 0;
+      const gols90Away = jogoAlemanha.score.regularTime?.away ?? jogoAlemanha.score.fullTime.away ?? 0;
+      const golsProrrogacaoHome = jogoAlemanha.score.extraTime?.home ?? 0;
+      const golsProrrogacaoAway = jogoAlemanha.score.extraTime?.away ?? 0;
+      
+      console.log(`🧮 CÁLCULO DA NOSSA FÓRMULA (regularTime + extraTime):`);
+      console.log(`   Resultado Final Casa: ${gols90Home + golsProrrogacaoHome}`);
+      console.log(`   Resultado Final Fora: ${gols90Away + golsProrrogacaoAway}`);
+    } else {
+      console.log("Partida de Alemanha x Paraguai não encontrada no payload de resposta da API.");
+    }
+    console.log("==============================================\n");
+    
+
     // Mapeamento tipado para o seu banco de dados
     const matchesToUpsert = data.matches.map((match: FootballMatch) => {
       // Define o status dinamicamente baseado na API de Futebol
@@ -107,10 +146,19 @@ export async function GET() {
         const jaTeveIntervalo = match.score?.halfTime?.home !== null && match.score?.halfTime?.away !== null;
         statusExibicao = jaTeveIntervalo ? '2º Tempo' : '1º Tempo';
       }
+      // 1. Pegamos os gols dos 90 minutos regulamentares
+      // Se o regularTime ainda não existir (jogo no início), usamos o fullTime como fallback
+      const gols90Home = match.score.regularTime?.home ?? match.score.fullTime.home ?? 0;
+      const gols90Away = match.score.regularTime?.away ?? match.score.fullTime.away ?? 0;
 
-      // O 'fullTime' da API já acumula os gols dos 90 min + os 30 min da prorrogação quando o status é FINISHED ou IN_PLAY.
-      const goals_home_final = match.score.fullTime.home ?? 0;
-      const goals_away_final = match.score.fullTime.away ?? 0;
+      // 2. Pegamos os gols marcados estritamente na prorrogação (se houver)
+      const golsProrrogacaoHome = match.score.extraTime?.home ?? 0;
+      const golsProrrogacaoAway = match.score.extraTime?.away ?? 0;
+
+      // 3. O placar final do seu bolão (bola rolando) será a soma dos dois, 
+      // ficando totalmente imune aos pênaltis e aos bugs de fim de jogo da API
+      const goals_home_final = gols90Home + golsProrrogacaoHome;
+      const goals_away_final = gols90Away + golsProrrogacaoAway;
 
       return {
           team_home: match.homeTeam.name,
