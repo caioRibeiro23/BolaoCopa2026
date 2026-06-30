@@ -87,40 +87,30 @@ export async function GET() {
     }
 
     console.log("\n==============================================");
-    console.log("🔍 ANÁLISE DETALHADA DE TEMPOS: GERMANY x PARAGUAY");
+    console.log("🔍 INSPEÇÃO GERAL DA API: BUSCANDO SENEGAL X BÉLGICA");
     console.log("==============================================");
+    console.log(`Total de jogos retornados pela API: ${data.matches.length}`);
     
-    const jogoAlemanha = data.matches.find(
-      (m: FootballMatch) => 
-        (m.homeTeam.name === 'Germany' && m.awayTeam.name === 'Paraguay') || 
-        (m.homeTeam.name === 'Paraguay' && m.awayTeam.name === 'Germany')
-    );
+    // Vamos listar todos os jogos para você ver o que tem no payload
+    data.matches.forEach((match: FootballMatch, index: number) => {
+      const isTargetMatch = 
+        match.homeTeam.name === 'Senegal' || match.awayTeam.name === 'Senegal' ||
+        match.homeTeam.name === 'Belgium' || match.awayTeam.name === 'Belgium';
 
-    if (jogoAlemanha) {
-      console.log(`⏱️ Status Geral da API : ${jogoAlemanha.status}`);
-      console.log(`⏱️ Duration da API     : ${jogoAlemanha.score?.duration}`);
-      console.log(`----------------------------------------------`);
-      console.log(`📊 [halfTime]    (1º Tempo)     => Casa: ${jogoAlemanha.score.halfTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.halfTime?.away ?? 'null'}`);
-      console.log(`📊 [regularTime] (90 Minutos)    => Casa: ${jogoAlemanha.score.regularTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.regularTime?.away ?? 'null'}`);
-      console.log(`📊 [extraTime]   (Prorrogação)   => Casa: ${jogoAlemanha.score.extraTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.extraTime?.away ?? 'null'}`);
-      console.log(`📊 [penalties]   (Pênaltis)      => Casa: ${jogoAlemanha.score.penalties?.home ?? 'null'} | Fora: ${jogoAlemanha.score.penalties?.away ?? 'null'}`);
-      console.log(`📊 [fullTime]    (Placar API)    => Casa: ${jogoAlemanha.score.fullTime?.home ?? 'null'} | Fora: ${jogoAlemanha.score.fullTime?.away ?? 'null'}`);
-      console.log(`----------------------------------------------`);
+      // Destaca se encontrar qualquer menção a Senegal ou Bélgica
+      if (isTargetMatch) {
+        console.log(`\n🚨 [ENCONTRADO] Jogo #${index + 1}:`);
+      } else {
+        console.log(`\n📅 Jogo #${index + 1}:`);
+      }
       
-      // Validação da nossa fórmula matemática atual baseada em tempos limpos
-      const gols90Home = jogoAlemanha.score.regularTime?.home ?? jogoAlemanha.score.fullTime.home ?? 0;
-      const gols90Away = jogoAlemanha.score.regularTime?.away ?? jogoAlemanha.score.fullTime.away ?? 0;
-      const golsProrrogacaoHome = jogoAlemanha.score.extraTime?.home ?? 0;
-      const golsProrrogacaoAway = jogoAlemanha.score.extraTime?.away ?? 0;
-      
-      console.log(`🧮 CÁLCULO DA NOSSA FÓRMULA (regularTime + extraTime):`);
-      console.log(`   Resultado Final Casa: ${gols90Home + golsProrrogacaoHome}`);
-      console.log(`   Resultado Final Fora: ${gols90Away + golsProrrogacaoAway}`);
-    } else {
-      console.log("Partida de Alemanha x Paraguai não encontrada no payload de resposta da API.");
-    }
+      console.log(`   Confronto : ${match.homeTeam.name} x ${match.awayTeam.name}`);
+      console.log(`   Status    : ${match.status}`);
+      console.log(`   Data UTC  : ${match.utcDate}`);
+      console.log(`   Fase      : ${match.stage}`);
+      console.log(`   ---------------------------------------------`);
+    });
     console.log("==============================================\n");
-    
 
     // Mapeamento tipado para o seu banco de dados
     const matchesToUpsert = data.matches.map((match: FootballMatch) => {
@@ -196,12 +186,6 @@ export async function GET() {
       // Isso protege o 4x0 da Espanha de ser sobrescrito pelo 5x0.
       if (!correspondenteNoBanco && match.status === 'finished') {
         return false;
-      }
-
-      // Se o jogo for da Bélgica ou Irã e você quer travar o placar na mão até eles arrumarem a sincronização:
-      const timesBugados = ['Iran', 'Belgium'];
-      if (timesBugados.includes(match.team_home) || timesBugados.includes(match.team_away)) {
-         return false; // Ignora o pacote deles temporariamente para não estragar o front
       }
     
     return match.team_home !== null && match.team_away !== null;
