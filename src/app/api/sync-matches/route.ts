@@ -142,9 +142,16 @@ export async function GET() {
       } else if (match.status === 'FINISHED') {
         statusExibicao = 'Encerrado';
       } else if (match.status === 'IN_PLAY') {
-        // Checa se o primeiro tempo já terminou olhando os dados do halfTime
-        const jaTeveIntervalo = match.score?.halfTime?.home !== null && match.score?.halfTime?.away !== null;
-        statusExibicao = jaTeveIntervalo ? '2º Tempo' : '1º Tempo';
+        // 🎯 CHECA SE ESTÁ NA PRORROGAÇÃO OU PÊNALTIS ANTES DE MOSTRAR OS TEMPOS REGULARES
+        if (match.score?.duration === 'EXTRA_TIME') {
+          statusExibicao = 'Prorrogação';
+        } else if (match.score?.duration === 'PENALTY_SHOOTOUT') {
+          statusExibicao = 'Pênaltis';
+        } else {
+          // Checa se o primeiro tempo já terminou olhando os dados do halfTime
+          const jaTeveIntervalo = match.score?.halfTime?.home !== null && match.score?.halfTime?.away !== null;
+          statusExibicao = jaTeveIntervalo ? '2º Tempo' : '1º Tempo';
+        }
       }
       // 1. Pegamos os gols dos 90 minutos regulamentares
       // Se o regularTime ainda não existir (jogo no início), usamos o fullTime como fallback
