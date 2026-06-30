@@ -86,32 +86,6 @@ export async function GET() {
       return NextResponse.json({ error: "Dados não encontrados na API" }, { status: 404 });
     }
 
-    console.log("\n==============================================");
-    console.log("🔍 INSPEÇÃO GERAL DA API: BUSCANDO SENEGAL X BÉLGICA");
-    console.log("==============================================");
-    console.log(`Total de jogos retornados pela API: ${data.matches.length}`);
-    
-    // Vamos listar todos os jogos para você ver o que tem no payload
-    data.matches.forEach((match: FootballMatch, index: number) => {
-      const isTargetMatch = 
-        match.homeTeam.name === 'Senegal' || match.awayTeam.name === 'Senegal' ||
-        match.homeTeam.name === 'Belgium' || match.awayTeam.name === 'Belgium';
-
-      // Destaca se encontrar qualquer menção a Senegal ou Bélgica
-      if (isTargetMatch) {
-        console.log(`\n🚨 [ENCONTRADO] Jogo #${index + 1}:`);
-      } else {
-        console.log(`\n📅 Jogo #${index + 1}:`);
-      }
-      
-      console.log(`   Confronto : ${match.homeTeam.name} x ${match.awayTeam.name}`);
-      console.log(`   Status    : ${match.status}`);
-      console.log(`   Data UTC  : ${match.utcDate}`);
-      console.log(`   Fase      : ${match.stage}`);
-      console.log(`   ---------------------------------------------`);
-    });
-    console.log("==============================================\n");
-
     // Mapeamento tipado para o seu banco de dados
     const matchesToUpsert = data.matches.map((match: FootballMatch) => {
       // Define o status dinamicamente baseado na API de Futebol
