@@ -137,12 +137,19 @@ export async function GET() {
   
       if (match.status === 'SCHEDULED') {
         statusExibicao = 'Ainda não começou';
-      } else if (match.status === 'PAUSED') {
-        statusExibicao = 'Intervalo';
       } else if (match.status === 'FINISHED') {
         statusExibicao = 'Encerrado';
+      } else if (match.status === 'PAUSED') {
+        // 🎯 Se estiver pausado mas a API já identificou que o destino é a prorrogação/pênaltis,
+        // exibe o status correto em vez de "Intervalo"
+        if (match.score?.duration === 'EXTRA_TIME') {
+          statusExibicao = 'Prorrogação';
+        } else if (match.score?.duration === 'PENALTY_SHOOTOUT') {
+          statusExibicao = 'Pênaltis';
+        } else {
+          statusExibicao = 'Intervalo'; // Intervalo normal dos 45 min
+        }
       } else if (match.status === 'IN_PLAY') {
-        // 🎯 CHECA SE ESTÁ NA PRORROGAÇÃO OU PÊNALTIS ANTES DE MOSTRAR OS TEMPOS REGULARES
         if (match.score?.duration === 'EXTRA_TIME') {
           statusExibicao = 'Prorrogação';
         } else if (match.score?.duration === 'PENALTY_SHOOTOUT') {
