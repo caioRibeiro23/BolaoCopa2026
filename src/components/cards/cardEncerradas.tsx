@@ -2,7 +2,8 @@ import Flag from "./iconePais/flag";
 import CaixaPlacarEncerrado from "./caixaPlacar/caixaPlacarEncerrado";
 import { getCountryAbbr } from "./iconePais/countryAbbr";
 import ResultCard from "../ui/resultCard";
-
+import { getPhaseLabel } from "@/src/utils/getPhaseLabel";
+import type { TournamentMatchPhase } from "@/src/lib/supabase/tournament";
 
 interface CardAoVivoProps {
     paisCasa: string;
@@ -12,11 +13,12 @@ interface CardAoVivoProps {
     placarVisitante: number;
     palpiteCasa?: number;
     palpiteVisitante?: number;
+    phase: TournamentMatchPhase;
 }
 
 export type StatusPontuacao = "exato" | "combo" | "resultado" | "um_gol" | "incorreto" | undefined;
 
-export default function CardEncerradas({ paisCasa, paisVisitante, grupo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante }: CardAoVivoProps) {
+export default function CardEncerradas({ paisCasa, paisVisitante, grupo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante, phase }: CardAoVivoProps) {
     let status: StatusPontuacao = undefined;
     if (palpiteCasa !== undefined && palpiteVisitante !== undefined) {
         const acertouGolCasa = palpiteCasa === placarCasa;
@@ -49,7 +51,11 @@ export default function CardEncerradas({ paisCasa, paisVisitante, grupo, placarC
                     <span className="text-cinzaSuave tracking-[1px] font-bold font-inter">ENCERRADA</span> 
                     <span className="text-cinzaSuave">FT</span>
                 </div>
-                <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                {phase !== "group_stage" ? (
+                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">{getPhaseLabel(phase)}</div>
+                ) : (
+                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                )}
                 <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +9 pts placar exato / +3 pt resultado</div>
             </div>
 

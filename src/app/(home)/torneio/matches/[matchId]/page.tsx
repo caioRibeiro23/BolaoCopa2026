@@ -152,6 +152,7 @@ export default async function MatchPage({ params, searchParams }: MatchPageProps
                     placarVisitante={match.goals_away ?? 0}
                     palpiteCasa={myPrediction?.predictionHome ?? undefined}
                     palpiteVisitante={myPrediction?.predictionAway ?? undefined}
+                    phase={match.phase}
                 />
             ) : match.status === "live" || jogoEstorouHorario ? (
                 <CardAoVivo
@@ -163,6 +164,7 @@ export default async function MatchPage({ params, searchParams }: MatchPageProps
                     placarVisitante={match.goals_away ?? 0}
                     palpiteCasa={myPrediction?.predictionHome ?? undefined}
                     palpiteVisitante={myPrediction?.predictionAway ?? undefined}
+                    phase={match.phase}
                 />
             ) : (
                 <CardAbertas
@@ -172,6 +174,7 @@ export default async function MatchPage({ params, searchParams }: MatchPageProps
                     grupo={groupLabel}
                     matchId={match.id}
                     date_time={match.date_time}
+                    phase={match.phase}
                 />
             )}
             {canSeePredictions ? (

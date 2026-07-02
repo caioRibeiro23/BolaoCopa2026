@@ -1,6 +1,8 @@
 import Flag from "./iconePais/flag";
 import CaixaPlacarFechado from "./caixaPlacar/caixaPlacarFechado";
 import { getCountryAbbr } from "./iconePais/countryAbbr";
+import { getPhaseLabel } from "@/src/utils/getPhaseLabel";
+import type { TournamentMatchPhase } from "@/src/lib/supabase/tournament";
 
 interface CardAoVivoProps {
     paisCasa: string;
@@ -11,9 +13,10 @@ interface CardAoVivoProps {
     placarVisitante: number;
     palpiteCasa?: number;
     palpiteVisitante?: number;
+    phase: TournamentMatchPhase;
 }
 
-export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante }: CardAoVivoProps) {
+export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante, phase }: CardAoVivoProps) {
     return (
         <div className="w-full flex flex-col bg-azulMedio rounded-2xl border border-gray-800 shadow-2xl">
 
@@ -24,7 +27,11 @@ export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, plac
                     <span className="text-vermelhoVibrante tracking-[1px]">Live</span> 
                     <span className="text-cinzaSuave">{tempo}&apos;</span>
                 </div>
-                <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                {phase !== "group_stage" ? (
+                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">{getPhaseLabel(phase)}</div>
+                ) : (
+                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                )}
                 <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +9 pts placar exato / +3 pt resultado</div>
             </div>
 

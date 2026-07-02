@@ -78,7 +78,7 @@ export default function MatchCard({ matchId, championshipId, paisCasa, paisVisit
 
                     <div className="flex min-w-24 flex-col items-center gap-2">
                         <span className="font-bebas-neue text-4xl tracking-[3px] text-[#E8EDF5]">
-                            {hasScore ? `${placarCasa} x ${placarVisitante}` : "-- x --"}
+                            {status!== "scheduled" ? `${placarCasa} x ${placarVisitante}` : "-- x --"}
                         </span>
                         <span className="font-inter text-[11px] uppercase tracking-[1.5px] text-cinzaSuave">
                             {data} • {hora}

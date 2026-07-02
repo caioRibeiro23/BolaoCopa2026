@@ -12,8 +12,9 @@ import { formatarHoraBR } from "../../utils/formatar-hora";
 import { t } from "../../utils/traducaoPaises";
 import { formatarDataBR } from "../../utils/formatar-data";
 import { formatarExtensoBR } from "../../utils/formatar-data-extenso";
+import type { TournamentMatchPhase } from "@/src/lib/supabase/tournament";
 
-type MatchPhase = 'group_stage' | 'round_of_16' | 'quarter_final' | 'semi_final' | 'third_place' | 'final';
+type MatchPhase = TournamentMatchPhase;
 type MatchStatus = 'scheduled' | 'live' | 'finished';
 
 interface Match {
@@ -249,6 +250,7 @@ export default function Home() {
               grupo={jogo.group_letter} 
               matchId={jogo.id}
               date_time={jogo.date_time}
+              phase={jogo.phase}
             />
           ))}
           {partidasAbertas.length === 0 && (
@@ -280,6 +282,7 @@ export default function Home() {
                 tempo={statusTempo}
                 palpiteCasa={palpite?.prediction_home}
                 palpiteVisitante={palpite?.prediction_away}
+                phase={jogo.phase}
               />
             );
           })}
@@ -307,6 +310,7 @@ export default function Home() {
                 placarVisitante={jogo.goals_away ?? 0}
                 palpiteCasa={palpite?.prediction_home}
                 palpiteVisitante={palpite?.prediction_away}
+                phase={jogo.phase}
               />
             );
           })}

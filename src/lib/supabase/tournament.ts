@@ -3,6 +3,7 @@ import { createClient } from "./server";
 export const MATCH_PHASES = ["all", "group_stage","last_32", "last_16", "quarter_finals", "semi_finals", "final"] as const;
 
 export type MatchPhase = (typeof MATCH_PHASES)[number];
+export type TournamentMatchPhase = Exclude<MatchPhase, "all">;
 
 export interface MatchRow {
     id: string;
@@ -10,7 +11,7 @@ export interface MatchRow {
     team_away: string;
     date_time: string;
     group_letter: string | null;
-    phase: string;
+    phase: TournamentMatchPhase;
     status: "scheduled" | "live" | "finished";
     goals_home: number | null;
     goals_away: number | null;

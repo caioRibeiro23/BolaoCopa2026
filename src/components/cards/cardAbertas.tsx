@@ -5,6 +5,8 @@ import CaixaPlacar from "./caixaPlacar/caixaPlacar";
 import { getCountryAbbr } from "./iconePais/countryAbbr";
 import { useState, FormEvent, useEffect } from "react";
 import { createClient } from "@/src/lib/supabase/client";
+import { TournamentMatchPhase } from "@/src/lib/supabase/tournament";
+import { getPhaseLabel } from "@/src/utils/getPhaseLabel";
 
 interface CardAbertasProps {
     matchId: string;
@@ -13,9 +15,11 @@ interface CardAbertasProps {
     hora: string;
     grupo: string;
     date_time?: string;
+    phase: TournamentMatchPhase;
 }
 
-export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, grupo, date_time }: CardAbertasProps) {
+
+export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, grupo, date_time, phase }: CardAbertasProps) {
     const [predictionHome, setPredictionHome] = useState<number | null>(null);
     const [predictionAway, setPredictionAway] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -138,9 +142,13 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
                     <span className="text-verdeNeon tracking-[1px]">OPEN</span> 
                     <span className="text-cinzaSuave whitespace-nowrap">{hora}</span>
                 </div>
-                <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                {phase !== "group_stage" ? (
+                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">{getPhaseLabel(phase)}</div>
+                ) : 
+                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>}
                 <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +9 pts placar exato / +3 pt resultado</div>
             </div>
+    
 
             {/* Corpo do Card */}
             <div className="w-full px-2 bp-540:px-6 py-8 flex flex-row items-center">
