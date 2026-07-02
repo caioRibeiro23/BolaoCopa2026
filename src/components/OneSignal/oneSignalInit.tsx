@@ -8,7 +8,6 @@ export default function OneSignalInit({ userId }: { userId: string }) {
     const initOneSignal = async () => {
       if (typeof window === "undefined") return;
 
-      // 🎯 O PULOS DO GATO: Evita rodar o SDK se estiver no localhost de produção
       const isLocalhost = 
         window.location.hostname === "localhost" || 
         window.location.hostname === "127.0.0.1";
@@ -23,7 +22,10 @@ export default function OneSignalInit({ userId }: { userId: string }) {
           appId: "af4ec315-ebaf-4bea-a5b2-62f225308278",
         });
 
-        const playerId = await OneSignal.User.PushSubscription.id;
+        // 🎯 FORÇA O POP-UP: Exibe explicitamente o pedido de permissão nativo
+        await OneSignal.Notifications.requestPermission();
+
+        const playerId = OneSignal.User.PushSubscription.id;
         
         if (playerId) {
           console.log("OneSignal Player ID capturado com sucesso:", playerId);
@@ -31,9 +33,19 @@ export default function OneSignalInit({ userId }: { userId: string }) {
         }
 
       } catch (error: unknown) {
-        if (error instanceof Error && error.message.includes("already initialized")) {
-          return;
+        // 🎯 TIPAGEM SEGURA: Verifica se o erro é um objeto que contém a propriedade 'message'
+        if (
+          error && 
+          typeof error === "object" && 
+          "message" in error && 
+          typeof (error as { message: unknown }).message === "string"
+        ) {
+          const errorMessage = (error as { message: string }).message;
+          if (errorMessage.includes("already initialized")) {
+            return;
+          }
         }
+        
         console.error("Erro ao configurar OneSignal:", error);
       }
     };
