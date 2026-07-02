@@ -5,6 +5,7 @@ import FilterCard from "./cards/filterCard"
 import MatchCard from "./cards/matchCard"
 import PaginationCard from "./cards/paginationCard"
 import { t } from "@/src/utils/traducaoPaises";
+import { getPhaseLabel } from "@/src/utils/getPhaseLabel";
 
 interface MatchRow {
     id: string;
@@ -34,23 +35,6 @@ const phaseFilters = [
     { text: "Semifinais", value: "semi_finals" },
     { text: "Final", value: "final" },
 ] as const;
-
-function getPhaseLabel(phase: MatchRow["phase"]) {
-    switch (phase) {
-        case "group_stage":
-            return "Fase de grupos";
-        case "last_16":
-            return "Oitavas de final";
-        case "quarter_finals":
-            return "Quartas de final";
-        case "semi_finals":
-            return "Semifinais";
-        case "final":
-            return "Final";
-        default:
-            return "Partida";
-    }
-}
 
 function getPaginationItems(totalPages: number, currentPage: number) {
     if (totalPages <= 4) {

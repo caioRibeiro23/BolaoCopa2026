@@ -11,30 +11,11 @@ import { getCountryAbbr } from "@/src/components/cards/iconePais/countryAbbr";
 import { notFound } from "next/navigation";
 import { getMatchById, getMatchParticipantPredictions } from "@/src/lib/supabase/tournament";
 import { createClient } from "@/src/lib/supabase/server";
+import { getPhaseLabel } from "@/src/utils/getPhaseLabel";
 
 interface MatchPageProps {
     params: Promise<{ matchId: string }> | { matchId: string };
     searchParams?: Promise<{ championshipId?: string }> | { championshipId?: string };
-}
-
-function getPhaseLabel(phase: string) {
-    switch (phase) {
-        case "group_stage":
-            return "Fase de Grupos";
-        case "last_32":
-            return "16 avos";
-        case "last_16":
-            return "Oitavas de final";
-        case "quarter_finals":
-            return "Quartas de final";
-        case "semi_finals":
-            return "Semifinais";
-        case "final":
-        case "third_place":
-            return "Final";
-        default:
-            return "Partida";
-    }
 }
 
 

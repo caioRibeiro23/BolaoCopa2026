@@ -23,19 +23,21 @@ export default async function FullGeneralTable({
         </span>
       </div>
 
-      {players.map((player) => (
-        <GeneralRow
-          key={player.user_id}
-          position={player.position}
-          name={player.full_name}
-          shortName={(player.username || "US")
-            .slice(0, 2)
-            .toUpperCase()}
-          exactScores={player.exact_scores}
-          points={player.total_points}
-          isCurrentUser={player.user_id === userId}
-        />
-      ))}
+      {players.map((player) =>
+        player.total_points !== 0 && player.total_points !== null ? (
+          <GeneralRow
+            key={player.user_id}
+            position={player.position}
+            name={player.full_name}
+            shortName={(player.username || "US")
+              .slice(0, 2)
+              .toUpperCase()}
+            exactScores={player.exact_scores}
+            points={player.total_points}
+            isCurrentUser={player.user_id === userId}
+          />
+        ) : null
+      )}
     </div>
   );
 }
