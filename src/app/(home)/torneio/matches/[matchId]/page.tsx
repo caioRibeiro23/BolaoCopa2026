@@ -19,15 +19,18 @@ interface MatchPageProps {
 
 function getPhaseLabel(phase: string) {
     switch (phase) {
-        case "groups":
-            return "Grupo";
-        case "round_16":
+        case "group_stage":
+            return "Fase de Grupos";
+        case "last_32":
+            return "16 avos";
+        case "last_16":
             return "Oitavas de final";
-        case "quarterfinals":
+        case "quarter_finals":
             return "Quartas de final";
-        case "semifinals":
+        case "semi_finals":
             return "Semifinais";
         case "final":
+        case "third_place":
             return "Final";
         default:
             return "Partida";
@@ -96,7 +99,9 @@ export default async function MatchPage({ params, searchParams }: MatchPageProps
     const jogoEstorouHorario = tempoAtualMilissegundos >= obterTimestampGarantido(match.date_time);
 
     const matchDate = `${formatarDataBR(match.date_time)} - ${formatarHoraBR(match.date_time)}`;
-    const groupLabel = match.group_letter ? `Grupo ${match.group_letter}` : getPhaseLabel(match.phase);
+    const groupLabel = match.phase === "group_stage" && match.group_letter 
+        ? `Grupo ${match.group_letter.replace('GROUP_', '')}` 
+        : getPhaseLabel(match.phase);
     const isFinished = match.status === "finished" && match.goals_home !== null && match.goals_away !== null;
     const isLive = match.status === "live";
     const canSeePredictions = isLive || isFinished || jogoEstorouHorario;

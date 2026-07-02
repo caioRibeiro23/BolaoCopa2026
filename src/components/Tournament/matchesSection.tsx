@@ -21,28 +21,29 @@ interface MatchRow {
 interface MatchesSectionProps {
     matches: MatchRow[];
     initialPage: number;
-    currentPhase: "all" | "groups" | "round_16" | "quarterfinals" | "semifinals" | "final";
+    currentPhase: "all" | "group_stage" | "last_32" | "last_16" | "quarter_finals" | "semi_finals" | "final";
     championshipId?: string;
 }
 
 const phaseFilters = [
     { text: "Todas as partidas", value: "all" },
-    { text: "Fase de grupos", value: "groups" },
-    { text: "Oitavas de final", value: "round_16" },
-    { text: "Quartas de final", value: "quarterfinals" },
-    { text: "Semifinais", value: "semifinals" },
+    { text: "Fase de grupos", value: "group_stage" },
+    { text: "16 avos", value: "last_32" },
+    { text: "Oitavas de final", value: "last_16" },
+    { text: "Quartas de final", value: "quarter_finals" },
+    { text: "Semifinais", value: "semi_finals" },
     { text: "Final", value: "final" },
 ] as const;
 
 function getPhaseLabel(phase: MatchRow["phase"]) {
     switch (phase) {
-        case "groups":
+        case "group_stage":
             return "Fase de grupos";
-        case "round_16":
+        case "last_16":
             return "Oitavas de final";
-        case "quarterfinals":
+        case "quarter_finals":
             return "Quartas de final";
-        case "semifinals":
+        case "semi_finals":
             return "Semifinais";
         case "final":
             return "Final";
