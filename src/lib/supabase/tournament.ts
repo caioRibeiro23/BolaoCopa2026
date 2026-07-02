@@ -2,8 +2,6 @@ import { createClient } from "./server";
 
 export const MATCH_PHASES = ["all", "group_stage","last_32", "last_16", "quarter_finals", "semi_finals", "final"] as const;
 
-//Vasco
-
 export type MatchPhase = (typeof MATCH_PHASES)[number];
 
 export interface MatchRow {
