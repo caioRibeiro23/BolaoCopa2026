@@ -20,6 +20,7 @@ export async function getUserData() {
   if (error) return null
 
   return {
+    id: user.id,
     name: user.user_metadata.full_name,
     pts: data.total_points,
     avatarUrl: user.user_metadata.avatar_url || "/copa.png"
