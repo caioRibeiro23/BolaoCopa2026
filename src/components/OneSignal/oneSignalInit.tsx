@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import OneSignal from "react-onesignal";
+import { createClient } from "../../lib/supabase/client"; // Ajuste relativo: src/components/OneSignal -> src/lib/supabase/client
 
 export default function OneSignalInit({ userId }: { userId: string }) {
   useEffect(() => {
@@ -22,18 +23,31 @@ export default function OneSignalInit({ userId }: { userId: string }) {
           appId: "af4ec315-ebaf-4bea-a5b2-62f225308278",
         });
 
-        // 🎯 FORÇA O POP-UP: Exibe explicitamente o pedido de permissão nativo
+        // 1. Abre o prompt nativo de permissão
         await OneSignal.Notifications.requestPermission();
 
+        // 2. Pega o token único do dispositivo
         const playerId = OneSignal.User.PushSubscription.id;
         
         if (playerId) {
-          console.log("OneSignal Player ID capturado com sucesso:", playerId);
-          // Aqui fica sua rota/função para atualizar o Supabase
+          console.log("OneSignal Player ID capturado:", playerId);
+          
+          // 🎯 Invoca a sua função para pegar a instância global do navegador
+          const supabase = createClient();
+          
+          const { error } = await supabase
+            .from("profiles")
+            .update({ onesignal_player_id: playerId })
+            .eq("id", userId);
+
+          if (error) {
+            console.error("Erro ao salvar o player_id no Supabase:", error.message);
+          } else {
+            console.log("Player ID atualizado com sucesso no banco!");
+          }
         }
 
       } catch (error: unknown) {
-        // 🎯 TIPAGEM SEGURA: Verifica se o erro é um objeto que contém a propriedade 'message'
         if (
           error && 
           typeof error === "object" && 

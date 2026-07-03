@@ -16,15 +16,15 @@ export async function GET(request: Request) {
 
   try {
     const agora = new Date();
-    const daquiUmaHora = new Date(agora.getTime() + 60 * 60 * 1000);
-    const daquiUmaHoraEQuinze = new Date(agora.getTime() + 75 * 60 * 1000);
+
+    const daquiSetentaECincoMinutos = new Date(agora.getTime() + 75 * 60 * 1000);
 
     // 1. Busca os jogos que começam na janela de 1 hora a partir de agora
     const { data: matches } = await supabase
       .from('matches')
-      .select('id, team_home, team_away')
-      .gte('date_time', daquiUmaHora.toISOString())
-      .lte('date_time', daquiUmaHoraEQuinze.toISOString());
+      .select('id, team_home, team_away, date_time')
+      .gte('date_time', agora.toISOString()) 
+      .lte('date_time', daquiSetentaECincoMinutos.toISOString());
 
     if (!matches || matches.length === 0) {
       return NextResponse.json({ message: "Nenhum jogo começando na próxima hora." });
