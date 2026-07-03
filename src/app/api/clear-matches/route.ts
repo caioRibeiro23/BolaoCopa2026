@@ -19,13 +19,14 @@ export async function GET(request: Request) {
     
     // Alarga a janela temporal de verificação para tratar discrepâncias de fuso horário (UTC)
     // Busca qualquer partida que inicie entre o horário atual e os próximos 75 minutos
+    const daquiUmaHora = new Date(agora.getTime() + 60 * 60 * 1000);
     const daquiSetentaECincoMinutos = new Date(agora.getTime() + 75 * 60 * 1000);
 
     // 1. Busca os jogos correspondentes à janela de tempo estabelecida
     const { data: matches } = await supabase
       .from('matches')
       .select('id, team_home, team_away, date_time')
-      .gte('date_time', agora.toISOString())
+      .gte('date_time', daquiUmaHora.toISOString()) 
       .lte('date_time', daquiSetentaECincoMinutos.toISOString());
 
     if (!matches || matches.length === 0) {
