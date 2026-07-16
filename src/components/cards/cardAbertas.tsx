@@ -200,7 +200,7 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
                         className={`px-4 py-2 rounded-lg font-bold font-inter text-sm tracking-[1px] duration-200 hover:scale-105 transition-all disabled:scale-100 ${isSaved ? `bg-transparent ${isFinal ? "text-[#ffd86b]" : "text-verdeNeon"} font-normal cursor-default` : `${isFinal ? "bg-linear-to-r from-[#3f2e09] via-[#8b6a1d] to-[#251902] text-[#ffd86b] hover:opacity-80" : "bg-verdeNeon text-black hover:bg-verdeNeon/70"} shadow-md cursor-pointer` }`}
                         type="submit"
                     >
-                        {isSubmitting ? "Enviando..." : isSaved ? <span className="text-[#ad872f]">Palpite Registrado ✓</span> : "Enviar Palpite →"}
+                        {isSubmitting ? "Enviando..." : isSaved ? <span className={`${isFinal ? "text-[#ad872f]" : "text-verdeNeon"}`}>Palpite Registrado ✓</span> : "Enviar Palpite →"}
                     </button>
 
                     {isSaved && (
