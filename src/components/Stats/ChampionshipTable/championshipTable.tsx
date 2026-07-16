@@ -70,6 +70,7 @@ export default async function ChampionshipTable({
                 {paginatedPlayers.map((player) => (
                     <ChampionshipRow
                         key={player.user_id}
+                        userId={player.user_id}
                         position={player.position}
                         name={player.full_name}
                         shortName={(player.username || "US").slice(0, 2).toUpperCase()}
@@ -82,8 +83,9 @@ export default async function ChampionshipTable({
 
             {/* Se o usuário atual não estiver nesta página, fixa embaixo de forma isolada */}
             {!isCurrentUserVisible && currentUserPlayer && (
-                <div className="border-t-2 border-dashed border-azulCinzado/40 bg-white/[0.02]">
+                <div className="border-t-2 border-dashed border-azulCinzado/40 bg-white/2">
                     <ChampionshipRow
+                        userId={currentUserPlayer.user_id}
                         position={currentUserPlayer.position}
                         name={currentUserPlayer.full_name}
                         shortName={(currentUserPlayer.username || "US").slice(0, 2).toUpperCase()}

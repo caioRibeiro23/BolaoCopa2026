@@ -1,6 +1,5 @@
 import { getChampionshipLeaderboard } from "@/src/lib/supabase/leaderboard";
 import ChampionshipRow from "../ChampionshipTable/championshipRow";
-// import { createClient } from "@/src/lib/supabase/server";
 
 const CHAMPIONSHIP_ID = "9f949a87-0b94-48ee-ae3d-aa65bd3478da";
 
@@ -9,8 +8,7 @@ export default async function FullChampionshipTable({
 }: {
   userId: string;
 }) {
-  const players =
-    (await getChampionshipLeaderboard(CHAMPIONSHIP_ID)) || [];
+  const players = await getChampionshipLeaderboard(CHAMPIONSHIP_ID);
 
   return (
     <div className="flex flex-col bg-azulMedio rounded-2xl border border-azulCinzado w-full shadow-sm">
@@ -30,6 +28,7 @@ export default async function FullChampionshipTable({
       {players.map((player) => (
         <ChampionshipRow
           key={player.user_id}
+          userId={player.user_id}
           position={player.position}
           name={player.full_name}
           shortName={(player.username || "US")

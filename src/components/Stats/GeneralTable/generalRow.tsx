@@ -1,6 +1,8 @@
 import UserBox from "../../ui/userBox";
+import ExtraPredictionSummary from "../ExtraPredictionSummary/extraPredictionSummary";
 
 interface GeneralRowProps {
+    userId: string;
     position: number;
     name: string;
     shortName: string;
@@ -9,7 +11,7 @@ interface GeneralRowProps {
     isCurrentUser?: boolean;
 }
 
-export default function generalRow({ position, name, shortName, exactScores, points, isCurrentUser }: GeneralRowProps) {
+export default function generalRow({ position, name, shortName, exactScores, points, isCurrentUser, userId }: GeneralRowProps) {
     const isTopThree = position <= 3;
     const medalSymbol = position === 1 ? "🥇" : position === 2 ? "🥈" : "🥉";
 
@@ -25,7 +27,7 @@ export default function generalRow({ position, name, shortName, exactScores, poi
                 {isTopThree ? medalSymbol : position}
             </span>
             <UserBox shortName={shortName} />
-            <div className="w-full flex flex-col py-0.5">
+            <div className="w-full min-w-0 flex flex-col py-0.5">
                 <p className="font-roboto text-sm text-[#E8EDF5] flex items-center gap-2">
                     {name}
                     {isCurrentUser && (
@@ -33,6 +35,7 @@ export default function generalRow({ position, name, shortName, exactScores, poi
                     )}
                 </p>
                 <p className="font-inter text-[11px] text-cinzaSuave">{exactScores} exacts scores</p>
+                <ExtraPredictionSummary userId={userId} />
             </div>
             <div className="flex flex-col">
                 <span className={position == 1 ? `font-roboto text-base font-bold text-[#FFD700] drop-shadow-[0_0_8px_#FFD700]` : "font-roboto text-base font-bold text-[#E8EDF5]"}>{points}</span>

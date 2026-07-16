@@ -16,9 +16,7 @@ export default async function GeneralTable({
 }) {
     const players = await getLeaderboard();
     const supabase = await createClient();
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+    await supabase.auth.getUser();
 
     // Lógica da Paginação Estrita
     const totalPages = Math.ceil(players.length / PLAYERS_PER_PAGE);
@@ -43,6 +41,7 @@ export default async function GeneralTable({
                 {paginatedPlayers.map((player) => (
                     <GeneralRow
                         key={player.user_id}
+                        userId={player.user_id}
                         position={player.position}
                         name={player.full_name}
                         shortName={player.username.slice(0, 2).toUpperCase()}
@@ -54,8 +53,9 @@ export default async function GeneralTable({
             </div>
 
             {!isCurrentUserVisible && currentUserPlayer && (
-                <div className="border-t-2 border-dashed border-azulCinzado/40 bg-white/[0.02]">
+                <div className="border-t-2 border-dashed border-azulCinzado/40 bg-white/2">
                     <GeneralRow
+                        userId={currentUserPlayer.user_id}
                         position={currentUserPlayer.position}
                         name={currentUserPlayer.full_name}
                         shortName={currentUserPlayer.username.slice(0, 2).toUpperCase()}

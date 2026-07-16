@@ -3,12 +3,10 @@ import GeneralRow from "../GeneralTable/generalRow";
 
 export default async function FullGeneralTable({
   userId,
-  championshipId,
 }: {
   userId: string;
-  championshipId: string
 }) {
-  const players = (await getLeaderboard()) || [];
+  const players = await getLeaderboard();
 
   return (
     <div className="flex flex-col bg-azulMedio rounded-2xl border border-azulCinzado w-full shadow-sm">
@@ -27,6 +25,7 @@ export default async function FullGeneralTable({
         player.total_points !== 0 && player.total_points !== null ? (
           <GeneralRow
             key={player.user_id}
+            userId={player.user_id}
             position={player.position}
             name={player.full_name}
             shortName={(player.username || "US")

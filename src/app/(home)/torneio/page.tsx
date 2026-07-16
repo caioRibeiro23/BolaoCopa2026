@@ -1,5 +1,4 @@
 import TitlePage from "@/src/components/ui/titlepage";
-import FullChampionshipTable from "@/src/components/Stats/FullChampionshipTable/fullChampionshipTable";
 import { createClient } from "@/src/lib/supabase/server";
 import { redirect } from "next/navigation";
 import {
@@ -16,7 +15,6 @@ import {
     resolvePageValue,
     resolvePhaseValue,
 } from "@/src/lib/supabase/tournament";
-import FullGeneralTable from "@/src/components/Stats/FullGeneralTable/fullGeneralTable";
 import GeneralTable from "@/src/components/Stats/GeneralTable/generalTable";
 import ChampionshipTable from "@/src/components/Stats/ChampionshipTable/championshipTable";
 

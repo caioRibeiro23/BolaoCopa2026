@@ -43,8 +43,7 @@ export default async function FullTablePage({ searchParams }: FullTablePageProps
       {/* Lógica condicional para renderizar a tabela correta */}
       {isGeneralChampionship ? (
         <FullGeneralTable 
-          userId={user.id} 
-          championshipId={championshipId || "general"} 
+          userId={user.id}
         />
       ) : (
         <FullChampionshipTable 
