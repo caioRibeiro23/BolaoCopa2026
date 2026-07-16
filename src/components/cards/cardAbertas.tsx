@@ -24,6 +24,7 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
     const [predictionAway, setPredictionAway] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isSaved, setIsSaved] = useState<boolean>(false);
+    const isFinal = phase === "final";
 
     const supabase = createClient();
 
@@ -133,20 +134,23 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
         }
     }
     return (
-        <form onSubmit={handleSendPrediction} className="w-full flex flex-col bg-azulMedio rounded-2xl border border-gray-800 shadow-2xl">
+        <form
+            onSubmit={handleSendPrediction}
+            className={`w-full flex flex-col bg-azulMedio rounded-2xl border shadow-2xl ${isFinal ? "border-[#d4af37]/80 shadow-[0_0_30px_rgba(212,175,55,0.18)]" : "border-gray-800"}`}
+        >
 
             {/* Cabeçalho do Card */}
-            <div className="w-full flex justify-between px-5 py-3 bg-azulCinzado shadow-inner rounded-t-2xl text-xs font-inter border-b border-gray-800">
+            <div className={`w-full flex justify-between px-5 py-3 shadow-inner rounded-t-2xl text-xs font-inter border-b ${isFinal ? "bg-linear-to-r from-[#3f2e09] via-[#8b6a1d] to-[#251902] border-[#d4af37]/70" : "bg-azulCinzado border-gray-800"}`}>
                 <div className="text-white w-full flex justify-start items-center gap-2">
-                    <div className="w-2 h-2 aspect-square rounded-4xl bg-verdeNeon shadow-[0_0_8px_#39FF14]"></div>
-                    <span className="text-verdeNeon tracking-[1px]">OPEN</span> 
-                    <span className="text-cinzaSuave whitespace-nowrap">{hora}</span>
+                    <div className={`w-2 h-2 aspect-square rounded-4xl shadow-[0_0_8px_rgba(255,255,255,0.3)] ${isFinal ? "bg-[#ffd86b] shadow-[0_0_10px_rgba(212,175,55,0.9)]" : "bg-verdeNeon shadow-[0_0_8px_#39FF14]"}`}></div>
+                    <span className={`tracking-[1px] ${isFinal ? "text-[#ffd86b]" : "text-verdeNeon"}`}>{isFinal ? "FINAL" : "OPEN"}</span> 
+                    <span className={`whitespace-nowrap ${isFinal ? "text-amber-100" : "text-cinzaSuave"}`}>{hora}</span>
                 </div>
                 {phase !== "group_stage" ? (
-                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">{getPhaseLabel(phase)}</div>
+                    <div className={`w-full text-end bp-540:text-center ${isFinal ? "text-[#ffd86b] font-semibold" : "text-cinzaSuave"}`}>{getPhaseLabel(phase)}</div>
                 ) : 
-                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>}
-                <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +9 pts placar exato / +3 pt resultado</div>
+                    <div className={`w-full text-end bp-540:text-center ${isFinal ? "text-[#ffd86b] font-semibold" : "text-cinzaSuave"}`}>Grupo {grupo}</div>}
+                <div className={`w-full text-end font-roboto hidden bp-540:block ${isFinal ? "text-[#ffd86b]" : "text-verdeNeon"}`}>{isFinal ? " +18 pts cravada / +3 pt resultado" : " +9 pts placar exato / +3 pt resultado"}</div>
             </div>
     
 

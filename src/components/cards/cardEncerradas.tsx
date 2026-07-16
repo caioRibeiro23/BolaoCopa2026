@@ -20,6 +20,7 @@ export type StatusPontuacao = "exato" | "combo" | "resultado" | "um_gol" | "inco
 
 export default function CardEncerradas({ paisCasa, paisVisitante, grupo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante, phase }: CardAoVivoProps) {
     let status: StatusPontuacao = undefined;
+    const isFinal = phase === "final";
     if (palpiteCasa !== undefined && palpiteVisitante !== undefined) {
         const acertouGolCasa = palpiteCasa === placarCasa;
         const acertouGolVisitante = palpiteVisitante === placarVisitante;
@@ -42,21 +43,21 @@ export default function CardEncerradas({ paisCasa, paisVisitante, grupo, placarC
         }
     }
     return (
-        <div className="w-full flex flex-col bg-azulMedio rounded-2xl border border-gray-800 shadow-2xl">
+        <div className={`w-full flex flex-col bg-azulMedio rounded-2xl border shadow-2xl ${isFinal ? "border-[#d4af37]/80 shadow-[0_0_30px_rgba(212,175,55,0.18)]" : "border-gray-800"}`}>
 
             {/* Cabeçalho do Card */}
-            <div className="w-full flex justify-between px-5 py-3 bg-[#111a2e] shadow-inner rounded-t-2xl text-xs font-inter border-b border-gray-800">
+            <div className={`w-full flex justify-between px-5 py-3 shadow-inner rounded-t-2xl text-xs font-inter border-b ${isFinal ? "bg-linear-to-r from-[#3f2e09] via-[#8b6a1d] to-[#251902] border-[#d4af37]/70" : "bg-[#111a2e] border-gray-800"}`}>
                 <div className="text-white w-full flex justify-start items-center gap-2">
-                    <div className="w-2 h-2 aspect-square rounded-4xl bg-cinzaSuave"></div>
-                    <span className="text-cinzaSuave tracking-[1px] font-bold font-inter">ENCERRADA</span> 
-                    <span className="text-cinzaSuave">FT</span>
+                    <div className={`w-2 h-2 aspect-square rounded-4xl ${isFinal ? "bg-[#ffd86b] shadow-[0_0_10px_rgba(212,175,55,0.9)]" : "bg-cinzaSuave"}`}></div>
+                    <span className={`tracking-[1px] font-bold font-inter ${isFinal ? "text-[#ffd86b]" : "text-cinzaSuave"}`}>ENCERRADA</span> 
+                    <span className={isFinal ? "text-amber-100" : "text-cinzaSuave"}>FT</span>
                 </div>
                 {phase !== "group_stage" ? (
-                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">{getPhaseLabel(phase)}</div>
+                    <div className={`w-full text-end bp-540:text-center ${isFinal ? "text-[#ffd86b] font-semibold" : "text-cinzaSuave"}`}>{getPhaseLabel(phase)}</div>
                 ) : (
-                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                    <div className={`w-full text-end bp-540:text-center ${isFinal ? "text-[#ffd86b] font-semibold" : "text-cinzaSuave"}`}>Grupo {grupo}</div>
                 )}
-                <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +9 pts placar exato / +3 pt resultado</div>
+                <div className={`w-full text-end font-roboto hidden bp-540:block ${isFinal ? "text-[#ffd86b]" : "text-verdeNeon"}`}>{isFinal ? " +18 pts cravada / +3 pt resultado" : " +9 pts placar exato / +3 pt resultado"}</div>
             </div>
 
             {/* Corpo do Card */}

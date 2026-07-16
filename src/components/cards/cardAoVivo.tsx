@@ -17,22 +17,24 @@ interface CardAoVivoProps {
 }
 
 export default function CardAoVivo({ paisCasa, paisVisitante, grupo, tempo, placarCasa, placarVisitante, palpiteCasa, palpiteVisitante, phase }: CardAoVivoProps) {
+    const isFinal = phase === "final";
+
     return (
-        <div className="w-full flex flex-col bg-azulMedio rounded-2xl border border-gray-800 shadow-2xl">
+        <div className={`w-full flex flex-col bg-azulMedio rounded-2xl border shadow-2xl ${isFinal ? "border-[#d4af37]/80 shadow-[0_0_30px_rgba(212,175,55,0.18)]" : "border-gray-800"}`}>
 
             {/* Cabeçalho do Card */}
-            <div className="w-full flex justify-between px-5 py-3 bg-verdeNeon/5 shadow-inner rounded-t-2xl text-xs font-inter border-b border-gray-800">
+            <div className={`w-full flex justify-between px-5 py-3 shadow-inner rounded-t-2xl text-xs font-inter border-b ${isFinal ? "bg-linear-to-r from-[#3f2e09] via-[#8b6a1d] to-[#251902] border-[#d4af37]/70" : "bg-verdeNeon/5 border-gray-800"}`}>
                 <div className="text-white w-full flex justify-start items-center gap-2">
-                    <div className="w-2 h-2 aspect-square rounded-4xl bg-vermelhoVibrante shadow-[0_0_8px_#FF4C4C]"></div>
-                    <span className="text-vermelhoVibrante tracking-[1px]">Live</span> 
-                    <span className="text-cinzaSuave">{tempo}&apos;</span>
+                    <div className={`w-2 h-2 aspect-square rounded-4xl ${isFinal ? "bg-[#ffd86b] shadow-[0_0_10px_rgba(212,175,55,0.9)]" : "bg-vermelhoVibrante shadow-[0_0_8px_#FF4C4C]"}`}></div>
+                    <span className={`tracking-[1px] ${isFinal ? "text-[#ffd86b]" : "text-vermelhoVibrante"}`}>{isFinal ? "FINAL" : "Live"}</span> 
+                    <span className={isFinal ? "text-amber-100" : "text-cinzaSuave"}>{isFinal ? "FT" : `${tempo}'`}</span>
                 </div>
                 {phase !== "group_stage" ? (
-                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">{getPhaseLabel(phase)}</div>
+                    <div className={`w-full text-end bp-540:text-center ${isFinal ? "text-[#ffd86b] font-semibold" : "text-cinzaSuave"}`}>{getPhaseLabel(phase)}</div>
                 ) : (
-                    <div className="text-cinzaSuave w-full text-end bp-540:text-center">Grupo {grupo}</div>
+                    <div className={`w-full text-end bp-540:text-center ${isFinal ? "text-[#ffd86b] font-semibold" : "text-cinzaSuave"}`}>Grupo {grupo}</div>
                 )}
-                <div className="text-verdeNeon w-full text-end font-roboto hidden bp-540:block"> +9 pts placar exato / +3 pt resultado</div>
+                <div className={`w-full text-end font-roboto hidden bp-540:block ${isFinal ? "text-[#ffd86b]" : "text-verdeNeon"}`}>{isFinal ? " +18 pts cravada / +3 pt resultado" : " +9 pts placar exato / +3 pt resultado"}</div>
             </div>
 
             {/* Corpo do Card */}
