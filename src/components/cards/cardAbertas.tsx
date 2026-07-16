@@ -167,6 +167,7 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
                         value={predictionHome} 
                         onChange={handleHomeChange}
                         disabled={isSaved}
+                        isFinal={isFinal}
                     />
                     <div className="py-2">
                         <div className="px-1 pt-7 pb-3">
@@ -179,6 +180,7 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
                         value={predictionAway}
                         onChange={handleAwayChange}
                         disabled={isSaved}
+                        isFinal={isFinal}
                     />
                 </div>
                 <div className="w-full py-2 text-end text-cinzaSuave font-bold font-inter text-base flex flex-col bp-540:flex-row items-center bp-540:items-center gap-1 bp-540:gap-3 justify-end">
@@ -195,10 +197,10 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
                 <div className="flex flex-col items-center gap-3">
                     <button 
                         disabled={isSubmitting || isSaved}
-                        className={`px-4 py-2 rounded-lg font-bold font-inter text-sm tracking-[1px] duration-200 hover:scale-105 transition-all disabled:scale-100 ${isSaved ? "bg-transparent text-verdeNeon font-normal cursor-default" : "bg-verdeNeon text-black hover:bg-verdeNeon/70 shadow-md cursor-pointer" }`}
+                        className={`px-4 py-2 rounded-lg font-bold font-inter text-sm tracking-[1px] duration-200 hover:scale-105 transition-all disabled:scale-100 ${isSaved ? `bg-transparent ${isFinal ? "text-[#ffd86b]" : "text-verdeNeon"} font-normal cursor-default` : `${isFinal ? "bg-linear-to-r from-[#3f2e09] via-[#8b6a1d] to-[#251902] text-[#ffd86b] hover:opacity-80" : "bg-verdeNeon text-black hover:bg-verdeNeon/70"} shadow-md cursor-pointer` }`}
                         type="submit"
                     >
-                        {isSubmitting ? "Enviando..." : isSaved ? "Palpite Registrado ✓" : "Enviar Palpite →"}
+                        {isSubmitting ? "Enviando..." : isSaved ? <span className="text-[#ad872f]">Palpite Registrado ✓</span> : "Enviar Palpite →"}
                     </button>
 
                     {isSaved && (
@@ -206,7 +208,7 @@ export default function CardAbertas({ matchId, paisCasa, paisVisitante, hora, gr
                             type="button"
                             onClick={handleEditPrediction}
                             disabled={isSubmitting}
-                            className="px-4 py-2 rounded-lg font-bold font-inter text-sm tracking-[1px] bg-transparent text-verdeNeon border border-verdeNeon/35 shadow-md hover:bg-verdeNeon/10 hover:scale-105 transition-all cursor-pointer disabled:opacity-70 disabled:scale-100 disabled:cursor-not-allowed"
+                            className={`px-4 py-2 rounded-lg font-bold font-inter text-sm tracking-[1px] bg-transparent ${isFinal ? "text-[#ad872f] border border-[#8b6a1d]/35 hover:bg-[#8b6a1d]/10" : "text-verdeNeon border border-verdeNeon/35 hover:bg-verdeNeon/10"} shadow-md hover:scale-105 transition-all cursor-pointer disabled:opacity-70 disabled:scale-100 disabled:cursor-not-allowed`}
                         >
                             Editar Palpite
                         </button>
